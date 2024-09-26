@@ -11,7 +11,7 @@ assignees: ''
 *Provide a detailed description of the requested feature. What is the problem or opportunity this feature addresses? Why is it important for the community or users?*
 
 **Purpose and Impact**
-*Explain the purpose of the feature and its potential impact on the application.*
+*Explain the purpose of the feature and its potential impact on the application.
 - What problem does it solve?
 - How will this improve the user experience?
 - Which parts of the application (web, mobile, backend) will this feature affect?*
