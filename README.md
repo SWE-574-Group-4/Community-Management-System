@@ -16,6 +16,8 @@ if you have any problems with npm install, try to run `npm install --force`
 
 ### backend
 
+pre-requisite: `python >= 3.7.4, pip >= 19.0.3`
+
 <!-- For Unix systems -->
 
 ```bash
