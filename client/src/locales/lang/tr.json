@@ -1,0 +1,162 @@
+{
+    "application": {
+        "featuresExplanation": "Communiche, size topluluk oluşturma ve var olan topluluklara katılma imkanı verir. Ayrıca ilgi duyduğunuz alandaki diğer arkadaşlarınızla da iletişim kurabilirsiniz. 🚀",
+        "terms_conditions": "Kullanım Koşulları",
+        "privacy_policy": "Gizlilik Politikası",
+        "select": {
+            "placeholder": "Seç"
+        },
+        "user": {
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "email": "E-posta",
+            "phone": "Telefon numarası",
+            "gender": "Cinsiyet",
+            "avatar": "Fotoğraf",
+            "username": "Kullanıcı Adı"
+        },
+        "email": "E-posta"
+    },
+    "nav": {
+        "home": "Ana Sayfa",
+        "singleMenuItem": "Menu Oluştur",
+        "collapseMenu": {
+            "collapseMenu": "Collapse menu item",
+            "item1": "Collapse menu item 1",
+            "item2": "Collapse menu item 2"
+        },
+        "groupMenu": {
+            "groupMenu": "Group menu",
+            "single": "Group single menu item",
+            "collapse": {
+                "collapse": "Group collapse menu",
+                "item1": "Group collapse menu item 1",
+                "item2": "Group collapse menu item 2"
+            }
+        },
+        "profile": "Hesabım",
+        "meals": "Yemeklerim",
+        "ingredients": "Malzemelerim",
+        "settings": "Ayarlar",
+        "signOut": "Çıkış Yap",
+        "password": "Şifre Ayarları"
+    },
+    "settings": {
+        "title": "Genel",
+        "description": "Adınız, adresiniz gibi temel bilgiler",
+        "profile": {
+            "title": "Hesabım",
+            "updateMessage": {
+                "success": "Bilgiler başarıyla güncellendi",
+                "error": "Güncelleme başarısız"
+            },
+            "genders": {
+                "Male": "Erkek",
+                "Female": "Kadın",
+                "Other": "Diğer"
+            },
+            "buttons": {
+                "update": "Güncelle",
+                "reset": "Sıfırla",
+                "updating": "Güncelliyor"
+            }
+        },
+        "meals": {
+            "title": "Yemeklerim"
+        },
+        "ingredients": {
+            "title": "Malzemelerim"
+        },
+        "password": {
+            "title": "Şifre"
+        }
+    },
+    "signUp": {
+        "credentials": "Giriş yapmak için lütfen kimlik bilgilerinizi girin!",
+        "username": "Kullanıcı Adı",
+        "email": "E-posta",
+        "password": "Parola",
+        "rememberMe": "Beni Hatırla",
+        "forgotPassword": "Parolanızı mı unuttunuz?",
+        "signUpMessage": "Ve ücretsiz denemenize başlayalım 🙂",
+        "createAccount": "Hesap oluşturuluyor...",
+        "haveAccount": "Zaten hesabın var mı?",
+        "errors": {
+            "username": "Lütfen kullanıcı adınızı girin",
+            "password": "Lütfen parolanızı girin",
+            "failedSignIn": "Geçersiz e-posta veya şifre!",
+            "invalidEmail": "Geçersiz e-posta",
+            "email": "Lütfen e-posta adresinizi girin",
+            "confirmPassword": "Parola Uyuşmuyor"
+        }
+    },
+    "signIn": {
+        "welcomeMessage": "Tekrar hoş geldiniz!",
+        "credentials": "Giriş yapmak için lütfen kimlik bilgilerinizi girin!",
+        "username": "Kullanıcı Adı",
+        "email": "E-posta",
+        "password": "Parola",
+        "confirmPassword": "Parola Onay",
+        "rememberMe": "Beni Hatırla",
+        "forgotPassword": "Parolanızı mı unuttunuz?",
+        "signIn": "Giriş Yap",
+        "signingIn": "Giriş yapılıyor",
+        "noAccountYet": "Henüz hesabınız yok mu?",
+        "signUp": "Kayıt Ol",
+        "errors": {
+            "username": "Lütfen kullanıcı adınızı girin",
+            "password": "Lütfen parolanızı girin",
+            "failedSignIn": "Geçersiz e-posta veya şifre!"
+        }
+    },
+    "forgotPassword": {
+        "title": "Şifremi Unuttum",
+        "message": "Doğrulama kodu almak için lütfen e-posta adresinizi girin",
+        "buttonTitle": "E-posta Gönder",
+        "back": "",
+        "checkEmail": "E-posta adresini kontrol et",
+        "successMessage": "E-posta adresine doğrulama kodu gönderildi",
+        "send": "Gönder",
+        "resend": "Yeniden Gönder"
+    },
+    "footer": {
+        "copyright": "{{year}} Tüm hakları saklıdır."
+    },
+    "codes": {
+        "ERR_GEN": "Beklenmeyen bir hata oluştu.",
+        "ERR_EMAIL_USER_REQ": "E-posta veya kullanıcı adı gereklidir.",
+        "ERR_INVALID_PASSWORD": "Geçersiz parola",
+        "ERR_INV_CRED": "Geçersiz e-posta/kullanıcı adı veya parola.",
+        "ERR_EMAIL_NOT_VER": "E-posta adresi doğrulanmamış.",
+        "ERR_USER_NOT_FOUND": "Kullanıcı bulunamadı.",
+        "ERR_DUP_EMAIL": "E-posta adresi zaten kayıtlı.",
+        "ERR_DUP_USERNAME": "Kullanıcı adı zaten alınmış.",
+        "ERR_INV_VER_TOKEN": "Geçersiz doğrulama belirteci.",
+        "ERR_PASS_NOT_MATCH": "Parolalar uyuşmuyor.",
+        "ERR_ING_NOT_FOUND": "Malzeme bulunamadı.",
+        "ERR_ING_ALREADY_OWNED": "Malzeme zaten kullanıcıya ait.",
+        "ERR_ING_NOT_OWNED": "Malzeme kullanıcıya ait değil.",
+        "ERR_MENU_NOT_FOUND": "Menü bulunamadı.",
+        "ERR_MENU_ALREADY_EXISTS": "Aynı isimle menü zaten mevcut.",
+        "ERR_DIET_NOT_FOUND": "Diyet bulunamadı.",
+        "ERR_DIET_ALREADY_EXISTS": "Aynı isimle diyet zaten mevcut.",
+        "ERR_DIET_INV_CATEGORY": "Geçersiz diyet kategorisi.",
+        "ERR_SUB_NOT_FOUND": "Abonelik bulunamadı.",
+        "ERR_SUB_ALREADY_EXISTS": "Aynı isimle abonelik zaten mevcut.",
+        "ERR_DUP_ENTRY": "Belirtilen alan için yinelenen giriş. Lütfen farklı bir değer seçin.",
+        "SUCCESS_USER_CREATED": "Kullanıcı başarıyla oluşturuldu. Lütfen e-postanızı doğrulayın.",
+        "SUCCESS_USER_LOGGED_IN": "Kullanıcı başarıyla giriş yaptı ({{loginType}}).",
+        "SUCCESS_EMAIL_VERIFIED": "E-posta doğrulama başarılı.",
+        "SUCCESS_ING_ADDED": "Malzeme başarıyla kullanıcıya eklendi.",
+        "SUCCESS_ING_REMOVED": "Malzeme başarıyla kullanıcıdan kaldırıldı.",
+        "SUCCESS_MENU_CREATED": "Menü başarıyla oluşturuldu.",
+        "SUCCESS_MENU_UPDATED": "Menü başarıyla güncellendi.",
+        "SUCCESS_MENU_DELETED": "Menü başarıyla silindi.",
+        "SUCCESS_DIET_CREATED": "Diyet başarıyla oluşturuldu.",
+        "SUCCESS_DIET_UPDATED": "Diyet başarıyla güncellendi.",
+        "SUCCESS_DIET_DELETED": "Diyet başarıyla silindi.",
+        "SUCCESS_SUB_CREATED": "Abonelik başarıyla oluşturuldu.",
+        "SUCCESS_SUB_UPDATED": "Abonelik başarıyla güncellendi.",
+        "SUCCESS_SUB_DELETED": "Abonelik başarıyla silindi."
+    }
+}
