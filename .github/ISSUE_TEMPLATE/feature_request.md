@@ -25,8 +25,5 @@ assignees: ''
 **Environment**
 *If this feature impacts specific environments, describe them (e.g., infrastructure, specific cloud services, database, devices, or browsers).*
 
-**Priority**
-*How critical is this issue? (Low, Medium, High, Critical)*
-
 **Additional Considerations**
 *List any possible challenges, limitations, or dependencies (e.g., third-party services, performance considerations, UI/UX impact).*

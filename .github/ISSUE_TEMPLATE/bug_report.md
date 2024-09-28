@@ -30,9 +30,6 @@ Backend environment:
 App version:
 Database:
 
-**Priority**
-*How critical is this issue? (Low, Medium, High, Critical)*
-
 **Logs & Error Messages**
 *If available, provide logs or error messages associated with the bug (from the backend, database, or client-side logs).*
 
