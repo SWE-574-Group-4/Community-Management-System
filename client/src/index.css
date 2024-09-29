@@ -1,0 +1,15 @@
+@import "./assets/styles/app.css";
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show scrollbar only when hovering */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}

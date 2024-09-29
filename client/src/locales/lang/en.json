@@ -1,0 +1,190 @@
+{
+    "application": {
+        "featuresExplanation": "Communicate, create and join communities, and connect with other friends in your interest area. ",
+        "terms_conditions": "Terms & Conditions",
+        "privacy_policy": "Privacy Policy",
+        "select": {
+            "placeholder": "Select"
+        },
+        "user": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "phone": "Phone Number",
+            "gender": "Gender",
+            "avatar": "Photo",
+            "username": "Username"
+        },
+        "email": "Email"
+    },
+    "nav": {
+        "home": "Home",
+        "createCommunity": "Create Community",
+        "individualCommunity": "Individual Community",
+        "communityDetail": "Community Detail",
+        "post": "Post",
+        "communities": "Communities",
+        "search": "Search",
+        "collapseMenu": {
+            "collapseMenu": "Collapse menu item",
+            "item1": "Collapse menu item 1",
+            "item2": "Collapse menu item 2"
+        },
+        "groupMenu": {
+            "groupMenu": "Group menu",
+            "single": "Group single menu item",
+            "collapse": {
+                "collapse": "Group collapse menu",
+                "item1": "Group collapse menu item 1",
+                "item2": "Group collapse menu item 2"
+            }
+        },
+        "profile": "Profile",
+        "meals": "Meals",
+        "ingredients": "Ingredients",
+        "settings": "Settings",
+        "signOut": "Sign Out",
+        "password": "Password Settings",
+        "invitations": "My Invitations",
+        "myCommunities": "My Communities"
+    },
+    "settings": {
+        "title": "General",
+        "description": "Basic information like your name, address",
+        "profile": {
+            "title": "My Account",
+            "updateMessage": {
+                "success": "Information updated successfully",
+                "error": "Update failed"
+            },
+            "genders": {
+                "Male": "Male",
+                "Female": "Female",
+                "Other": "Other"
+            },
+            "buttons": {
+                "update": "Update",
+                "reset": "Reset",
+                "updating": "Updating"
+            }
+        },
+        "meals": {
+            "title": "My Meals"
+        },
+        "ingredients": {
+            "title": "My Ingredients"
+        },
+        "password": {
+            "title": "Password"
+        }
+    },
+    "community": {
+        "messages": {
+            "success": "Community added successfully",
+            "error": "Community added failed"
+        }
+    },
+    "signUp": {
+        "credentials": "Please enter your credentials to sign in!",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "rememberMe": "Remember Me",
+        "forgotPassword": "Forgot password?",
+        "signUpMessage": "And let's start your free trial ",
+        "createAccount": "Creating account...",
+        "haveAccount": "Already have an account?",
+        "errors": {
+            "username": "Please enter your username",
+            "password": "Please enter your password",
+            "failedSignIn": "Invalid email or password!",
+            "invalidEmail": "Invalid email",
+            "email": "Please enter your email address",
+            "confirmPassword": "Passwords do not match",
+            "firstname": "Please enter your firstname",
+            "lastname": "Please enter your lastname",
+            "dob": "Please enter your date of birth",
+            "country": "Please enter your country",
+            "phone": "Please enter your phone number",
+            "shortBio": "Please enter your short bio"
+        },
+        "placeholders": {
+            "firstname": "First Name",
+            "lastname": "Last Name",
+            "username": "Username",
+            "password": "Password",
+            "email": "Email",
+            "dob": "Date of Birth",
+            "country": "Country",
+            "phone": "Phone Number",
+            "short_bio": "Short Bio"
+        }
+    },
+    "signIn": {
+        "welcomeMessage": "Welcome back!",
+        "credentials": "Please enter your credentials to sign in!",
+        "username": "Username",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "rememberMe": "Remember Me",
+        "forgotPassword": "Forgot password?",
+        "signIn": "Sign In",
+        "signingIn": "Signing in...",
+        "noAccountYet": "Don't have an account yet?",
+        "signUp": "Sign Up",
+        "errors": {
+            "username": "Please enter your username",
+            "password": "Please enter your password",
+            "failedSignIn": "Invalid email or password!"
+        }
+    },
+    "forgotPassword": {
+        "title": "Forgot Password",
+        "message": "Please enter your email address to receive a verification code",
+        "buttonTitle": "Send Email",
+        "back": "",
+        "checkEmail": "Check your email",
+        "successMessage": "Verification code sent to email address",
+        "send": "Send",
+        "resend": "Resend"
+    },
+    "footer": {
+        "copyright": "{{year}} All rights reserved."
+    },
+    "codes": {
+        "ERR_GEN": "An unexpected error occurred.",
+        "ERR_EMAIL_USER_REQ": "Email or username is required.",
+        "ERR_INV_CRED": "Invalid email/username or password.",
+        "ERR_EMAIL_NOT_VER": "Email address is not verified.",
+        "ERR_USER_NOT_FOUND": "User not found.",
+        "ERR_DUP_EMAIL": "Email address is already registered.",
+        "ERR_DUP_USERNAME": "Username is already taken.",
+        "ERR_INV_VER_TOKEN": "Invalid verification token.",
+        "ERR_PASS_NOT_MATCH": "Passwords do not match.",
+        "ERR_ING_NOT_FOUND": "Ingredient not found.",
+        "ERR_ING_ALREADY_OWNED": "Ingredient is already owned by the user.",
+        "ERR_ING_NOT_OWNED": "Ingredient is not owned by the user.",
+        "ERR_MENU_NOT_FOUND": "Menu not found.",
+        "ERR_MENU_ALREADY_EXISTS": "Menu with the same name already exists.",
+        "ERR_DIET_NOT_FOUND": "Diet not found.",
+        "ERR_DIET_ALREADY_EXISTS": "Diet with the same name already exists.",
+        "ERR_DIET_INV_CATEGORY": "Invalid diet category.",
+        "ERR_SUB_NOT_FOUND": "Subscription not found.",
+        "ERR_SUB_ALREADY_EXISTS": "Subscription with the same name already exists.",
+        "SUCCESS_USER_CREATED": "User created successfully. Please check your email for verification.",
+        "SUCCESS_USER_LOGGED_IN": "User logged in successfully with {{loginType}}.",
+        "SUCCESS_EMAIL_VERIFIED": "Email verification successful.",
+        "SUCCESS_ING_ADDED": "Ingredient added to user successfully.",
+        "SUCCESS_ING_REMOVED": "Ingredient removed from user successfully.",
+        "SUCCESS_MENU_CREATED": "Menu created successfully.",
+        "SUCCESS_MENU_UPDATED": "Menu updated successfully.",
+        "SUCCESS_MENU_DELETED": "Menu deleted successfully.",
+        "SUCCESS_DIET_CREATED": "Diet created successfully.",
+        "SUCCESS_DIET_UPDATED": "Diet updated successfully.",
+        "SUCCESS_DIET_DELETED": "Diet deleted successfully.",
+        "SUCCESS_SUB_CREATED": "Subscription created successfully.",
+        "SUCCESS_SUB_UPDATED": "Subscription updated successfully.",
+        "SUCCESS_SUB_DELETED": "Subscription deleted successfully."
+    }
+}
