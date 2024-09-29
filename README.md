@@ -1,5 +1,17 @@
 # Community-Management-System
 
+## Description
+
+Goal: Create a social platform for users to form communities, share content, and interact.
+
+Features: Registration, community creation, content posting, moderation, search.
+
+Mobile Variation: Responsive design, push notifications, optimized for mobile.
+Responsive Design: Ensure the platform adapts seamlessly to different screen sizes (phones, tablets).
+Push Notifications: Send notifications for new posts, comments, or invitations.
+Optimized for Mobile: Consider touch-friendly controls and simplified navigation.
+Requirements: Performance, scalability, security, availability, usability, maintainability.
+
 ## setup
 
 ### frontend
