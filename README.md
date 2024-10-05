@@ -94,16 +94,6 @@ python manage.py migrate &&
 python manage.py runserver
 ```
 
-Note: To avoid a Cors error, make sure you include the server's served IP in the settings.py. Example
-
-```python
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "https://communiche.vercel.app",
-    "http://localhost:5173",
-]
-```
-
 ## The use of .env files
 
 We have got separate env files for client and server. Following are the details:
