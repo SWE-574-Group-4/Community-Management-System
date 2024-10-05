@@ -66,6 +66,7 @@ DB_PASSWORD=your_db_password
 DB_HOST=your_db_host
 DB_PORT=your_db_port
 ```
+
 example .env file:
 
 ```bash
@@ -102,3 +103,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 ```
+
+## The use of .env files
+
+We have got separate env files for client and server. Following are the details:
+
+- Make sure that env files is placed in the root of its domain (server, client)
+- Make sure that env files has a dot before the file name like this .env
