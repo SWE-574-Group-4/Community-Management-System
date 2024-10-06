@@ -22,17 +22,6 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 *If applicable, add screenshots to help explain your problem.*
 
-**Environment**
-*Provide details about the environment where the bug occurred. Fill in below details if applicable:*
-Device/OS: 
-Browser:
-Backend environment:
-App version:
-Database:
-
-**Priority**
-*How critical is this issue? (Low, Medium, High, Critical)*
-
 **Logs & Error Messages**
 *If available, provide logs or error messages associated with the bug (from the backend, database, or client-side logs).*
 

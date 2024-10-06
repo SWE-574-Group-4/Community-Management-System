@@ -18,12 +18,3 @@ assignees: ''
 
 **Dependencies**
 *Identify if this task is dependent on the completion of other tasks.*
-
-*Environment*
-*If this task impacts specific environments, describe them (e.g., infrastructure, specific cloud services, database, devices, or browsers).*
-
-**Priority**
-*How important is this task? (Low-Medium-High-Critical)*
-
-**Due Date**
-*Specify when this task should be completed.*
