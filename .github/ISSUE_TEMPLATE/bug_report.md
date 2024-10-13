@@ -14,10 +14,7 @@ assignees: ''
 *Provide a step-by-step guide to reproduce the bug. This helps developers to identify and replicate the issue.*
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
-
-**Actual Behavior**
-*Describe what actually happened when you encountered the bug.*
+*A clear and concise description of what you expected to happen.*
 
 **Screenshots**
 *If applicable, add screenshots to help explain your problem.*
