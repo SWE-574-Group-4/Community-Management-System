@@ -14,6 +14,11 @@ Requirements: Performance, scalability, security, availability, usability, maint
 
 ## setup
 
+### database setup
+
+- Open MySQL Workbench
+- Create a new database schema with the name `communiche_db` that does not require a password
+
 ### frontend
 
 pre-requisite: `nodejs, npm`
@@ -25,6 +30,7 @@ npm run start
 ```
 
 if you have any problems with npm install, try to run `npm install --force`
+make sure you are running commands in a terminal where you have admin rights.
 
 ### backend
 
@@ -52,8 +58,6 @@ python manage.py runserver
 
 Note: I have used mysql as database. You might need a mysql server running on your local machine. You can change the database settings in `server/communiche/settings.py` file. Also, consider .env file is needed. You can create a .env file in the root of the project and add the following lines:
 
-- Create a db with the name `communiche_db` in your mysql server
-
 ```bash
 # .env file. Make sure to ask for the .env file from the project owner
 DB_NAME=your_db_name
@@ -63,8 +67,36 @@ DB_HOST=your_db_host
 DB_PORT=your_db_port
 ```
 
+example .env file:
+
+```bash
+# Server Configuration
+BASE_URL=http://localhost:8000
+PORT=8000
+NODE_ENV=development
+
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=communiche_db
+DB_PORT=3306
+
+# Client Configuration
+CLIENT_URL=http://localhost:5173
+
+PRODUCTION_CLIENT_URL=https://communiche.vercel.app
+```
+
 ```bash
 python manage.py makemigrations &&
 python manage.py migrate &&
 python manage.py runserver
 ```
+
+## The use of .env files
+
+We have got separate env files for client and server. Following are the details:
+
+- Make sure that env files is placed in the root of its domain (server, client)
+- Make sure that env files has a dot before the file name like this .env
