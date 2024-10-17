@@ -12,6 +12,9 @@ assignees: ''
 
 **Subtasks**
 *List any subtasks that are part of this task.*
+- [ ] ...
+- [ ] ...
+- [ ] ...
 
 **Deliverables**
 *What specific outcomes or deliverables are expected from completing this task?*
