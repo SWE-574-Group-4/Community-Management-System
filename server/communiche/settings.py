@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--x&acod-6vwu^!_s1t_(9*x!79=abpd+)ypt5@wg9)5v6aqcz@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
+ALLOWED_HOSTS = ["my-backend-container", "127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
 
 
 # Application definition
