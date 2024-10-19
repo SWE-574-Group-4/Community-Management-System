@@ -14,7 +14,10 @@ const Header = (props: HeaderProps) => {
     const { headerStart, headerEnd, headerMiddle, className, container } = props
 
     return (
-        <header className={classNames('header', className)}>
+        <header
+            className={classNames('header', className)}
+            style={{ zIndex: 1000 }}
+        >
             <div
                 className={classNames(
                     'header-wrapper',
