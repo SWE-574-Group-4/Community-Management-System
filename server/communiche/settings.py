@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--x&acod-6vwu^!_s1t_(9*x!79=abpd+)ypt5@wg9)5v6aqcz@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
+ALLOWED_HOSTS = ["34.247.178.72", "my-backend-container", "127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
 
 
 # Application definition
@@ -55,12 +55,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "https://communiche.vercel.app",
-    "http://localhost:5173",
-    "http://34.247.178.72:5173",
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'communiche.urls'
 
@@ -95,8 +90,8 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
