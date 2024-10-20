@@ -88,5 +88,8 @@ export default defineConfig(({ mode }) => {
         define: {
             'process.env': process.env,
         },
+        preview: {
+            port: 5173,
+        },
     }
 })
