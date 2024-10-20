@@ -28,8 +28,8 @@ export default defineConfig(({ mode }) => {
                     'mask-icon.svg',
                 ],
                 manifest: {
-                    name: 'pnx',
-                    short_name: 'pnx',
+                    name: 'communiche',
+                    short_name: 'communiche',
                     theme_color: '#ffffff',
                     icons: [
                         {
