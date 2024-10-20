@@ -9,6 +9,9 @@ COPY package.json package-lock.json ./
 # Install dependencies using npm
 RUN npm install
 
+# Install the serve package globally
+RUN npm install -g serve
+
 # Copy the rest of the application files
 COPY . .
 
