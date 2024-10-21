@@ -9,17 +9,11 @@ COPY package.json package-lock.json ./
 # Install dependencies using npm
 RUN npm install
 
-# Install the serve package globally
-RUN npm install -g serve
-
 # Copy the rest of the application files
 COPY . .
 
-# Build the application for production
-RUN npm run build
-
-# Expose the port that the application will run on
+# Expose the port that Vite's development server will run on
 EXPOSE 5173
 
-# Serve the built files using serve
-CMD ["serve", "-s", "build", "-l", "5173"]
+# Run the Vite development server
+CMD ["npm", "run", "start"]
