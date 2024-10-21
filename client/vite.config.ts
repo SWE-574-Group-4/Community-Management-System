@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
@@ -18,7 +17,6 @@ export default defineConfig(({ mode }) => {
                     plugins: ['babel-plugin-macros'],
                 },
             }),
-
             dynamicImport(),
             VitePWA({
                 registerType: 'autoUpdate',
@@ -90,6 +88,13 @@ export default defineConfig(({ mode }) => {
         },
         preview: {
             port: 5173,
+        },
+        server: {
+            cors: {
+                origin: '*', // Allow all origins
+                methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
+                allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+            },
         },
     }
 })
