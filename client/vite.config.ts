@@ -11,6 +11,7 @@ dotenv.config()
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
     return {
+        base: '/',
         plugins: [
             react({
                 babel: {
@@ -62,7 +63,7 @@ export default defineConfig(({ mode }) => {
                                     `${process.env.REACT_APP_API_BASE_URL}`
                                 )
                             },
-                            handler: 'CacheFirst' as const,
+                            handler: 'CacheFirst',
                             options: {
                                 cacheName: 'api-cache',
                                 cacheableResponse: {
