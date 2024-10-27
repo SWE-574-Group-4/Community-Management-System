@@ -252,7 +252,7 @@ const CreateCommunity = () => {
                     )
                 }}
             </Formik>
-            <CommunitySpecificTemplates />
+            {editMode && <CommunitySpecificTemplates />}
         </div>
     )
 }
