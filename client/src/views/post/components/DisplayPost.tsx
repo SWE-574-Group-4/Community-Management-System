@@ -102,6 +102,11 @@ export default function DisplayPost({
                     {detailed && (
                         <div className="mt-5">
                             {content.map((item: _Field) => {
+                                // Exclude the title field
+                                if (item.field_name.toLowerCase() === 'title')
+                                    return null
+
+                                // For geolocation fields, handle separately
                                 if (item.field_type === 'geolocation') {
                                     const coordinates = JSON.parse(
                                         item.field_value
@@ -113,15 +118,24 @@ export default function DisplayPost({
                                         />
                                     )
                                 }
+
+                                // Render field name and value inline
                                 return (
-                                    <p key={item.field_name}>
-                                        <RenderField field={item} />
-                                    </p>
+                                    <div
+                                        key={item.field_name}
+                                        className="flex items-center"
+                                    >
+                                        <strong>{item.field_name}: </strong>
+                                        <span className="ml-2">
+                                            <RenderField field={item} />
+                                        </span>
+                                    </div>
                                 )
                             })}
                         </div>
                     )}
                 </div>
+
                 <div className="footer flex justify-between">
                     <p>
                         Posted by
