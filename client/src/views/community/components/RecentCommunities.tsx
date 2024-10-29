@@ -28,9 +28,14 @@ export default function RecentCommunities() {
         <div>
             <h3>Recent Communities</h3>
             <Card className="mt-3 h-75 overflow-auto cursor-pointer">
-                {renderedCommunities.map((community) => (
-                    <RecentCommunity key={community.id} community={community} />
-                ))}
+                {renderedCommunities.map((community) =>
+                    community.is_public || community.is_member ? (
+                        <RecentCommunity
+                            key={community.id}
+                            community={community}
+                        />
+                    ) : null
+                )}
                 <ActionLink to={'/communities'}>{'See all'}</ActionLink>
             </Card>
         </div>
