@@ -50,6 +50,23 @@ const MembersTable = ({
         () => dispatch(toggleFetchTrigger())
     )
 
+    async function changeUserRoles(
+        id: number,
+        rowId: number,
+        userId: number,
+        handleChangeRole: any
+    ) {
+        try {
+            // changes the role of the current user to -1, role: owner
+            await handleChangeRole(id, rowId, -1)
+
+            // changes the role of the current user to 0, role: user
+            await handleChangeRole(id, userId, 0)
+        } catch (error) {
+            console.error('Error changing roles:', error)
+        }
+    }
+
     const columns: ColumnDef<any>[] = [
         {
             header: 'Name',
@@ -158,14 +175,14 @@ const MembersTable = ({
                                 // disabled={is_owner}
                                 onClick={() => {
                                     if (
-                                        typeof handleTransferOwnership ===
-                                        'function'
+                                        typeof handleChangeRole === 'function'
                                     ) {
-                                        handleTransferOwnership({
-                                            community_id: id,
-                                            user_id: userId,
-                                            new_owner_id: row.id,
-                                        })
+                                        changeUserRoles(
+                                            id,
+                                            row.id,
+                                            userId,
+                                            handleChangeRole
+                                        )
                                     }
                                 }}
                             >
