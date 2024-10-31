@@ -19,3 +19,7 @@
 .toast {
     z-index: 4000;
 }
+
+.custom-mb-8 {
+    margin-bottom: 0.5rem;
+}
