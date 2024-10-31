@@ -112,9 +112,13 @@ export default function DisplayPost({
                         <div className="mt-5">
                             {content.map((item: _Field) => {
                                 if (item.field_type === 'geolocation') {
-                                    const coordinates = JSON.parse(
-                                        item.field_value
-                                    )
+                                    let coordinates
+                                    try {
+                                        coordinates = JSON.parse(item.field_value)
+                                    } catch (error) {
+                                        console.error("Error parsing Coordinates: ", error)
+                                        coordinates = [40.7371776, 31.5850752]; //this will be the default values (Istanbul)
+                                    }
 
                                     return (
                                         <RenderGeo coordinates={coordinates} />
