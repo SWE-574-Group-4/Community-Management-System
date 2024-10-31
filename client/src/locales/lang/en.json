@@ -92,6 +92,7 @@
         "rememberMe": "Remember Me",
         "forgotPassword": "Forgot password?",
         "signUpMessage": "And let's start your free trial ",
+        "signUpMandatoryFields": " * Mandatory Fields ",
         "createAccount": "Creating account...",
         "haveAccount": "Already have an account?",
         "errors": {
@@ -113,6 +114,17 @@
             "lastname": "Last Name",
             "username": "Username",
             "password": "Password",
+            "email": "Email",
+            "dob": "Date of Birth",
+            "country": "Country",
+            "phone": "Phone Number",
+            "short_bio": "Short Bio"
+        },
+        "labels": {
+            "firstname": "* First Name",
+            "lastname": "* Last Name",
+            "username": "* Username",
+            "password": "* Password",
             "email": "Email",
             "dob": "Date of Birth",
             "country": "Country",
