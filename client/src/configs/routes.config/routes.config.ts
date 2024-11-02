@@ -50,16 +50,16 @@ export const protectedRoutes = [
             headerContainer: true,
         },
     },
-    {
-        key: 'post',
-        path: '/post/:id',
-        component: lazy(() => import('@/views/post/PostView')),
-        authority: [],
-        meta: {
-            header: i18n.t('nav.post'),
-            headerContainer: true,
-        },
-    },
+    // {
+    //     key: 'post',
+    //     path: '/post/:id',
+    //     component: lazy(() => import('@/views/post/PostView')),
+    //     authority: [],
+    //     meta: {
+    //         header: i18n.t('nav.post'),
+    //         headerContainer: true,
+    //     },
+    // },
     {
         key: 'post',
         path: '/profile/:id',
