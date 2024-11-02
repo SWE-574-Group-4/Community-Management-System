@@ -35,7 +35,7 @@ const CreateCommunity = () => {
     const [data, setData] = useState<CommunityFormModel>({
         name: '',
         description: '',
-        is_public: false,
+        is_public: true,
     })
     const cid = useParams<{ id: string }>().id
     const [editMode, setEditMode] = useState(false)
@@ -223,9 +223,7 @@ const CreateCommunity = () => {
                                             component={Switcher}
                                         />
                                         <div className="ml-3">
-                                            {values.is_public
-                                                ? 'Public'
-                                                : 'Private'}
+                                            {'Public'}
                                         </div>
                                     </div>
                                 </FormRow>
@@ -252,7 +250,7 @@ const CreateCommunity = () => {
                     )
                 }}
             </Formik>
-            <CommunitySpecificTemplates />
+            {editMode && <CommunitySpecificTemplates />}
         </div>
     )
 }
