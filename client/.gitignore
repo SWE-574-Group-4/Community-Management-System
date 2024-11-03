@@ -24,3 +24,4 @@ build
 *.sw?
 .vite-cache/
 .env
+*.DS_Store
