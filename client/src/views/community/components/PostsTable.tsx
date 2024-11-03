@@ -21,10 +21,6 @@ const PostsTable = ({ posts }: { posts: PostData[] }) => {
             () => dispatch(toggleFetchTrigger())
         )
 
-    const handleClick = (row: any) => {
-        navigate(`/post/${row.original.id}`)
-    }
-
     return (
         <div>
             {posts.map((post) => (
