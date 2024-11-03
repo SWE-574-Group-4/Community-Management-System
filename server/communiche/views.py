@@ -390,6 +390,11 @@ def change_user_role(request, community_id, user_id):
     if community_user:
         community_user.role = role
         community_user.save()
+
+        if int(role) == -1:
+            community.owner = user
+            community.save()
+        
         return Response(status=status.HTTP_200_OK)
     return Response({'message': 'User is not a member of the community'}, status=status.HTTP_400_BAD_REQUEST)
 
