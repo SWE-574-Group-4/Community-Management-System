@@ -125,37 +125,40 @@ const MembersTable = ({
                         </Button>
                     )
                 } else if (row.role === 0) {
-                    return (
-                        <div className="flex justify-between items-center">
-                            <Button
-                                // disabled={is_owner}
-                                className="bg-blue-500 text-white"
-                                size="sm"
-                                variant="solid"
-                                onClick={() => {
-                                    if (
-                                        typeof handleChangeRole === 'function'
-                                    ) {
-                                        handleChangeRole(id, row.id, 1)
-                                    }
-                                }}
-                            >
-                                Assign Moderator
-                            </Button>
-                            <ActionLink
-                                onClick={() => {
-                                    if (
-                                        typeof handleLeaveCommunity ===
-                                        'function'
-                                    ) {
-                                        handleLeaveCommunity(id, row.id, 0)
-                                    }
-                                }}
-                            >
-                                Remove
-                            </ActionLink>
-                        </div>
-                    )
+                    if (row.id !== userId) {
+                        return (
+                            <div className="flex justify-between items-center">
+                                <Button
+                                    // disabled={is_owner}
+                                    className="bg-blue-500 text-white"
+                                    size="sm"
+                                    variant="solid"
+                                    onClick={() => {
+                                        if (
+                                            typeof handleChangeRole ===
+                                            'function'
+                                        ) {
+                                            handleChangeRole(id, row.id, 1)
+                                        }
+                                    }}
+                                >
+                                    Assign Moderator
+                                </Button>
+                                <ActionLink
+                                    onClick={() => {
+                                        if (
+                                            typeof handleLeaveCommunity ===
+                                            'function'
+                                        ) {
+                                            handleLeaveCommunity(id, row.id, 0)
+                                        }
+                                    }}
+                                >
+                                    Remove
+                                </ActionLink>
+                            </div>
+                        )
+                    }
                 } else
                     return (
                         <div className="flex justify-between items-center">
