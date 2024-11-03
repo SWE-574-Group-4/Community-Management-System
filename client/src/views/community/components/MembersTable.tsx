@@ -50,7 +50,7 @@ const MembersTable = ({
         () => dispatch(toggleFetchTrigger())
     )
 
-    async function changeUserRoles(
+    async function changeOwner(
         id: number,
         rowId: number,
         userId: number,
@@ -180,7 +180,7 @@ const MembersTable = ({
                                     if (
                                         typeof handleChangeRole === 'function'
                                     ) {
-                                        changeUserRoles(
+                                        changeOwner(
                                             id,
                                             row.id,
                                             userId,
