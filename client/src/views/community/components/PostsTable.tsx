@@ -1,10 +1,7 @@
 // src/views/community/components/PostsTable.tsx
 import { useState } from 'react'
-import DataTable from '@/components/shared/DataTable'
-import type { ColumnDef } from '@/components/shared/DataTable'
 import { apiAcceptRejectRequest } from '@/services/CommunityService'
 import { toggleFetchTrigger } from '@/store'
-import { formatDate, truncateText } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { useDispatch } from 'react-redux'
 import { PostData } from '@/@types/post'
