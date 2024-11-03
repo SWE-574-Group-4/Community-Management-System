@@ -590,7 +590,8 @@ def search(request):
 
     community_serializer = CommunitySerializer(communities, many=True)
     post_serializer = PostSerializer(posts, many=True)
-
+    
+    
     return Response({
         'communities': community_serializer.data,
         'posts': post_serializer.data,
