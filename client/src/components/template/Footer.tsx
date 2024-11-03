@@ -35,7 +35,7 @@ const FooterContent = () => {
                 <a
                     className="text-gray"
                     href="/#"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={handleNavigate('/privacy-policy')}  // Navigate to Privacy Policy
                 >
                     {t('application.privacy_policy')}
                 </a>
