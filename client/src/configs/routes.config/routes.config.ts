@@ -129,6 +129,16 @@ export const protectedRoutes = [
         },
     },
     {
+        key: 'privacy',
+        path: '/privacy-policy',
+        component: lazy(() => import('@/views/UserAgreements/PrivacyPolicy')),
+        authority: [],
+        meta: {
+            header: 'Privacy Policy',
+            headerContainer: true,
+        },
+    },
+    {
         key: 'collapseMenu.item1',
         path: '/collapse-menu-item-view-1',
         component: lazy(() => import('@/views/demo/CollapseMenuItemView1')),
