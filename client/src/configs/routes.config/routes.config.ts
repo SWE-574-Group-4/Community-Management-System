@@ -50,16 +50,16 @@ export const protectedRoutes = [
             headerContainer: true,
         },
     },
-    {
-        key: 'post',
-        path: '/post/:id',
-        component: lazy(() => import('@/views/post/PostView')),
-        authority: [],
-        meta: {
-            header: i18n.t('nav.post'),
-            headerContainer: true,
-        },
-    },
+    // {
+    //     key: 'post',
+    //     path: '/post/:id',
+    //     component: lazy(() => import('@/views/post/PostView')),
+    //     authority: [],
+    //     meta: {
+    //         header: i18n.t('nav.post'),
+    //         headerContainer: true,
+    //     },
+    // },
     {
         key: 'post',
         path: '/profile/:id',
@@ -115,6 +115,16 @@ export const protectedRoutes = [
         authority: [],
         meta: {
             header: 'Communities',
+            headerContainer: true,
+        },
+    },
+    {
+        key: 'terms',
+        path: '/terms-and-conditions',
+        component: lazy(() => import('@/views/UserAgreements/TermsAndConditions')),
+        authority: [],
+        meta: {
+            header: 'Terms and Conditions',
             headerContainer: true,
         },
     },

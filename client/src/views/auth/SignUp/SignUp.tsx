@@ -1,3 +1,4 @@
+import Line from '@/components/ui/Progress/Line'
 import SignUpForm from './SignUpForm'
 import { useTranslation } from 'react-i18next'
 
@@ -5,9 +6,11 @@ const SignUp = () => {
     const { t } = useTranslation()
     return (
         <>
-            <div className="mb-8">
+            <div className="custom-mb-8">
                 <h3 className="mb-1">{t('signIn.signUp')}</h3>
                 <p>{t('signUp.signUpMessage')}</p>
+                <br></br>
+                <p>{t('signUp.signUpMandatoryFields')}</p>
             </div>
             <SignUpForm disableSubmit={false} />
         </>

@@ -5,11 +5,10 @@ import {
     apiDeletePost,
     apiGetComments,
     apiLikePost,
-    apiPost,
     apiPostComment,
 } from '@/services/PostService'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
-import { formatDate, truncateText } from '@/utils/helpers'
+import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { FaCommentAlt } from 'react-icons/fa'
 import { HiOutlineThumbUp, HiThumbUp, HiUserGroup } from 'react-icons/hi'
@@ -30,7 +29,7 @@ export default function DisplayPost({
     detailed?: boolean
 }) {
     const [comment, setComment] = useState('')
-    const [showComment, setShowComment] = useState(false)
+    const [showComment, setShowComment] = useState(true)
     const [showComments, setShowComments] = useState(showComment && detailed)
     const fetchTrigger = useAppSelector(
         (state) => state.community.community.fetchTrigger
@@ -227,8 +226,8 @@ export default function DisplayPost({
             )}
 
             {showComments &&
-                comments.data &&
-                comments.data.map((item: CommentResponseType) => {
+                comments?.data &&
+                comments?.data.map((item: CommentResponseType) => {
                     return <Comment comment={item} />
                 })}
         </div>
