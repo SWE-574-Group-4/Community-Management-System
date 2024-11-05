@@ -1,15 +1,25 @@
 @import "./assets/styles/app.css";
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 0px;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0px;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
 }
 
 /* Optional: show scrollbar only when hovering */
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-    background: #888; 
+    background: #888;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555; 
+    background: #555;
+}
+
+.toast {
+    z-index: 4000;
+}
+
+.custom-mb-8 {
+    margin-bottom: 0.5rem;
 }

@@ -119,6 +119,28 @@ export const protectedRoutes = [
         },
     },
     {
+        key: 'terms',
+        path: '/terms-and-conditions',
+        component: lazy(
+            () => import('@/views/UserAgreements/TermsAndConditions')
+        ),
+        authority: [],
+        meta: {
+            header: 'Terms and Conditions',
+            headerContainer: true,
+        },
+    },
+    {
+        key: 'privacy',
+        path: '/privacy-policy',
+        component: lazy(() => import('@/views/UserAgreements/PrivacyPolicy')),
+        authority: [],
+        meta: {
+            header: 'Privacy Policy',
+            headerContainer: true,
+        },
+    },
+    {
         key: 'collapseMenu.item1',
         path: '/collapse-menu-item-view-1',
         component: lazy(() => import('@/views/demo/CollapseMenuItemView1')),

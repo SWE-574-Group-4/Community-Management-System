@@ -126,7 +126,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                         <FormContainer>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.firstname') ||
+                                    t('signUp.labels.firstname') ||
                                     'First Name'
                                 }
                                 invalid={errors.firstname && touched.firstname}
@@ -144,7 +144,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.lastname') ||
+                                    t('signUp.labels.lastname') ||
                                     'Last Name'
                                 }
                                 invalid={errors.lastname && touched.lastname}
@@ -162,7 +162,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.username') ||
+                                    t('signUp.labels.username') ||
                                     'Username'
                                 }
                                 invalid={errors.username && touched.username}
@@ -180,7 +180,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.password') ||
+                                    t('signUp.labels.password') ||
                                     'Password'
                                 }
                                 invalid={errors.password && touched.password}
@@ -197,7 +197,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.email') || 'Email'
+                                    t('signUp.labels.email') || 'Email'
                                 }
                                 invalid={errors.email && touched.email}
                                 errorMessage={errors.email}
@@ -214,7 +214,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.dob') ||
+                                    t('signUp.labels.dob') ||
                                     'Date of Birth'
                                 }
                                 invalid={errors.dob && touched.dob}
@@ -232,7 +232,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.country') ||
+                                    t('signUp.labels.country') ||
                                     'Country'
                                 }
                                 invalid={errors.country && touched.country}
@@ -250,7 +250,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.phone') ||
+                                    t('signUp.labels.phone') ||
                                     'Phone Number'
                                 }
                                 invalid={errors.phone && touched.phone}
@@ -268,7 +268,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                             </FormItem>
                             <FormItem
                                 label={
-                                    t('signUp.placeholders.short_bio') ||
+                                    t('signUp.labels.short_bio') ||
                                     'Short Bio'
                                 }
                                 invalid={errors.short_bio && touched.short_bio}
