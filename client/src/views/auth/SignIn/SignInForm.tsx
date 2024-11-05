@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 
 interface SignInFormProps extends CommonProps {
     disableSubmit?: boolean
-    forgotPasswordUrl?: string
+    // forgotPasswordUrl?: string
     signUpUrl?: string
 }
 
@@ -28,7 +28,7 @@ const SignInForm = (props: SignInFormProps) => {
     const {
         disableSubmit = false,
         className,
-        forgotPasswordUrl = '/forgot-password',
+        // forgotPasswordUrl = '/forgot-password',
         signUpUrl = '/sign-up',
     } = props
 
@@ -131,9 +131,9 @@ const SignInForm = (props: SignInFormProps) => {
                                 >
                                     {t('signIn.rememberMe')}
                                 </Field>
-                                <ActionLink to={forgotPasswordUrl}>
+                                {/* <ActionLink to={forgotPasswordUrl}>
                                     {t('signIn.forgotPassword')}
-                                </ActionLink>
+                                </ActionLink> */}
                             </div>
                             <Button
                                 block
