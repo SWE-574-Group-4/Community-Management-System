@@ -17,7 +17,6 @@ build
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
@@ -25,3 +24,4 @@ build
 *.sw?
 .vite-cache/
 .env
+*.DS_Store

@@ -1,3 +1,4 @@
+// src/post/components/DisplayPost.tsx
 import { CommentResponseType, PostData, _Field } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
 import { Button, Card, Input } from '@/components/ui'
@@ -20,13 +21,16 @@ import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
 import RenderField from './RenderField'
 import RenderGeo from './RenderGeo'
+import { String } from 'lodash'
 
 export default function DisplayPost({
     post,
     detailed = false,
+    showCommunityName = true, // New prop with a default value
 }: {
     post: PostData
     detailed?: boolean
+    showCommunityName?: boolean // Add type for new prop
 }) {
     const [comment, setComment] = useState('')
     const [showComment, setShowComment] = useState(true)
@@ -77,23 +81,17 @@ export default function DisplayPost({
     )
 
     return (
-        <div>
+        <div className="mb-8">
+            {' '}
+            {/* Add margin between posts */}
             <Card
                 className="mt-3"
                 onClick={!detailed ? handleClick : undefined}
                 bodyClass="cursor-pointer"
             >
                 <div className="header justify-between">
-                    <h3>{content[0].field_value}</h3>
-                    {detailed ? (
-                        <ActionLink
-                            to={`/community/${community.id}/details`}
-                            className="text-blue-500 flex items-center"
-                        >
-                            {community.name}
-                            <HiUserGroup className="ml-3" />
-                        </ActionLink>
-                    ) : (
+                    <h3>{content[0]?.field_value || 'No Title'}</h3>
+                    {showCommunityName && (
                         <div className="flex items-center">
                             <p className="mr-3">{community.name}</p>
                             <HiUserGroup />
@@ -101,33 +99,43 @@ export default function DisplayPost({
                     )}
                 </div>
                 <div className="body mt-5 mb-5">
-                    {/* <p>
-                        {!detailed
-                            ? truncateText(content[1].field_value, 60)
-                            : content[1].field_value}
-                    </p> */}
-
                     {detailed && (
                         <div className="mt-5">
                             {content.map((item: _Field) => {
+                                // Exclude the title field
+                                if (item.field_name.toLowerCase() === 'title')
+                                    return null
+
+                                // For geolocation fields, handle separately
                                 if (item.field_type === 'geolocation') {
                                     const coordinates = JSON.parse(
                                         item.field_value
                                     )
-
                                     return (
-                                        <RenderGeo coordinates={coordinates} />
+                                        <RenderGeo
+                                            key={item.field_name}
+                                            coordinates={coordinates}
+                                        />
                                     )
                                 }
+
+                                // Render field name and value inline
                                 return (
-                                    <p key={item.field_name}>
-                                        <RenderField field={item} />
-                                    </p>
+                                    <div
+                                        key={item.field_name}
+                                        className="flex items-center"
+                                    >
+                                        <strong>{item.field_name}: </strong>
+                                        <span className="ml-2">
+                                            <RenderField field={item} />
+                                        </span>
+                                    </div>
                                 )
                             })}
                         </div>
                     )}
                 </div>
+
                 <div className="footer flex justify-between">
                     <p>
                         Posted by
@@ -162,7 +170,6 @@ export default function DisplayPost({
                                 ({(comments && comments.data.length) ?? null})
                             </p>
                         </div>
-
                         <div className="likes flex items-center justify-between">
                             {is_liked ? (
                                 <HiThumbUp
@@ -224,7 +231,6 @@ export default function DisplayPost({
                     </Button>
                 </div>
             )}
-
             {showComments &&
                 comments?.data &&
                 comments?.data.map((item: CommentResponseType) => {
