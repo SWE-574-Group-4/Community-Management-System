@@ -50,6 +50,23 @@ const MembersTable = ({
         () => dispatch(toggleFetchTrigger())
     )
 
+    async function changeOwner(
+        id: number,
+        rowId: number,
+        userId: number,
+        handleChangeRole: any
+    ) {
+        try {
+            // changes the role of the current user to -1, role: owner
+            await handleChangeRole(id, rowId, -1)
+
+            // changes the role of the current user to 0, role: user
+            await handleChangeRole(id, userId, 0)
+        } catch (error) {
+            console.error('Error changing roles:', error)
+        }
+    }
+
     const columns: ColumnDef<any>[] = [
         {
             header: 'Name',
@@ -108,37 +125,40 @@ const MembersTable = ({
                         </Button>
                     )
                 } else if (row.role === 0) {
-                    return (
-                        <div className="flex justify-between items-center">
-                            <Button
-                                // disabled={is_owner}
-                                className="bg-blue-500 text-white"
-                                size="sm"
-                                variant="solid"
-                                onClick={() => {
-                                    if (
-                                        typeof handleChangeRole === 'function'
-                                    ) {
-                                        handleChangeRole(id, row.id, 1)
-                                    }
-                                }}
-                            >
-                                Assign Moderator
-                            </Button>
-                            <ActionLink
-                                onClick={() => {
-                                    if (
-                                        typeof handleLeaveCommunity ===
-                                        'function'
-                                    ) {
-                                        handleLeaveCommunity(id, row.id, 0)
-                                    }
-                                }}
-                            >
-                                Remove
-                            </ActionLink>
-                        </div>
-                    )
+                    if (row.id !== userId) {
+                        return (
+                            <div className="flex justify-between items-center">
+                                <Button
+                                    // disabled={is_owner}
+                                    className="bg-blue-500 text-white"
+                                    size="sm"
+                                    variant="solid"
+                                    onClick={() => {
+                                        if (
+                                            typeof handleChangeRole ===
+                                            'function'
+                                        ) {
+                                            handleChangeRole(id, row.id, 1)
+                                        }
+                                    }}
+                                >
+                                    Assign Moderator
+                                </Button>
+                                <ActionLink
+                                    onClick={() => {
+                                        if (
+                                            typeof handleLeaveCommunity ===
+                                            'function'
+                                        ) {
+                                            handleLeaveCommunity(id, row.id, 0)
+                                        }
+                                    }}
+                                >
+                                    Remove
+                                </ActionLink>
+                            </div>
+                        )
+                    }
                 } else
                     return (
                         <div className="flex justify-between items-center">
@@ -158,14 +178,14 @@ const MembersTable = ({
                                 // disabled={is_owner}
                                 onClick={() => {
                                     if (
-                                        typeof handleTransferOwnership ===
-                                        'function'
+                                        typeof handleChangeRole === 'function'
                                     ) {
-                                        handleTransferOwnership({
-                                            community_id: id,
-                                            user_id: userId,
-                                            new_owner_id: row.id,
-                                        })
+                                        changeOwner(
+                                            id,
+                                            row.id,
+                                            userId,
+                                            handleChangeRole
+                                        )
                                     }
                                 }}
                             >

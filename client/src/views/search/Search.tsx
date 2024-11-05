@@ -9,6 +9,10 @@ import { PostData } from '@/@types/post'
 import TableSearch from '../account/Settings/components/Search/TableSearch'
 import { apiGetDataTypes } from '@/services/CommunityService'
 import { DatePickerRangeValue } from '@/components/ui/DatePicker/DatePickerRange'
+// User search
+import User from './components/User'
+import { UserResponseType } from '@/@types/user'
+
 
 const { DatePickerRange } = DatePicker
 
@@ -55,7 +59,7 @@ const Search = () => {
     const [searchType, setSearchType] = useState('community')
 
     const onChange = (val: string) => {
-        setSearchType(val)
+            setSearchType(val)
     }
 
     const handleInputChange = useCallback(
@@ -76,7 +80,7 @@ const Search = () => {
                 // Handle any errors here
             }
         },
-        [checkboxList, searchType] // Add the missing dependencies: range
+        [checkboxList, searchType, range] // Add the missing dependencies: range
     )
 
     useEffect(() => {
@@ -160,6 +164,15 @@ const Search = () => {
                     {data.data.map((post: PostData) => {
                         return <Post post={post} />
                     })}
+                </Card>
+            )}
+                    {/* User Results */}
+            {searchType === 'user' && data && (
+                <Card className="mt-5">
+                    <h5>Users:</h5>
+                    {data.data.map((user: UserResponseType) => (
+                        <User key={user.id} user={user} />
+                    ))}
                 </Card>
             )}
         </div>
