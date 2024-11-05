@@ -7,35 +7,55 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Community',
+            name="Community",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('description', models.CharField(max_length=600)),
-                ('created_at', models.DateTimeField()),
-                ('updated_at', models.DateTimeField()),
-                ('isPublic', models.BooleanField(default=False, null=True)),
-                ('reputationRating', models.DecimalField(decimal_places=1, default=0, max_digits=10, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("description", models.CharField(max_length=600)),
+                ("created_at", models.DateTimeField()),
+                ("updated_at", models.DateTimeField()),
+                ("isPublic", models.BooleanField(default=False, null=True)),
+                (
+                    "reputationRating",
+                    models.DecimalField(
+                        decimal_places=1, default=0, max_digits=10, null=True
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='User',
+            name="User",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('firstname', models.CharField(max_length=200)),
-                ('lastname', models.CharField(max_length=200)),
-                ('username', models.CharField(max_length=50)),
-                ('password', models.CharField(max_length=50)),
-                ('email', models.CharField(max_length=200, null=True)),
-                ('dob', models.DateTimeField(null=True)),
-                ('country', models.CharField(max_length=200, null=True)),
-                ('phone', models.CharField(max_length=20, null=True)),
-                ('short_bio', models.CharField(max_length=600, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("firstname", models.CharField(max_length=200)),
+                ("lastname", models.CharField(max_length=200)),
+                ("username", models.CharField(max_length=50)),
+                ("password", models.CharField(max_length=50)),
+                ("email", models.CharField(max_length=200, null=True)),
+                # ('dob', models.DateTimeField(null=True)),
+                ("country", models.CharField(max_length=200, null=True)),
+                ("phone", models.CharField(max_length=20, null=True)),
+                ("short_bio", models.CharField(max_length=600, null=True)),
             ],
         ),
     ]

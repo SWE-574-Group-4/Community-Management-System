@@ -104,7 +104,6 @@
             "confirmPassword": "Passwords do not match",
             "firstname": "Please enter your firstname",
             "lastname": "Please enter your lastname",
-            "dob": "Please enter your date of birth",
             "country": "Please enter your country",
             "phone": "Please enter your phone number",
             "shortBio": "Please enter your short bio"
@@ -115,7 +114,6 @@
             "username": "Username",
             "password": "Password",
             "email": "Email",
-            "dob": "Date of Birth",
             "country": "Country",
             "phone": "Phone Number",
             "short_bio": "Short Bio"
@@ -126,7 +124,6 @@
             "username": "* Username",
             "password": "* Password",
             "email": "Email",
-            "dob": "Date of Birth",
             "country": "Country",
             "phone": "Phone Number",
             "short_bio": "Short Bio"

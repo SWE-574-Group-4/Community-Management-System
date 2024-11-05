@@ -31,7 +31,7 @@ export default function Profile() {
         userId,
     ])
 
-    const { firstname, lastname, email, username, dob, country, short_info } =
+    const { firstname, lastname, email, username, country, short_info } =
         userInfo?.data || {}
 
     return (
@@ -47,7 +47,7 @@ export default function Profile() {
                 />
                 <CustomerInfoField title="Email" value={email} />
                 <CustomerInfoField title="Username" value={username} />
-                <CustomerInfoField title="Date of birth" value={dob} />
+                {/* <CustomerInfoField title="Date of birth" value={dob} /> */}
                 <CustomerInfoField title="Country" value={country} />
                 <CustomerInfoField title="Short Info" value={short_info} />
 
