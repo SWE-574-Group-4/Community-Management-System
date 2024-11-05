@@ -24,9 +24,9 @@ export type SignUpCredential = {
     short_bio?: string
 }
 
-export type ForgotPassword = {
-    email: string
-}
+// export type ForgotPassword = {
+//     email: string
+// }
 
 export type ResetPassword = {
     password: string
