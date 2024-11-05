@@ -102,7 +102,7 @@ function useAuth() {
             setUser({
                 id: -1,
                 country: '',
-                dob: '',
+                // dob: '',
                 email: '',
                 firstname: '',
                 lastname: '',

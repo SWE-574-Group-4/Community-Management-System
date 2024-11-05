@@ -10,14 +10,14 @@ export async function getUsers() {
 }
 
 export async function updateProfile(data: UserResponseType) {
-    const { id, dob, ..._data } = data
+    const { id, ..._data } = data
 
     return ApiService.fetchData({
         url: `/users/${id}/`,
         method: 'put',
         data: {
             ..._data,
-            dob: dob ? dayjs(dob).format('YYYY-MM-DDTHH:mm:ss') : null,
+            // dob: dob ? dayjs(dob).format('YYYY-MM-DDTHH:mm:ss') : null,
         },
     })
 }

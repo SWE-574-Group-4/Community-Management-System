@@ -5,7 +5,7 @@ import { UserResponseType } from '@/@types/user'
 const initialState: UserResponseType = {
     id: -1,
     country: '',
-    dob: '',
+    // dob: '',
     email: '',
     firstname: '',
     lastname: '',

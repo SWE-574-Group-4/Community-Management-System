@@ -23,7 +23,7 @@ type SignUpFormSchema = {
         | 'username'
         | 'password'
         | 'email'
-        | 'dob'
+        // | 'dob'
         | 'country'
         | 'phone'
         | 'short_bio']: string
@@ -46,7 +46,7 @@ const SignUpForm = (props: SignUpFormProps) => {
             t('signUp.errors.password') || 'Please enter your password'
         ),
         email: Yup.string().email().nullable(),
-        dob: Yup.string().nullable(),
+        // dob: Yup.string().nullable(),
         country: Yup.string().nullable(),
         phone: Yup.string().nullable(),
         short_bio: Yup.string().nullable(),
@@ -68,7 +68,7 @@ const SignUpForm = (props: SignUpFormProps) => {
             username,
             password,
             email,
-            dob,
+            // dob,
             country,
             phone,
             short_bio,
@@ -80,7 +80,7 @@ const SignUpForm = (props: SignUpFormProps) => {
             username,
             password,
             email,
-            dob,
+            // dob,
             country,
             phone,
             short_bio,
@@ -107,7 +107,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                     username: '',
                     password: '',
                     email: '',
-                    dob: '',
+                    // dob: '',
                     country: '',
                     phone: '',
                     short_bio: '',
@@ -212,7 +212,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     component={Input}
                                 />
                             </FormItem>
-                            <FormItem
+                            {/* <FormItem
                                 label={
                                     t('signUp.labels.dob') ||
                                     'Date of Birth'
@@ -229,7 +229,7 @@ const SignUpForm = (props: SignUpFormProps) => {
                                     ).toLowerCase()}
                                     component={Input}
                                 />
-                            </FormItem>
+                            </FormItem> */}
                             <FormItem
                                 label={
                                     t('signUp.labels.country') ||
