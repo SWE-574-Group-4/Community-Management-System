@@ -578,7 +578,7 @@ def delete_post(request, post_id):
 @api_view(['GET'])
 def posts(request):
     posts = Posts.objects.all().order_by('-created_at')
-    serializer = PostSerializer(posts, many=True)
+    serializer = PostSerializer(posts, context = {'request': request}, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
