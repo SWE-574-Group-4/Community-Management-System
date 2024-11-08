@@ -16,10 +16,13 @@ export async function apiPost(
     })
 }
 
-export async function apiGetPosts() {
+export async function apiGetPosts(userId?: string) {
     return ApiService.fetchData({
-        url: '/posts/',
+        url: `/posts/`,
         method: 'get',
+        params: {
+            user_id: userId,
+        },
     })
 }
 
