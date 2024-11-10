@@ -148,3 +148,12 @@ class UserBadge(models.Model):
         # Check if user already has this badge
         if not cls.objects.filter(user=user, badge=badge).exists():
             cls.objects.create(user=user, badge=badge)
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"

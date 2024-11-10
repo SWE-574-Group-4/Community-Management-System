@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Badge, Template, User, Posts, UserBadge
+from .models import Badge, Notification, Template, User, Posts, UserBadge
 from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -572,6 +572,7 @@ def post(request):
     for badge in Badge.objects.all():
         if badge.is_criteria_met(user):
             UserBadge.assign_badge(user, badge)
+            send_in_app_notification(user, badge)
     
     return Response(status=status.HTTP_201_CREATED)
 
@@ -779,3 +780,17 @@ def advance_search(request):
             'data': user_serializer.data,
             'total': len(user_serializer.data)
         })
+
+def send_in_app_notification(user, badge):
+    """Creates a notification for a user when they earn a new badge."""
+    Notification.objects.create(
+        user=user,
+        message=f"Congratulations! You've earned the {badge.name} badge.",
+    )
+
+@api_view(['GET'])
+def get_user_notifications(request, user_id):
+    notifications = Notification.objects.filter(user_id=user_id, is_read=False)
+    # Optionally, serialize notifications to return as JSON
+    notifications_data = [{"id": n.id, "message": n.message, "created_at": n.created_at} for n in notifications]
+    return Response(notifications_data)
