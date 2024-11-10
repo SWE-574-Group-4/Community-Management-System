@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.db.models import JSONField
 from django.contrib.auth.hashers import check_password
@@ -120,3 +121,30 @@ class PComment(models.Model):
     content = models.CharField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Badge(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    tier = models.CharField(max_length=20)
+    criteria = models.JSONField()
+    icon = models.CharField(max_length=255, default="default_icon.png")  # Set your default icon path here
+
+
+    def is_criteria_met(self, user):
+        # Example check for criteria - adjust this based on your app's needs
+        user_posts_count = user.posts_set.count()
+        user_upvotes_received = sum(post.likes.count() for post in user.posts_set.all())
+        
+        return (user_posts_count >= self.criteria.get("posts_count", 0) and
+                user_upvotes_received >= self.criteria.get("upvotes_received", 0))
+
+class UserBadge(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(default=timezone.now)
+
+    @classmethod
+    def assign_badge(cls, user, badge):
+        # Check if user already has this badge
+        if not cls.objects.filter(user=user, badge=badge).exists():
+            cls.objects.create(user=user, badge=badge)

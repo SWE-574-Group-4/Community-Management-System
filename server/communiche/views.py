@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Template, User, Posts
+from .models import Badge, Template, User, Posts, UserBadge
 from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -53,6 +53,11 @@ def user_detail(request, id):
         # Get the posts that the user has posted
         posts = Posts.objects.filter(user=user).values('id', 'content')
         user_data['posts'] = list(posts)
+
+        # Fetch and add badges
+        user_badges = UserBadge.objects.filter(user=user).select_related('badge')
+        badges_data = [{'badge_name': ub.badge.name, 'earned_at': ub.earned_at} for ub in user_badges]
+        user_data['badges'] = badges_data
         
         return Response(user_data)
     
@@ -562,6 +567,11 @@ def post(request):
     # Update the community's updated_at field
     community.updated_at = datetime.now()
     community.save()
+
+    # Check badge criteria for this user
+    for badge in Badge.objects.all():
+        if badge.is_criteria_met(user):
+            UserBadge.assign_badge(user, badge)
     
     return Response(status=status.HTTP_201_CREATED)
 
