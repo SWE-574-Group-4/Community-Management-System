@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Badge, Notification, Template, User, Posts, UserBadge
-from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
+from .serializers import TemplateSerializer, UserBadgeDetailedSerializer, UserBadgeSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, BadgeSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -794,3 +794,34 @@ def get_user_notifications(request, user_id):
     # Optionally, serialize notifications to return as JSON
     notifications_data = [{"id": n.id, "message": n.message, "created_at": n.created_at} for n in notifications]
     return Response(notifications_data)
+
+@api_view(['GET'])
+def get_user_badges(request):
+    user_id = request.query_params.get('user_id')
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    user_badges = UserBadge.objects.filter(user=user)
+    serializer = UserBadgeDetailedSerializer(user_badges, many=True)
+    return Response(serializer.data)
+
+# Get all available badges (for admins or others)
+@api_view(['GET'])
+def get_all_badges(request):
+    badges = Badge.objects.all()
+    serializer = BadgeSerializer(badges, many=True)
+    return Response(serializer.data)
+
+# Assign badge to user (admin or system logic)
+@api_view(['POST'])
+def assign_badge_to_user(request, user_id, badge_id):
+    user = User.objects.get(id=user_id)
+    badge = Badge.objects.get(id=badge_id)
+    
+    # Example: Here, you can use your logic to assign a badge to the user
+    UserBadge.assign_badge(user, badge)
+    
+    return Response({"message": f"Badge {badge.name} assigned to user {user.username}"})
+        

@@ -123,12 +123,12 @@ class PComment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Badge(models.Model):
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     tier = models.CharField(max_length=20)
     criteria = models.JSONField()
-    icon = models.CharField(max_length=255, default="default_icon.png")  # Set your default icon path here
-
+    icon = models.ImageField(upload_to='badges/icons/', null=True, blank=True)  # Image field for badge icons
 
     def is_criteria_met(self, user):
         # Example check for criteria - adjust this based on your app's needs
