@@ -102,7 +102,13 @@ class PostSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    community = serializers.SerializerMethodField()
 
     class Meta:
         model = PComment
-        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user']
+        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user', 'community']
+
+    def get_community(self, obj):
+        # Assuming the post has a foreign key to community
+        community = obj.post.community
+        return CommunitySerializer(community).data
