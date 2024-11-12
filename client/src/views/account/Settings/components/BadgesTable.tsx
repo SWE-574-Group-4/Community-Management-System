@@ -29,7 +29,14 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
             accessorKey: 'icon',
             cell: (props) => {
                 const row = props.row.original
-                return <div>{row.icon}</div>
+                const iconUrl = row.icon ? `${row.icon}` : null
+                return iconUrl ? (
+                    <img
+                        src={iconUrl}
+                        alt={row.name}
+                        style={{ width: '50px', height: '50px' }}
+                    />
+                ) : null
             },
         },
         {
