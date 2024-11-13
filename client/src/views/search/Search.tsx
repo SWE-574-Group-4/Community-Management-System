@@ -187,7 +187,11 @@ const Search = () => {
                 <Card className="mt-5">
                     <h5>Community Specific templates:</h5>
                     {data.data.map((template: TemplateType) => (
-                        <Template key={template.id} template={template} />
+                        <Template
+                            key={template.id}
+                            template={template}
+                            checkboxList={checkboxList}
+                        />
                     ))}
                 </Card>
             )}
