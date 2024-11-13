@@ -21,6 +21,7 @@ export type TemplateType = {
     updated_at?: string
     fields: FieldType[]
     templateDialogOpen?: boolean
+    community?: CommunityType
 }
 
 export type TemplateResponse = {

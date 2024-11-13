@@ -4,7 +4,7 @@ import { truncateText } from '@/utils/helpers'
 
 export default function Post({ post }: { post: PostData }) {
     return (
-        <ActionLink to={`/post/${post.id}`}>
+        <ActionLink to={`/post/${post.id}`} className="block">
             {post.content && (
                 <>
                     {post.content[0].field_value} -{' '}
