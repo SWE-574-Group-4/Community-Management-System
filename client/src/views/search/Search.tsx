@@ -59,11 +59,15 @@ const CustomCheckboxGroup = ({
     }, [])
 
     return (
-        <Checkbox.Group value={checkboxList} onChange={onCheckboxChange}>
+        <Checkbox.Group
+            value={checkboxList}
+            onChange={onCheckboxChange}
+            className="grid grid-cols-12 gap-1"
+        >
             {dataTypes.map((dataType) => {
                 return (
                     <Checkbox
-                        className="mb-3"
+                        className="lg:col-span-2 md:col-span-4 sm:col-span-6 col-span-6"
                         name="dataTypes"
                         value={dataType}
                     >
@@ -128,7 +132,6 @@ const Search = () => {
     return (
         <div className="">
             <div className="lg:flex justify-between mb-4">
-                <h3>Advance Community Search</h3>
                 <div className="flex flex-col lg:flex-row">
                     <TableSearch
                         ref={inputRef}
@@ -139,7 +142,7 @@ const Search = () => {
                         onChange={onChange}
                         className="mr-2 h-10 flex items-center"
                     >
-                        <Radio value={'community'} className="ml-2">
+                        <Radio value={'community'} className="lg:ml-2">
                             Community
                         </Radio>
                         <Radio value={'template'}>Template</Radio>
