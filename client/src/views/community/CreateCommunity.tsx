@@ -20,6 +20,7 @@ import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { useAppSelector } from '@/store'
 import { useEffect, useState } from 'react'
 import { useFetchCommunity } from '@/utils/hooks/useFetchCommunity'
+import SelectLabelField from './components/SelectLabelField'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -210,6 +211,16 @@ const CreateCommunity = () => {
                                         }
                                     />
                                 </FormRow>
+
+                                <FormRow
+                                    name="description"
+                                    label="Labels"
+                                    {...validatorProps}
+                                >
+                                    <SelectLabelField />
+
+                                </FormRow>
+
 
                                 <FormRow
                                     name="is_public"
