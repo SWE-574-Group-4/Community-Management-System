@@ -120,3 +120,17 @@ class PComment(models.Model):
     content = models.CharField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Label(models.Model):
+    label = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.label
+
+class Tag(models.Model):
+    label = models.ForeignKey(Label, on_delete=models.CASCADE, related_name='tags')
+    value = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.label

@@ -25,6 +25,13 @@ export async function apiUpdateCommunity(data: CommunityFormModel) {
     })
 }
 
+export async function apiGetLabels() {
+    return ApiService.fetchData({
+        url: '/labels/',
+        method: 'get',
+    })
+}
+
 export async function apiGetDefaultTemplate() {
     return ApiService.fetchData({
         url: '/default_template/',

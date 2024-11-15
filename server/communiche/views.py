@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Template, User, Posts
-from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
+from .models import Label, Tag, Template, User, Posts
+from .serializers import LabelSerializer, TagSerializer, TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -769,3 +769,17 @@ def advance_search(request):
             'data': user_serializer.data,
             'total': len(user_serializer.data)
         })
+
+@api_view(['GET'])
+def labels(request):
+    if request.method == 'GET':
+        labels = Label.objects.all()
+        serializer = LabelSerializer(labels, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def tags(request):
+    if request.method == 'GET':
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data)

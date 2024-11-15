@@ -1,30 +1,7 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Select from '@/components/ui/Select'
-
-const groupedOptions = [
-    {
-        label: 'Technology',
-        options: [
-            {value: 'ai', label: 'Artificial Intelligence'},
-            {value: 'blockchain', label: 'Blockchain'},
-            {value: 'cybersecurity', label: 'Cybersecurity'},
-            {value: 'data-science', label: 'Data Science'},
-            {value: 'iot', label: 'Internet of Things'},
-            {value: 'ml', label: 'Machine Learning'},
-            {value: 'quantum-computing', label: 'Quantum Computing'},
-        ],
-    },
-    {
-        label: 'Sports',
-        options: [
-            {value: 'basketball', label: 'Basketball'},
-            {value: 'football', label: 'Football'},
-            {value: 'tennis', label: 'Tennis'},
-            {value: 'hockey', label: 'Hockey'},
-        ],
-    },
-]
+import { apiGetLabels } from '@/services/CommunityService'
 
 const formatGroupLabel = (data: any) => (
     <div className="font-bold text-xs uppercase text-gray-800 dark:text-white my-2">
@@ -32,44 +9,47 @@ const formatGroupLabel = (data: any) => (
     </div>
 )
 
-const Group = () => {
+export default function Group() {
+    const [labels, setLabels] = React.useState([])
+
+    // transform the data to match the format of the Select component
+    const transformedLabels = labels.map((label: any) => {
+        return {
+            label: label.label,
+            options: label.tags.map((tag: any) => {
+                return {
+                    value: tag.value,
+                    label: tag.title
+                }
+            })
+        }
+    })
+    
+    useEffect(() => {
+        const fetchLabels = async () => {
+            try {
+                const response = await apiGetLabels()
+                if (response.status === 200) {
+                    setLabels(response.data as [])
+                }
+                // fetch default community labels
+                console.log('fetching community labels')
+            } catch (error) {
+                console.error('Error fetching community labels', error)
+            }
+        }
+        
+        fetchLabels()
+    }, [])
+
     return (
         <div>
             <Select
                 isMulti
                 formatGroupLabel={formatGroupLabel}
-                options={groupedOptions}
+                options={transformedLabels}
                 placeholder="Select labels"
             />
         </div>
     )
 }
-
-export default Group
-
-// const groupedOptions = [
-//     {
-//         label: 'Technology',
-//         tags: [
-//             'Artificial Intelligence',
-//             'Blockchain',
-//             'Cybersecurity',
-//             'Data Science',
-//             'Internet of Things',
-//             'Machine Learning',
-//             'Quantum Computing',
-//         ],
-//     },
-//     {
-//         label: 'Sports',
-//         tags: [
-//             'Baseball',
-//             'Basketball',
-//             'Cricket',
-//             'Football',
-//             'Golf',
-//             'Hockey',
-//             'Swimming'
-//         ],
-//     },
-// ]

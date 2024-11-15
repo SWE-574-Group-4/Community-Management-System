@@ -13,6 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { CommunityFormModel } from '@/@types/community'
 import {
     apiAddCommunity,
+    apiGetLabels,
     apiUpdateCommunity,
 } from '@/services/CommunityService'
 import { t } from 'i18next'
@@ -21,6 +22,7 @@ import { useAppSelector } from '@/store'
 import { useEffect, useState } from 'react'
 import { useFetchCommunity } from '@/utils/hooks/useFetchCommunity'
 import SelectLabelField from './components/SelectLabelField'
+import Group from './components/SelectLabelField'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -217,7 +219,7 @@ const CreateCommunity = () => {
                                     label="Labels"
                                     {...validatorProps}
                                 >
-                                    <SelectLabelField />
+                                    <Group />
 
                                 </FormRow>
 
