@@ -18,6 +18,11 @@ from .constants import DATA_TYPES
     "short_bio": "string"
 }
 """
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class User(models.Model):
     firstname = models.CharField(max_length=200)  # Required
@@ -106,6 +111,7 @@ class Posts(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name='post_likes')
+    tags = models.ManyToManyField(Tag, related_name="posts", blank=True)
 
 class PostComment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

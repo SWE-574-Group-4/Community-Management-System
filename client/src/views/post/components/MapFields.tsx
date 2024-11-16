@@ -11,6 +11,8 @@ import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification
 import { apiPost } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
+import Select, { MultiValue } from 'react-select'
+import axios from 'axios'
 
 const FieldComponent = ({
     field,
@@ -99,6 +101,30 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
         () => dispatch(toggleFetchTrigger())
     )
 
+    const [tags, setTags] = useState<{ value: number; label: string }[]>([])
+    const [selectedTags, setSelectedTags] = useState<MultiValue<{ value: number; label: string }>>([])
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/tags/')
+                const options = response.data.map((tag: { id: number; name: string }) => ({
+                    value: tag.id,
+                    label: tag.name,
+                }))
+                setTags(options)
+            } catch (error) {
+                console.error('Error fetching tags:', error)
+            }
+        }
+        fetchTags()
+    }, [])
+
+    const handleTagChange = (selectedOptions: MultiValue<{ value: number; label: string }>) => {
+        setSelectedTags(selectedOptions)
+    }
+
+
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
@@ -108,10 +134,14 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
             field_value: fieldValues[field.field_name] || '',
         }))
 
+        const tags = selectedTags.map((tag) => {
+            return tag.value
+        })
+
         // TODO: why is this not notifyin the user that the post was successful?
         // turn form data into a string with JSON.stringify
         if (typeof handlePost === 'function') {
-            handlePost(id, userId, JSON.stringify(formData))
+            handlePost(id, userId, formData,tags)
         }
     }
 
@@ -141,6 +171,17 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
                         }
                     />
                 ))}
+
+                <div className="form-group">
+                    <label>Select Tags:</label>
+                    <Select
+                        options={tags}
+                        isMulti
+                        value={selectedTags}
+                        onChange={handleTagChange}
+                        placeholder="Choose tags..."
+                    />
+                </div>
 
                 <Button
                     className="mt-5 flex items-center justify-center gap-x-0.5"

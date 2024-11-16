@@ -1,19 +1,25 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Template, User, Posts
-from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
+from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
-from .models import Community, JoinRequest, CommunityUser, Invitation, PComment
+from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Tag
 from django.http import JsonResponse
 from . import constants
 from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
 from django.utils import timezone
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -547,6 +553,7 @@ def post(request):
     user_id = data.get('user_id')
     community_id = data.get('community_id')
     content = data.get('content')
+    tag_ids = data.get('tag_ids', [])
     
     try:
         user = User.objects.get(pk=user_id)
@@ -558,6 +565,10 @@ def post(request):
     
     post = Posts(user=user, community=community, content=content)
     post.save()
+
+    if tag_ids:
+        tags = Tag.objects.filter(id__in=tag_ids)
+        post.tags.set(tags)
     
     # Update the community's updated_at field
     community.updated_at = datetime.now()
@@ -646,6 +657,9 @@ def post_detail(request, post_id):
         data['is_liked'] = user in post.likes.all()
     else:
         data['is_liked'] = False
+
+    data['tags'] = [tag.name for tag in post.tags.all()]
+
     # data.pop('community', None)
     return Response(data, status=status.HTTP_200_OK)
 

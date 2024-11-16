@@ -141,6 +141,21 @@ export default function DisplayPost({
                     )}
                 </div>
 
+                {/* Tags Section */}
+                {post.tags && post.tags.length > 0 && (
+                    <div className="tags-section mt-3">
+                        <strong>Tags:</strong>
+                        <span className="ml-2">
+                            {post.tags.map((tag, index) => (
+                                <span key={index}>
+                                    {tag}
+                                    {index < post.tags.length - 1 && ', '}
+                                </span>
+                            ))}
+                        </span>
+                    </div>
+                )}
+
                 <div className="footer flex justify-between">
                     <p>
                         Posted by
