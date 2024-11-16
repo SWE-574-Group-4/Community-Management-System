@@ -789,10 +789,15 @@ def send_in_app_notification(user, badge):
     )
 
 @api_view(['GET'])
-def get_user_notifications(request, user_id):
-    notifications = Notification.objects.filter(user_id=user_id, is_read=False)
-    # Optionally, serialize notifications to return as JSON
-    notifications_data = [{"id": n.id, "message": n.message, "created_at": n.created_at} for n in notifications]
+def get_user_notifications(request):
+    user_id = request.query_params.get('user_id')
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    notifications = Notification.objects.filter(user=user_id, is_read=False)
+    notifications_data = [{"id": n.id, "message": n.message, "is_read": n.is_read, "created_at": n.created_at} for n in notifications]
     return Response(notifications_data)
 
 @api_view(['GET'])

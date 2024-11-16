@@ -47,7 +47,8 @@
         "password": "Password Settings",
         "invitations": "My Invitations",
         "myCommunities": "My Communities",
-        "myBadges": "My Badges"
+        "myBadges": "My Badges",
+        "myNotifications": "My Notifications"
     },
     "settings": {
         "title": "General",

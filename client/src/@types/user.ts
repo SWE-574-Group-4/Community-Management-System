@@ -44,6 +44,13 @@ export type BadgeType = {
     status: boolean
 }
 
+export type NotificationType = {
+    id: number
+    name: string
+    is_read?: boolean
+    created_at?: string
+}
+
 export type ProfileType = {
     id: number
     firstname: string
