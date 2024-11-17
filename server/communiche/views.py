@@ -746,7 +746,6 @@ def advance_search(request):
     }
 
     fields = params['dataTypes']
-
     # Construct a Q object for each field
     q_objects = Q()
     for field in fields:
@@ -755,7 +754,6 @@ def advance_search(request):
     # Filter posts that contain any of the fields in their content
     date_range = params['date_range']
     start_date, end_date = date_range if len(date_range) == 2 else (None, None)
-    # print(start_date, end_date)
     posts = Posts.objects.filter(q_objects, content__icontains=query)
     post_serializer = PostSerializer(posts, many=True)
 
@@ -765,7 +763,19 @@ def advance_search(request):
     users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
     user_serializer = UserSerializer(users, many=True)
 
-    if(params['searchType'] == 'community'):
+    # Construct a Q object to filter templates based on the fields
+    template_q_objects = Q()
+    for field in fields:
+        template_q_objects |= Q(fields__icontains=field)
+
+    # Search for templates that match the query and fields
+    templates = Template.objects.filter(
+        Q(name__icontains=query) | Q(description__icontains=query) & template_q_objects | Q(fields__icontains=query)
+    )
+
+    template_serializer = TemplateSerializer(templates, many=True)
+
+    if params['searchType'] == 'community':
         return Response({
             'search_type': 'community',
             'data': community_serializer.data,
@@ -776,6 +786,12 @@ def advance_search(request):
             'search_type': 'post',
             'data': post_serializer.data,
             'total': len(post_serializer.data)
+        })
+    elif params['searchType'] == 'template':
+        return Response({
+            'search_type': 'template',
+            'data': template_serializer.data,
+            'total': len(template_serializer.data)
         })
     else:
         return Response({

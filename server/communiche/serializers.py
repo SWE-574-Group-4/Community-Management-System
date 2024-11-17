@@ -15,9 +15,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'firstname', 'lastname', 'username', 'email', 'dob', 'country', 'phone', 'short_bio', 'password']
 
 class TemplateSerializer(serializers.ModelSerializer):
+    community = serializers.SerializerMethodField()
+
     class Meta:
         model = Template
-        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'fields']
+        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'fields', 'community']
+
+    def get_community(self, obj):
+        template_community = TemplateCommunity.objects.filter(template=obj).first()
+        return CommunitySerializer(template_community.community).data if template_community else None
 
 class TemplateCommunitySerializer(serializers.ModelSerializer):
     template = TemplateSerializer()

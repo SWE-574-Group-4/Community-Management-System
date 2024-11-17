@@ -18,15 +18,15 @@ export type SignUpCredential = {
     username: string // Required
     password: string // Required
     email?: string
-    dob?: string
+    // dob?: string
     country?: string
     phone?: string
     short_bio?: string
 }
 
-export type ForgotPassword = {
-    email: string
-}
+// export type ForgotPassword = {
+//     email: string
+// }
 
 export type ResetPassword = {
     password: string
