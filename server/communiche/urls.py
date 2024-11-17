@@ -69,4 +69,11 @@ urlpatterns = [
 
     # search
     path('advance_search/', views.advance_search, name='advance-search'),
+
+    # reports within a community
+    path('community/<int:community_id>/create_report/', views.report_create, name='report-create'),
+    path('community/<int:community_id>/reports/', views.report_list, name='community-report-list'),
+    path('community/<int:community_id>/reports/<int:id>/', views.report_detail, name='community-report-detail'),
+    path('community/<int:community_id>/reports/<int:id>/delete/', views.report_delete, name='report-delete'),
+    path('community/<int:community_id>/reports/<int:report_id>/update_status/', views.update_report_status, name='update-report-status'),
 ]

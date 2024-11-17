@@ -141,6 +141,26 @@ export const protectedRoutes = [
         },
     },
     {
+        key: 'report',
+        path: '/community/:community_id/create-report',
+        component: lazy(() => import('@/views/report/CreateReport')),
+        authority: [],
+        meta: {
+            header: 'Report',
+            headerContainer: true,
+        },
+    },
+    {
+        key: 'reportView',
+        path: '/community/:community_id/reports/:report_id',
+        component: lazy(() => import('@/views/report/ReportView')),
+        authority: [],
+        meta: {
+            header: 'Report',
+            headerContainer: true,
+        },
+    },
+    {
         key: 'collapseMenu.item1',
         path: '/collapse-menu-item-view-1',
         component: lazy(() => import('@/views/demo/CollapseMenuItemView1')),
