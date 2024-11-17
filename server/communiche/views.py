@@ -756,7 +756,7 @@ def advance_search(request):
 
     # Search for templates that match the query and fields
     templates = Template.objects.filter(
-        Q(name__icontains=query), Q(description__icontains=query), template_q_objects, Q(fields__icontains=query)
+        Q(name__icontains=query) | Q(description__icontains=query) & template_q_objects | Q(fields__icontains=query)
     )
 
     template_serializer = TemplateSerializer(templates, many=True)
