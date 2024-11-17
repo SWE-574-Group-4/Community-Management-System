@@ -185,3 +185,10 @@ export async function apiTransferOwnership(data: any) {
         method: 'post',
     })
 }
+
+export async function apiGetAllTemplates() {
+    return ApiService.fetchData({
+        url: '/templates/',
+        method: 'get',
+    })
+}

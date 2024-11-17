@@ -7,18 +7,20 @@ import {
 } from '@/@types/community'
 import Community from '../search/components/Community'
 import { Button, Card, Checkbox, Radio } from '@/components/ui'
-import DatePicker from '@/components/ui/DatePicker'
 import Post from './components/Post'
 import { PostData } from '@/@types/post'
 import TableSearch from '../account/Settings/components/Search/TableSearch'
-import { apiGetDataTypes } from '@/services/CommunityService'
+import {
+    apiGetAllTemplates,
+    apiGetDataTypes,
+} from '@/services/CommunityService'
 import { DatePickerRangeValue } from '@/components/ui/DatePicker/DatePickerRange'
 // User search
 import User from './components/User'
 import { UserResponseType } from '@/@types/user'
 import Template from './components/Template'
-
-const { DatePickerRange } = DatePicker
+import PostTemplate from './components/PostTemplate'
+import { template } from 'lodash'
 
 const CustomCheckboxGroup = ({
     setCheckboxList,
@@ -83,6 +85,7 @@ const Search = () => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [data, setData] = useState<any>(null)
     const [checkboxList, setCheckboxList] = useState<(string | number)[]>([])
+    const [allTemplates, setAllTemplates] = useState<TemplateType[]>([])
     const [range, setRange] = useState<DatePickerRangeValue>([
         new Date(),
         new Date(),
@@ -129,6 +132,21 @@ const Search = () => {
         }
     }, [range, handleInputChange])
 
+    useEffect(() => {
+        const fetchTemplates = async () => {
+            try {
+                const templates = await apiGetAllTemplates()
+                if (templates.status === 200) {
+                    setAllTemplates(templates.data as TemplateType[])
+                }
+            } catch (error) {
+                console.error('Error fetching templates', error)
+            }
+        }
+
+        fetchTemplates()
+    }, [])
+
     return (
         <div className="">
             <div className="lg:flex justify-between mb-4">
@@ -152,11 +170,27 @@ const Search = () => {
                 </div>
             </div>
 
+            {searchType === 'post' && (
+                <div className="mb-5">
+                    <span>
+                        Search for posts by community specific templates
+                    </span>
+                    <PostTemplate templates={allTemplates as TemplateType[]} />
+                </div>
+            )}
+
             {(searchType === 'post' || searchType === 'template') && (
-                <CustomCheckboxGroup
-                    setCheckboxList={setCheckboxList}
-                    checkboxList={checkboxList}
-                />
+                <div className="my-5">
+                    <span>
+                        Search for{' '}
+                        {searchType === 'post' ? 'posts' : 'templates'} by
+                        specific fields
+                    </span>
+                    <CustomCheckboxGroup
+                        setCheckboxList={setCheckboxList}
+                        checkboxList={checkboxList}
+                    />
+                </div>
             )}
 
             {searchType == 'community' && data && (
@@ -169,12 +203,14 @@ const Search = () => {
             )}
 
             {searchType === 'post' && data && (
-                <Card className="mt-5">
-                    <h5>Posts:</h5>
-                    {data.data.map((post: PostData) => {
-                        return <Post post={post} />
-                    })}
-                </Card>
+                <div>
+                    <Card className="mt-5">
+                        <h5>Posts:</h5>
+                        {data.data.map((post: PostData) => {
+                            return <Post post={post} />
+                        })}
+                    </Card>
+                </div>
             )}
             {/* User Results */}
             {searchType === 'user' && data && (
