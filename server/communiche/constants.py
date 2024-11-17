@@ -1,6 +1,6 @@
 DATA_TYPES = [
     ('text', 'text'),
-    ('textarea', 'textArea'),
+    ('textarea', 'textarea'),
     ('date', 'date'),
     ('geo', 'geolocation'),
     ('number', 'number'),
