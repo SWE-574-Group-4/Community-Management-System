@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag
+from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Report, Tag
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -115,6 +115,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     community = serializers.SerializerMethodField()
+    community = serializers.SerializerMethodField()
 
     class Meta:
         model = PComment
@@ -124,3 +125,25 @@ class CommentSerializer(serializers.ModelSerializer):
         # Assuming the post has a foreign key to community
         community = obj.post.community
         return CommunitySerializer(community).data
+
+class ReportSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    comment = CommentSerializer()
+    post = PostSerializer()
+
+    class Meta:
+        model = Report
+        fields = ['id', 'user', 'post', 'comment', 'community', 'reason', 'comment_text' ,'created_at', 'status']
+
+    def get_comment(self, obj):
+        if obj.comment:
+            return CommentSerializer(obj.comment).data
+        return None 
+    def get_post(self, obj):
+        if obj.post:
+            return PostSerializer(obj.post).data
+        return None
+    def get_user(self, obj):
+        if obj.user:
+            return UserSerializer(obj.user).data
+        return None

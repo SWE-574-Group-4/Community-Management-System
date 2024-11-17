@@ -15,6 +15,7 @@ import { mapRoleToLabel } from '@/utils/helpers'
 import PendingRequests from './components/PendingRequests'
 import Invite from './Invite'
 import Posts from './components/Posts'
+import Reports from './components/Reports'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 
 const { TabNav, TabList } = Tabs
@@ -84,6 +85,11 @@ const Settings = () => {
         templates: {
             label: 'Templates',
             path: 'templates',
+            authority: ['owner', 'moderator'],
+        },
+        reports: {
+            label: 'Reports',
+            path: 'reports',
             authority: ['owner', 'moderator'],
         },
     }
@@ -167,6 +173,9 @@ const Settings = () => {
                         {currentTab === 'invite' && <Invite />}
                         {currentTab === 'templates' && (
                             <CommunitySpecificTemplates />
+                        )}
+                        {currentTab === 'reports' && (
+                            <Reports />
                         )}
                     </Suspense>
                 </div>

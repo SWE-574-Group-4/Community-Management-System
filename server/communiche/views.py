@@ -1,19 +1,26 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Tag, Template, User, Posts
-from .serializers import TagSerializer, TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
-from rest_framework.decorators import api_view
+from .serializers import TagSerializer, TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, ReportSerializer 
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
-from .models import Community, JoinRequest, CommunityUser, Invitation, PComment
+from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Report
 from django.http import JsonResponse
 from . import constants
 from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
 from django.utils import timezone
+from rest_framework.permissions import AllowAny
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_tags(request):
@@ -799,3 +806,96 @@ def advance_search(request):
             'data': user_serializer.data,
             'total': len(user_serializer.data)
         })
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def report_create(request, community_id):
+
+    post_id = request.data.get('post_id')
+    comment_id = request.data.get('comment_id')
+    reason = request.data.get('reason')
+    comment_text = request.data.get('comment_text', '')
+    user_id = request.data.get('user_id')
+    print(f"user_id received: {user_id}")
+    user = User.objects.get(pk=request.data.get('user_id'))
+
+    # Ensure at least one of post_id or comment_id is provided
+    if not post_id and not comment_id:
+        return Response({'error': 'post_id or comment_id required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get the community from post if reporting a comment
+    if comment_id:
+        comment = PComment.objects.get(id=comment_id)
+        post = comment.post
+        community = post.community
+    elif post_id:
+        post = Posts.objects.get(id=post_id)
+        community = post.community
+
+    # Create the report
+    report = Report.objects.create(
+        user=user,
+        post=post if post_id else None,
+        comment=comment if comment_id else None,
+        community=community,
+        community_id=community.id,
+        reason=reason,
+        comment_text=comment_text,
+    )
+
+    serializer = ReportSerializer(report)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def report_list(request, community_id):
+    # Retrieve all reports for the specified community
+    reports = Report.objects.filter(community_id=community_id).order_by('-created_at')
+    
+    # Serialize and return the list of reports
+    serializer = ReportSerializer(reports, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+def report_detail(request, community_id, id):
+    try:
+        # Retrieve the specific report for the given community
+        report = Report.objects.get(pk=id, community_id=community_id)
+    except Report.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ReportSerializer(report)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def report_delete(request, community_id, id):
+    try:
+        # Retrieve the specific report for the given community
+        report = Report.objects.get(pk=id, community_id=community_id)
+    except Report.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    report.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def update_report_status(request, community_id, report_id):
+    try:
+        report = Report.objects.get(community_id=community_id, id=report_id)
+        new_status = request.data.get('status')
+
+        if new_status is None:
+            return Response({"error": "Status is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if int(new_status) not in [0, 1, 2]:
+            return Response({"error": "Invalid status value."}, status=status.HTTP_400_BAD_REQUEST)
+
+        report.status = int(new_status)
+        report.save()
+
+        return Response({"message": "Report status updated successfully."}, status=status.HTTP_200_OK)
+    except Report.DoesNotExist:
+        return Response({"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
