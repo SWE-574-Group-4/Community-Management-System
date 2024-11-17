@@ -10,7 +10,7 @@ export async function getUsers() {
 }
 
 export async function updateProfile(data: UserResponseType) {
-    const { id, ..._data } = data
+    const { id, dob, ..._data } = data
 
     return ApiService.fetchData({
         url: `/users/${id}/`,
