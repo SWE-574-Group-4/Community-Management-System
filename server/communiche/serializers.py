@@ -1,6 +1,9 @@
 import json
 from rest_framework import serializers
+
+from communiche import constants
 from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation
+from .models import UserFollowing
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -106,3 +109,14 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PComment
         fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user']
+
+from rest_framework import serializers
+from .models import UserFollowing
+
+class UserFollowingSerializer(serializers.ModelSerializer):
+    follower = serializers.ReadOnlyField(source='follower.username')
+    following = serializers.ReadOnlyField(source='following.username')
+
+    class Meta:
+        model = UserFollowing
+        fields = ['id', 'follower', 'following', 'created_at']

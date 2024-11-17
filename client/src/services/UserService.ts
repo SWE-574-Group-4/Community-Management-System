@@ -73,3 +73,33 @@ export async function apiGetUserInformation(userId: string) {
         method: 'get',
     })
 }
+
+export async function followUser(userId: number, authedUserId: number) {
+    try {
+        const response = await ApiService.fetchData({
+            url: `follow/${userId}/${authedUserId}`,
+            method: 'post',
+            data: {
+                user_id: userId,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error in followUser:', error);
+        throw error;
+    }
+}
+
+export async function unfollowUser(userId: number, authedUserId: number) {
+    try {
+        const response = await ApiService.fetchData({
+            url: `unfollow/${userId}/${authedUserId}`, 
+            method: 'post',
+
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error in unfollowUser:', error);
+        throw error;
+    }
+}

@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from communiche import views
-
+from .views import follow_user, unfollow_user
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', views.user_list, name='user_list'),
@@ -27,7 +27,11 @@ urlpatterns = [
     path('user/communities/', views.user_communities, name='user_communities'),
     path('signup/', views.signup),
     path('login/', views.login),
+    path('follow/<int:user_id>/<int:follower_id>', follow_user, name='follow_user'),
+    path('unfollow/<int:user_id>/<int:follower_id>', unfollow_user, name='unfollow_user'),
 
+    # other paths...
+    
     # community
     path('communities/', views.communities, name='communities'),
     path('community/<int:id>/', views.community_detail, name='community-detail'),
