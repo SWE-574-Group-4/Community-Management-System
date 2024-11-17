@@ -2,7 +2,7 @@ import ApiService from './ApiService'
 import type {
     SignInCredential,
     SignUpCredential,
-    ForgotPassword,
+    // ForgotPassword,
     ResetPassword,
     SignInResponse,
     SignUpResponse,
@@ -32,13 +32,13 @@ export async function apiSignOut() {
     })
 }
 
-export async function apiForgotPassword(data: ForgotPassword) {
-    return ApiService.fetchData({
-        url: '/forgot-password/',
-        method: 'post',
-        data,
-    })
-}
+// export async function apiForgotPassword(data: ForgotPassword) {
+//     return ApiService.fetchData({
+//         url: '/forgot-password/',
+//         method: 'post',
+//         data,
+//     })
+// }
 
 export async function apiResetPassword(data: ResetPassword) {
     return ApiService.fetchData({

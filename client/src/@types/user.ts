@@ -1,6 +1,6 @@
 export type UserResponseType = {
     country: string | null
-    dob: string | null
+    dob?: string | null
     email: string
     firstname: string
     id: number
@@ -42,7 +42,7 @@ export type ProfileType = {
     lastname: string
     username: string
     email: string
-    dob: string | null
+    // dob: string | null
     country: string | null
     phone: string | null
     short_bio: string | null
