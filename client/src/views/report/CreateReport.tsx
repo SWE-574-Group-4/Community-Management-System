@@ -2,6 +2,7 @@ import { FormItem, FormContainer } from '@/components/ui/Form';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import toast from '@/components/ui/toast';
+import Select from '@/components/ui/Select';
 import Notification from '@/components/ui/Notification';
 import Alert from '@/components/ui/Alert'; // Import Alert
 import { Field, Form, Formik } from 'formik';
@@ -54,7 +55,6 @@ const CreateReport = () => {
                 user_id: user?.id,
                 status: 0,
             };
-            console.log('Data sent to API:', data);
             await apiCreateReport(Number(communityId), data);
 
             // Set success message
@@ -95,13 +95,22 @@ const CreateReport = () => {
                                 errorMessage={errors.reason}
                                 className="flex flex-col w-1/3"
                             >
-                                <Field as="select" name="reason" className="w-full text-sm">
-                                    <option value="">Select a reason</option>
-                                    {REPORT_REASONS.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
+                                <Field name="reason">
+                                    {({ field, form }: any) => (
+                                        <Select
+                                            options={REPORT_REASONS}
+                                            placeholder="Select a reason"
+                                            className="w-full text-sm"
+                                            value={
+                                                REPORT_REASONS.find((option) => option.value === field.value) || null
+                                            }
+                                            onChange={(selectedOption) => {
+                                                if (selectedOption) {
+                                                    form.setFieldValue(field.name, selectedOption.value);
+                                                }
+                                            }}
+                                        />
+                                    )}
                                 </Field>
                             </FormItem>
 
@@ -112,13 +121,13 @@ const CreateReport = () => {
                                 className="flex flex-col w-1/3"
                             >
                                 <Field
-                                    as="textarea"
-                                    name="comment_text"
-                                    placeholder="Provide additional details"
-                                    className="w-full text-md resize-none"
-                                    rows={3}
-                                    maxLength={250}
-                                />
+                                        type="text"
+                                        autoComplete="off"
+                                        name="comment_text"
+                                        placeholder="Description"
+                                        textArea
+                                        component={Input}
+                                    />
                             </FormItem>
 
                             <div>

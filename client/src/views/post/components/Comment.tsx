@@ -83,7 +83,7 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
                             </Button>
                         )}
                         <Button
-                            className="text-red-500 mx-1.5 md:ml-auto"
+                            className="text-red-500 mx-1.5"
                             onClick={handleReport}
                         >
                             Report
