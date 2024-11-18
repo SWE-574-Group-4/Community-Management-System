@@ -3,7 +3,7 @@ import { apiGetReportDetail, apiDeleteReport, apiUpdateReportStatus } from '@/se
 import { formatDate } from '@/utils/helpers';
 import useFetchData from '@/utils/hooks/useFetchData';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card } from '@/components/ui';
+import { Button, Card, Select } from '@/components/ui';
 import { Notification, toast } from '@/components/ui';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
@@ -141,17 +141,18 @@ export default function ReportView() {
                     </div>
                     <div className="mb-4">
                         <strong>Status:</strong>
-                        <select
-                            value={selectedStatus}
-                            onChange={(e) => handleStatusChange(Number(e.target.value))}
-                            className="ml-2 border border-gray-300 p-1 rounded"
-                        >
-                            {STATUS_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
+                        <Select
+                            options={STATUS_OPTIONS}
+                            placeholder="Select Status"
+                            className="ml-2 max-w-md md:w-52"
+                            value={STATUS_OPTIONS.find((option) => option.value === selectedStatus) || null}
+                            onChange={(selectedOption) => {
+                                if (selectedOption) {
+                                    const status = selectedOption.value; // Extract the value from the selected option
+                                    handleStatusChange(status); // Call your function to handle status change
+                                }
+                            }}
+                        />
                     </div>
                     <div className="flex justify-end">
                         <Button
