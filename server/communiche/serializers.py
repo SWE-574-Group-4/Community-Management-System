@@ -103,7 +103,6 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     community = serializers.SerializerMethodField()
-    community = serializers.SerializerMethodField()
 
     class Meta:
         model = PComment

@@ -780,7 +780,6 @@ def report_create(request, community_id):
     reason = request.data.get('reason')
     comment_text = request.data.get('comment_text', '')
     user_id = request.data.get('user_id')
-    print(f"user_id received: {user_id}")
     user = User.objects.get(pk=request.data.get('user_id'))
 
     # Ensure at least one of post_id or comment_id is provided
