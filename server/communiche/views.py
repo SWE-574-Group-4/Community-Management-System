@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Template, User, Posts
-from .serializers import TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
+from .models import Tag, Template, User, Posts
+from .serializers import TagSerializer, TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,6 +14,12 @@ from . import constants
 from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
 from django.utils import timezone
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -164,6 +170,11 @@ def add_community(request):
             community = serializer.instance
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
+
+            tag_ids = request.data.get('tag_ids', [])
+            for tag_id in tag_ids:
+                tag = Tag.objects.get(pk=tag_id)
+                community.tags.add(tag)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -216,6 +227,8 @@ def community_detail(request, id):
             community_data['has_user_requested'] = JoinRequest.objects.filter(community=community, user=user).exists()
             community_data['is_member'] = user in community.members.all()
         
+        # Get the tag ids associated with the community
+        community_data['tags'] = [tag.name for tag in community.tags.all()]
         community_data['num_members'] = community.members.count()
 
         # community_data.pop('members', None)  # Remove the 'members' field

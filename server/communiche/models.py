@@ -18,7 +18,12 @@ from .constants import DATA_TYPES
     "short_bio": "string"
 }
 """
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.name
+    
 class User(models.Model):
     firstname = models.CharField(max_length=200)  # Required
     lastname = models.CharField(max_length=200)  # Required
@@ -66,7 +71,8 @@ class Community(models.Model):
     reputation_rating = models.DecimalField(max_digits=10, decimal_places=1, default=0, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner', null=True)
     members = models.ManyToManyField(User, through='CommunityUser', related_name='communities')
-    
+    tags = models.ManyToManyField(Tag, related_name="tags")
+
 class CommunityUser(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
