@@ -26,6 +26,7 @@ export type CommentResponseType = {
     post: number
     user: UserResponseType
     content: string
+    community: CommunityType
     created_at: string
     updated_at: string
 }
