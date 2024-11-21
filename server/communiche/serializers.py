@@ -37,7 +37,7 @@ class CommunitySerializer(serializers.ModelSerializer):
     is_member = serializers.SerializerMethodField()
     has_user_requested = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
-    tags = TagSerializer(many=True)
+    tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = Community

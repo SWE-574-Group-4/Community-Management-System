@@ -171,10 +171,13 @@ def add_community(request):
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
 
-            tag_ids = request.data.get('tag_ids', [])
-            for tag_id in tag_ids:
-                tag = Tag.objects.get(pk=tag_id)
-                community.tags.add(tag)
+            tags = request.data.get('tags', [])
+            for tag_data in tags:
+                tag_id = tag_data.get('id')
+                tag_name = tag_data.get('name')
+                if tag_id and tag_name:
+                    tag, created = Tag.objects.get_or_create(id=tag_id, defaults={'name': tag_name})
+                    community.tags.add(tag)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
