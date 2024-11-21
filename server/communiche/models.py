@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import JSONField
+from django.db.models import JSONField, Sum, Count
 from django.contrib.auth.hashers import check_password
 
 from .constants import DATA_TYPES
@@ -130,13 +130,22 @@ class Badge(models.Model):
     criteria = models.JSONField()
     icon = models.ImageField(upload_to='badges/icons/', null=True, blank=True)  # Image field for badge icons
 
-    def is_criteria_met(self, user):
-        # Example check for criteria - adjust this based on your app's needs
-        user_posts_count = user.posts_set.count()
-        user_upvotes_received = sum(post.likes.count() for post in user.posts_set.all())
+    def post_criteria(self, user):
+        user_posts = user.posts_set.count()
         
-        return (user_posts_count >= self.criteria.get("posts_count", 0) and
-                user_upvotes_received >= self.criteria.get("upvotes_received", 0))
+        return user_posts >= self.criteria.get("posts", 0)
+    
+    def get_like_criteria(self, user):
+        user_upvotes_received = sum(post.likes.count() for post in user.posts_set.all())
+
+        return user_upvotes_received >= self.criteria.get("single_post_likes", 0)
+        print(user_upvotes_received)
+
+    def give_like_criteria(self, user):
+        user_upvotes_given = user.post_likes.count()
+
+        return user_upvotes_given >= self.criteria.get("likes_given", 0)
+        print(user_upvotes_given)
 
 class UserBadge(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)

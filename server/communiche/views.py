@@ -14,6 +14,7 @@ from . import constants
 from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -569,8 +570,9 @@ def post(request):
     community.save()
 
     # Check badge criteria for this user
-    for badge in Badge.objects.all():
-        if badge.is_criteria_met(user):
+    badge = get_object_or_404(Badge, pk=1)
+
+    if badge.post_criteria(user):
             UserBadge.assign_badge(user, badge)
             send_in_app_notification(user, badge)
     
@@ -660,15 +662,31 @@ def post_detail(request, post_id):
     # data.pop('community', None)
     return Response(data, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 def like_post(request, user_id, post_id):
     post = Posts.objects.get(pk=post_id)
     user = User.objects.get(pk=user_id)
     if user in post.likes.all():
         post.likes.remove(user)
+
         return Response({'message': 'Post unliked'}, status=status.HTTP_200_OK)
     else:
         post.likes.add(user)
+
+        giveLikeBadge = get_object_or_404(Badge, pk=2)
+        getLikeBadge = get_object_or_404(Badge, pk=5)
+
+        postUser = post.user
+
+        if giveLikeBadge.give_like_criteria(user):
+            UserBadge.assign_badge(user, giveLikeBadge)
+            send_in_app_notification(user, giveLikeBadge)
+
+        if getLikeBadge.get_like_criteria(postUser):
+            UserBadge.assign_badge(postUser, getLikeBadge)
+            send_in_app_notification(postUser, getLikeBadge)
+
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
 
 from rest_framework import status

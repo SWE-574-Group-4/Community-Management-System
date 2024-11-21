@@ -48,14 +48,6 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
             },
         },
         {
-            header: 'Description',
-            accessorKey: 'badge_description',
-            cell: (props) => {
-                const row = props.row.original
-                return <div>{row.description}</div>
-            },
-        },
-        {
             header: 'Tier',
             accessorKey: 'tier',
             cell: (props) => {
@@ -64,11 +56,19 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
             },
         },
         {
-            header: 'Date',
+            header: 'Description',
+            accessorKey: 'badge_description',
+            cell: (props) => {
+                const row = props.row.original
+                return <div>{row.description}</div>
+            },
+        },
+        {
+            header: 'Received Date',
             accessorKey: 'date',
             cell: (props) => {
                 const row = props.row.original
-                return <div>{row.earned_at}</div>
+                return <div>{formatDate(row.earned_at)}</div>
             },
         },
     ]

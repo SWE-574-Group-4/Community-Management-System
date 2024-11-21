@@ -29,7 +29,7 @@ const NotificationsTable = ({
 
     const columns: ColumnDef<any>[] = [
         {
-            header: 'Meassage',
+            header: 'Message',
             accessorKey: 'message_description',
             cell: (props) => {
                 const row = props.row.original
@@ -37,11 +37,11 @@ const NotificationsTable = ({
             },
         },
         {
-            header: 'Date',
+            header: 'Received Date',
             accessorKey: 'notification_creation_date',
             cell: (props) => {
                 const row = props.row.original
-                return <div>{row.created_at}</div>
+                return <div>{formatDate(row.created_at)}</div>
             },
         },
     ]
