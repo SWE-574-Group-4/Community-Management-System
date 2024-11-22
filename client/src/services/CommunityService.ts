@@ -9,7 +9,7 @@ export async function apiGetTags() {
 }
 
 export async function apiAddCommunity(data: CommunityFormModel) {
-    const { is_public, userId, tags, ...rest } = data
+    const { is_public, userId, tag_ids, ...rest } = data
     return ApiService.fetchData({
         url: '/add_community/',
         method: 'post',
@@ -17,7 +17,7 @@ export async function apiAddCommunity(data: CommunityFormModel) {
             ...rest,
             is_public,
             user_id: userId,
-            ...(tags && { tags: tags.map(tag => ({ id: tag.id, name: tag.name })) }), // Include tags only if defined
+            tag_ids,
         },
     })
 }

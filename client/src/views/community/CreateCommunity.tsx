@@ -74,7 +74,7 @@ const CreateCommunity = () => {
             const resp = await apiAddCommunity({
                 ...values,
                 userId,
-                tags,
+                tag_ids: tags.map((tag) => tag.id),
             })
 
             if (resp.status == 201) {
@@ -122,7 +122,7 @@ const CreateCommunity = () => {
             const resp = await apiUpdateCommunity({
                 ...values,
                 cid,
-                tags,
+                tag_ids: tags.map((tag) => tag.id),
             })
 
             if (resp.status == 200) {

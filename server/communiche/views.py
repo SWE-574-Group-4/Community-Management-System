@@ -164,21 +164,19 @@ def add_community(request):
         serializer = CommunitySerializer(data=request.data)
         if serializer.is_valid():
             user_id = request.data.get('user_id')
-            serializer.save(owner_id=user_id)
+            tags = request.data.getlist('tag_ids[]')
+            serializer.save(owner_id=user_id, tags=tags)
             
             # Add owner to communityuser table with role -1
             community = serializer.instance
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
 
-            tags = request.data.get('tags', [])
-            for tag_data in tags:
-                tag_id = tag_data.get('id')
-                tag_name = tag_data.get('name')
-                if tag_id and tag_name:
-                    tag, created = Tag.objects.get_or_create(id=tag_id, defaults={'name': tag_name})
-                    community.tags.add(tag)
-            
+            for tag_id in tags:
+                if tag_id:
+                    tag = Tag.objects.get(id=tag_id)
+                    print("tag data:", tag)
+                    community.tags.add(tag)         
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

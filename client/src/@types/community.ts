@@ -4,7 +4,7 @@ export type CommunityFormModel = {
     is_public: boolean
     userId?: string
     cid?: string
-    tags?: { id: number; name: string }[]
+    tag_ids?: number[]
 }
 
 export type FieldType = {
