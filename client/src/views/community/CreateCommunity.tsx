@@ -215,14 +215,16 @@ const CreateCommunity = () => {
                                     />
                                 </FormRow>
 
-                                <FormRow
-                                    name="description"
-                                    label="Labels"
-                                    {...validatorProps}
-                                >
-                                    <AddCommunityTagsField setCommunityTags={setTags}  />
-
-                                </FormRow>
+                                {/* You can set tags only when creating community, you cannot change it later */}
+                                {!editMode && (
+                                    <FormRow
+                                        name="description"
+                                        label="Labels"
+                                        {...validatorProps}
+                                    >
+                                        <AddCommunityTagsField setCommunityTags={setTags} />
+                                    </FormRow>
+                                )}
 
                                 <FormRow
                                     name="is_public"
