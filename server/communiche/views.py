@@ -1,18 +1,39 @@
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Tag, Template, User, Posts
-from .serializers import TagSerializer, TemplateSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, ReportSerializer, ReportSerializer 
-from rest_framework.decorators import api_view, permission_classes, permission_classes
+from .models import (
+    Tag, 
+    Template, 
+    User, 
+    Posts, 
+    Community, 
+    JoinRequest, 
+    CommunityUser, 
+    Invitation, 
+    PComment, 
+    Report,
+    TemplateCommunity
+)
+from .serializers import (
+    TagSerializer, 
+    TemplateSerializer, 
+    UserSerializer, 
+    CommunitySerializer, 
+    JoinRequestSerializer, 
+    TemplateCommunitySerializer, 
+    PostSerializer, 
+    InvitationSerializer, 
+    CommentSerializer, 
+    ReportSerializer
+)
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
-from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Report, Report
 from django.http import JsonResponse
 from . import constants
 from datetime import datetime, timedelta
-from .models import Community, TemplateCommunity
 from django.utils import timezone
 from rest_framework.permissions import AllowAny
 

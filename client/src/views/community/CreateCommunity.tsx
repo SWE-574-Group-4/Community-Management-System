@@ -62,10 +62,6 @@ const CreateCommunity = () => {
         }
     }, [community])
 
-    // useEffect(() => {
-    //     console.log('tags', tags)
-    // }, [tags])
-
     const onFormSubmit = async (
         values: CommunityFormModel,
         setSubmitting: (isSubmitting: boolean) => void
