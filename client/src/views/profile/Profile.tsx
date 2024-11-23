@@ -27,7 +27,6 @@ export default function Profile() {
     const { id: userId } = useParams<{ id: string }>()
     const authUser = useAppSelector((state) => state.auth.user)
 
-<<<<<<< HEAD
     // Fetch user information using the provided userId
     const userInfo = useFetchData<AxiosResponse>(apiGetUserInformation, [userId])
     const {
@@ -43,15 +42,9 @@ export default function Profile() {
         posts,
         communities,
     } = userInfo?.data || {}
-=======
-    const userInfo = useFetchData<AxiosResponse>(apiGetUserInformation, [
-        userId,
-    ])
 
-    const { firstname, lastname, email, username, country, short_info } =
-        userInfo?.data || {}
->>>>>>> dev
 
+    
     return (
         <div>
             {authUser?.id === userId && 'This is your profile page'}
@@ -67,7 +60,7 @@ export default function Profile() {
                 
                 {/* Username Field */}
                 <CustomerInfoField title="Username" value={username} />
-                {/* <CustomerInfoField title="Date of birth" value={dob} /> */}
+                <CustomerInfoField title="Date of birth" value={dob} />
                 <CustomerInfoField title="Country" value={country} />
                 <CustomerInfoField title="Short Info" value={short_info} />
 
