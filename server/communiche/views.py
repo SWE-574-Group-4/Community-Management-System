@@ -913,3 +913,9 @@ def unfollow_user(request, user_id, follower_id):
         return Response({'message': 'User unfollowed successfully'}, status=status.HTTP_204_NO_CONTENT)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+@api_view(['GET'])
+def is_following(request, user_id, follower_id):
+    follower = User.objects.get(pk=follower_id)
+    following = User.objects.get(id=user_id)
+    is_following = UserFollowing.objects.filter(follower=follower, following=following).exists()
+    return Response(is_following, status=status.HTTP_200_OK)

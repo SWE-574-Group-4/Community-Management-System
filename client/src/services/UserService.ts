@@ -68,7 +68,6 @@ export async function apiAcceptRejectInvitation(
 }
 
 export async function apiGetUserInformation(userId: string) {
-    console.log('userId....', userId)
     return ApiService.fetchData({
         url: `/users/${userId}/`,
         method: 'get',
@@ -76,8 +75,6 @@ export async function apiGetUserInformation(userId: string) {
 }
 
 export async function followUser(userId: number, authedUserId: number) {
-
-    console.log('followed', userId, authedUserId)
         const response = await ApiService.fetchData({
             url: `follow/${userId}/${authedUserId}`,
             method: 'post',
@@ -95,4 +92,12 @@ export async function unfollowUser(userId: number, authedUserId: number) {
 
         });
         return response.data;
+}
+
+export async function isFollowing(userId: number, authedUserId: number) {
+    return ApiService.fetchData({
+        url: `is_following/${userId}/${authedUserId}`,
+        method: 'get',
+    });
+
 }

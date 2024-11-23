@@ -1,7 +1,7 @@
 import { Community, Post } from '@/@types/user'
 import { ActionLink } from '@/components/shared'
 import FollowButton from '@/views/profile/FollowButton'
-import { apiGetUserInformation } from '@/services/UserService'
+import { apiGetUserInformation, isFollowing } from '@/services/UserService'
 import { useAppSelector } from '@/store'
 import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
@@ -29,6 +29,9 @@ export default function Profile() {
 
     // Fetch user information using the provided userId
     const userInfo = useFetchData<AxiosResponse>(apiGetUserInformation, [userId])
+    const userFollowing = useFetchData<AxiosResponse>(isFollowing, [userId, authUser?.id])
+    const isFollowingUser = userFollowing?.data ?? false
+
     const {
         id,
         firstname,
@@ -38,7 +41,6 @@ export default function Profile() {
         dob,
         country,
         short_info,
-        is_followed,
         posts,
         communities,
     } = userInfo?.data || {}
@@ -51,7 +53,7 @@ export default function Profile() {
             {/* Follow Button for other users */}
             {authUser?.id !== id && id !== undefined && (
             <div className="mt-4">
-                <FollowButton userId={id} authUserId={authUser?.id} isFollowed={is_followed ?? false} />
+                <FollowButton userId={id} authUserId={authUser?.id} isFollowed={isFollowingUser} />
             </div>
             )}
             <div className="grid grid-cols-1 xl:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
