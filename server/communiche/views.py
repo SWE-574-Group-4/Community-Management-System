@@ -788,7 +788,7 @@ def follow_user(request, user_id, follower_id):
     try:
         follower = User.objects.get(pk=follower_id)
         following = User.objects.get(pk=user_id)
-        print("following: ")
+        
         if follower != following:
             UserFollowing.objects.get_or_create(follower=follower, following=following)
         return Response({'message': 'User followed successfully'}, status=status.HTTP_201_CREATED)
