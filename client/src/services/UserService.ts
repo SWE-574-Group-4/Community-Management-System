@@ -17,7 +17,7 @@ export async function updateProfile(data: UserResponseType) {
         method: 'put',
         data: {
             ..._data,
-            dob: dob ? dayjs(dob).format('YYYY-MM-DDTHH:mm:ss') : null,
+            // dob: dob ? dayjs(dob).format('YYYY-MM-DDTHH:mm:ss') : null,
         },
     })
 }

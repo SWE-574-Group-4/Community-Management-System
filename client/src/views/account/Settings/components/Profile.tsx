@@ -78,7 +78,7 @@ const Profile = ({
     data = {
         id: -1,
         country: '',
-        dob: '',
+        // dob: '',
         email: '',
         firstname: '',
         lastname: '',
@@ -244,7 +244,7 @@ const Profile = ({
                                     }
                                 />
                             </FormRow>
-                            <FormRow
+                            {/* <FormRow
                                 name="dob"
                                 label={t('Date of Birth')}
                                 {...validatorProps}
@@ -259,7 +259,7 @@ const Profile = ({
                                         <HiOutlineUser className="text-xl" />
                                     }
                                 />
-                            </FormRow>
+                            </FormRow> */}
                             <FormRow
                                 name="country"
                                 label={t('Country')}

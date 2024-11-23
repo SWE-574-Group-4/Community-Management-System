@@ -1,8 +1,7 @@
 import json
 from rest_framework import serializers
 
-from communiche import constants
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation
+from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Report
 from .models import UserFollowing
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,9 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'firstname', 'lastname', 'username', 'email', 'dob', 'country', 'phone', 'short_bio', 'password']
 
 class TemplateSerializer(serializers.ModelSerializer):
+    community = serializers.SerializerMethodField()
+
     class Meta:
         model = Template
-        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'fields']
+        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'fields', 'community']
+
+    def get_community(self, obj):
+        template_community = TemplateCommunity.objects.filter(template=obj).first()
+        return CommunitySerializer(template_community.community).data if template_community else None
 
 class TemplateCommunitySerializer(serializers.ModelSerializer):
     template = TemplateSerializer()
@@ -105,10 +110,38 @@ class PostSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    community = serializers.SerializerMethodField()
 
     class Meta:
         model = PComment
-        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user']
+        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user', 'community']
+
+    def get_community(self, obj):
+        # Assuming the post has a foreign key to community
+        community = obj.post.community
+        return CommunitySerializer(community).data
+
+class ReportSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    comment = CommentSerializer()
+    post = PostSerializer()
+
+    class Meta:
+        model = Report
+        fields = ['id', 'user', 'post', 'comment', 'community', 'reason', 'comment_text' ,'created_at', 'status']
+
+    def get_comment(self, obj):
+        if obj.comment:
+            return CommentSerializer(obj.comment).data
+        return None 
+    def get_post(self, obj):
+        if obj.post:
+            return PostSerializer(obj.post).data
+        return None
+    def get_user(self, obj):
+        if obj.user:
+            return UserSerializer(obj.user).data
+        return None
 
 from rest_framework import serializers
 from .models import UserFollowing
