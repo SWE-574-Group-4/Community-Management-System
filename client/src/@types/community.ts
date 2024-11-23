@@ -88,6 +88,7 @@ export type IndividualCommunityType = {
     templates: DataTypeOption[]
     num_members: number
     members?: Member[]
+    tags?: string[]
 }
 
 export type FetchCommunityType = {

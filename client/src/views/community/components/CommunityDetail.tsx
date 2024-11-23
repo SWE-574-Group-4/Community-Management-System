@@ -29,7 +29,7 @@ export default function CommunityDetail({
         (state) => state.community.community.fetchTrigger
     )
     const userId = useAppSelector((state) => state.auth.user?.id)
-    const { id, members, num_members, name, description, is_public, is_owner } =
+    const { id, members, num_members, name, description, is_public, is_owner, tags } =
         community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -187,7 +187,7 @@ export default function CommunityDetail({
                 <h4 className="font-bold">Related Topics</h4>
                 <div className="flex py-2">
                     <div className="mr-2 rtl:ml-2">
-                        <TagComponent community={community} />
+                        <TagComponent tags={tags || []} />
                     </div>
                 </div>
             </Card>

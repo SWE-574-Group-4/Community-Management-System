@@ -1,38 +1,26 @@
 
 import Tag from '@/components/ui/Tag'
-import { apiGetCommunityTags } from '@/services/CommunityService'
 import React, { useEffect } from 'react'
 import { HiPlusCircle, HiX } from 'react-icons/hi'
 
-function TagComponent(community: any) {
-    const [tags, setTags] = React.useState<{ id: number; name: string }[]>([])
+interface TagComponentProps {
+    tags: string[];
+}
 
-    useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const response = await apiGetCommunityTags()
-                if (response.status === 200) {
-                    setTags(response.data as [])
-                    console.log('getting tags', response.data)
-                }
-                // fetch default community labels
-                console.log('fetching specific community tags')
-            } catch (error) {
-                console.error('Error fetching specific community tags', error)
-            }
-        }
-        fetchTags()
-    }, [])
-    
+const TagComponent: React.FC<TagComponentProps> = ({tags}) => {
     return (
         <div className="flex">
-            {tags.map((tag) => (
-                <div key={tag.id} className="mr-2 rtl:ml-2">                    
-                    <Tag prefix prefixClass="bg-emerald-500">
-                        {tag.name}
-                    </Tag>
-            </div>
-            ))}
+            {tags.length > 0 ? (
+                tags.map((tag) => (
+                    <div className="mr-2 rtl:ml-2" key={tag}>
+                        <Tag prefix prefixClass="bg-emerald-500">
+                            {tag}
+                        </Tag>
+                    </div>
+                ))
+            ) : (
+                <div>No tags available</div>
+            )}
         </div>
     )
 }
