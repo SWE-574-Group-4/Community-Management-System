@@ -113,8 +113,11 @@ class PostSerializer(serializers.ModelSerializer):
         except json.JSONDecodeError:
             return None  # or return some default value
     
+    # def get_tags(self, obj):
+    #     return [tag.name for tag in obj.tags.all()]
+    
     def get_tags(self, obj):
-        return [tag.name for tag in obj.tags.all()]
+        return [tag.name for tag in obj.tags.all()] if obj.tags.exists() else []
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
