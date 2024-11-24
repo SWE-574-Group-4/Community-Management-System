@@ -42,12 +42,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
 from . import constants
 
-@api_view(['GET'])
-def get_tags(request):
-    tags = Tag.objects.all()
-    serializer = TagSerializer(tags, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
 @api_view(['GET', 'POST'])
 def user_list(request):
     # get all the users
@@ -995,3 +989,9 @@ def update_report_status(request, community_id, report_id):
         return Response({"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
