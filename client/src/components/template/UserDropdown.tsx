@@ -4,7 +4,13 @@ import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import useAuth from '@/utils/hooks/useAuth'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
-import { HiOutlineLogout, HiOutlineUser, HiOutlineKey } from 'react-icons/hi'
+import {
+    HiOutlineLogout,
+    HiOutlineUser,
+    HiOutlineKey,
+    HiBadgeCheck,
+    HiPhoneMissedCall,
+} from 'react-icons/hi'
 import { BsCardChecklist } from 'react-icons/bs'
 import { IoFastFoodOutline } from 'react-icons/io5'
 
@@ -34,6 +40,16 @@ const dropdownItemList: DropdownList[] = [
         label: 'nav.myCommunities',
         path: '/app/account/settings/myCommunities',
         icon: <HiOutlineKey />,
+    },
+    {
+        label: 'nav.myBadges',
+        path: '/app/account/settings/myBadges',
+        icon: <HiBadgeCheck />,
+    },
+    {
+        label: 'nav.myNotifications',
+        path: '/app/account/settings/myNotifications',
+        icon: <HiPhoneMissedCall />,
     },
 ]
 

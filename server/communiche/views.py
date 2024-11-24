@@ -1,21 +1,27 @@
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import (
-    Tag, 
+    Badge, 
+    Notification, 
     Template, 
     User, 
     Posts, 
+    Tag,
+    UserBadge, 
     Community, 
     JoinRequest, 
     CommunityUser, 
     Invitation, 
     PComment, 
-    Report,
-    TemplateCommunity
+    Report, 
+    TemplateCommunity, 
+    UserFollowing
 )
 from .serializers import (
     TagSerializer, 
     TemplateSerializer, 
+    UserBadgeDetailedSerializer, 
+    UserBadgeSerializer, 
     UserSerializer, 
     CommunitySerializer, 
     JoinRequestSerializer, 
@@ -23,19 +29,28 @@ from .serializers import (
     PostSerializer, 
     InvitationSerializer, 
     CommentSerializer, 
-    ReportSerializer
+    BadgeSerializer, 
+    ReportSerializer, 
+    UserFollowingSerializer
 )
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
-from django.http import JsonResponse
-from . import constants
-from datetime import datetime, timedelta
 from django.utils import timezone
-from rest_framework.permissions import AllowAny
+from django.shortcuts import get_object_or_404
+from . import constants
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def get_tags(request):
@@ -63,6 +78,7 @@ def user_list(request):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def user_detail(request, id):
+    print("user ", request.user.id)
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
@@ -81,6 +97,11 @@ def user_detail(request, id):
         # Get the posts that the user has posted
         posts = Posts.objects.filter(user=user).values('id', 'content')
         user_data['posts'] = list(posts)
+
+        # Fetch and add badges
+        user_badges = UserBadge.objects.filter(user=user).select_related('badge')
+        badges_data = [{'badge_name': ub.badge.name, 'earned_at': ub.earned_at} for ub in user_badges]
+        user_data['badges'] = badges_data
         
         return Response(user_data)
     
@@ -598,6 +619,13 @@ def post(request):
     # Update the community's updated_at field
     community.updated_at = datetime.now()
     community.save()
+
+    # Check badge criteria for this user
+    badge = get_object_or_404(Badge, pk=1)
+
+    if badge.post_criteria(user):
+            UserBadge.assign_badge(user, badge)
+            send_in_app_notification(user, badge)
     
     return Response(status=status.HTTP_201_CREATED)
 
@@ -685,15 +713,31 @@ def post_detail(request, post_id):
     # data.pop('community', None)
     return Response(data, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 def like_post(request, user_id, post_id):
     post = Posts.objects.get(pk=post_id)
     user = User.objects.get(pk=user_id)
     if user in post.likes.all():
         post.likes.remove(user)
+
         return Response({'message': 'Post unliked'}, status=status.HTTP_200_OK)
     else:
         post.likes.add(user)
+
+        giveLikeBadge = get_object_or_404(Badge, pk=2)
+        getLikeBadge = get_object_or_404(Badge, pk=5)
+
+        postUser = post.user
+
+        if giveLikeBadge.give_like_criteria(user):
+            UserBadge.assign_badge(user, giveLikeBadge)
+            send_in_app_notification(user, giveLikeBadge)
+
+        if getLikeBadge.get_like_criteria(postUser):
+            UserBadge.assign_badge(postUser, getLikeBadge)
+            send_in_app_notification(postUser, getLikeBadge)
+
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
 
 from rest_framework import status
@@ -822,6 +866,55 @@ def advance_search(request):
             'total': len(user_serializer.data)
         })
 
+def send_in_app_notification(user, badge):
+    """Creates a notification for a user when they earn a new badge."""
+    Notification.objects.create(
+        user=user,
+        message=f"Congratulations! You've earned the {badge.name} badge.",
+    )
+
+@api_view(['GET'])
+def get_user_notifications(request):
+    user_id = request.query_params.get('user_id')
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    notifications = Notification.objects.filter(user=user_id, is_read=False)
+    notifications_data = [{"id": n.id, "message": n.message, "is_read": n.is_read, "created_at": n.created_at} for n in notifications]
+    return Response(notifications_data)
+
+@api_view(['GET'])
+def get_user_badges(request):
+    user_id = request.query_params.get('user_id')
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    user_badges = UserBadge.objects.filter(user=user)
+    serializer = UserBadgeDetailedSerializer(user_badges, many=True)
+    return Response(serializer.data)
+
+# Get all available badges (for admins or others)
+@api_view(['GET'])
+def get_all_badges(request):
+    badges = Badge.objects.all()
+    serializer = BadgeSerializer(badges, many=True)
+    return Response(serializer.data)
+
+# Assign badge to user (admin or system logic)
+@api_view(['POST'])
+def assign_badge_to_user(request, user_id, badge_id):
+    user = User.objects.get(id=user_id)
+    badge = Badge.objects.get(id=badge_id)
+    
+    # Example: Here, you can use your logic to assign a badge to the user
+    UserBadge.assign_badge(user, badge)
+    
+    return Response({"message": f"Badge {badge.name} assigned to user {user.username}"})
+        
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def report_create(request, community_id):
@@ -913,3 +1006,34 @@ def update_report_status(request, community_id, report_id):
         return Response({"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def follow_user(request, user_id, follower_id):  
+    try:
+        follower = User.objects.get(pk=follower_id)
+        following = User.objects.get(pk=user_id)
+        
+        if follower != following:
+            UserFollowing.objects.get_or_create(follower=follower, following=following)
+        return Response({'message': 'User followed successfully'}, status=status.HTTP_201_CREATED)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def unfollow_user(request, user_id, follower_id):
+    try:
+        follower = User.objects.get(pk=follower_id)
+        following = User.objects.get(id=user_id)
+        if follower != following:
+            UserFollowing.objects.filter(follower=follower, following=following).delete()
+        return Response({'message': 'User unfollowed successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['GET'])
+def is_following(request, user_id, follower_id):
+    follower = User.objects.get(pk=follower_id)
+    following = User.objects.get(id=user_id)
+    is_following = UserFollowing.objects.filter(follower=follower, following=following).exists()
+    return Response(is_following, status=status.HTTP_200_OK)
