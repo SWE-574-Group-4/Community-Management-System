@@ -4,19 +4,19 @@ export async function apiPost(
     communityId: string,
     userId: string,
     fields: string,
-    tag_ids:number[]
+    tag_ids: number[]
 ) {
     return ApiService.fetchData({
         url: `/post/`,
         method: 'post',
         headers: {
-            'Content-Type': 'application/json'
-          },
+            'Content-Type': 'application/json',
+        },
         data: {
             community_id: communityId,
             user_id: userId,
             content: fields,
-            tag_ids:tag_ids
+            tag_ids: tag_ids,
         },
     })
 }
@@ -89,5 +89,13 @@ export async function apiRemoveComment(commentId: string) {
     return ApiService.fetchData({
         url: `/comment/${commentId}/remove`,
         method: 'delete',
+    })
+}
+
+// tags
+export async function apiGetTags() {
+    return ApiService.fetchData({
+        url: `/tags/`,
+        method: 'get',
     })
 }

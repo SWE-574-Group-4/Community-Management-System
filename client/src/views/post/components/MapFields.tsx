@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { apiPost } from '@/services/PostService'
+import { apiGetTags, apiPost } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
 import Select, { MultiValue } from 'react-select'
-import axios from 'axios'
+import { AxiosResponse } from 'axios'
 
 const FieldComponent = ({
     field,
@@ -102,16 +102,21 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
     )
 
     const [tags, setTags] = useState<{ value: number; label: string }[]>([])
-    const [selectedTags, setSelectedTags] = useState<MultiValue<{ value: number; label: string }>>([])
+    const [selectedTags, setSelectedTags] = useState<
+        MultiValue<{ value: number; label: string }>
+    >([])
 
     useEffect(() => {
         const fetchTags = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/tags/')
-                const options = response.data.map((tag: { id: number; name: string }) => ({
-                    value: tag.id,
-                    label: tag.name,
-                }))
+                const response = (await apiGetTags()) as AxiosResponse
+
+                const options = response?.data.map(
+                    (tag: { id: number; name: string }) => ({
+                        value: tag.id,
+                        label: tag.name,
+                    })
+                )
                 setTags(options)
             } catch (error) {
                 console.error('Error fetching tags:', error)
@@ -120,10 +125,11 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
         fetchTags()
     }, [])
 
-    const handleTagChange = (selectedOptions: MultiValue<{ value: number; label: string }>) => {
+    const handleTagChange = (
+        selectedOptions: MultiValue<{ value: number; label: string }>
+    ) => {
         setSelectedTags(selectedOptions)
     }
-
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -141,7 +147,7 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
         // TODO: why is this not notifyin the user that the post was successful?
         // turn form data into a string with JSON.stringify
         if (typeof handlePost === 'function') {
-            handlePost(id, userId, formData,tags)
+            handlePost(id, userId, formData, tags)
         }
     }
 
