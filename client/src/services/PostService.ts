@@ -9,6 +9,8 @@ export async function apiPost(
     return ApiService.fetchData({
         url: `/post/`,
         method: 'post',
+
+        // TODO: remove headers
         headers: {
             'Content-Type': 'application/json',
         },
@@ -16,7 +18,7 @@ export async function apiPost(
             community_id: communityId,
             user_id: userId,
             content: fields,
-            tag_ids: tag_ids,
+            tag_ids: tag_ids, // TODO: Look for a better way to process in the backend like content fields
         },
     })
 }
