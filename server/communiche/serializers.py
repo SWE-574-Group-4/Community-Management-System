@@ -1,6 +1,21 @@
 import json
 from rest_framework import serializers
-from .models import Badge, Notification, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, UserBadge, Report
+from .models import (
+    Badge, 
+    Notification, 
+    Template, 
+    User, 
+    Community, 
+    JoinRequest, 
+    CommunityUser, 
+    TemplateCommunity, 
+    Posts, 
+    PComment, 
+    Invitation, 
+    UserBadge, 
+    Report, 
+    UserFollowing
+)
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -141,6 +156,13 @@ class ReportSerializer(serializers.ModelSerializer):
             return UserSerializer(obj.user).data
         return None
 
+class UserFollowingSerializer(serializers.ModelSerializer):
+    follower = serializers.ReadOnlyField(source='follower.username')
+    following = serializers.ReadOnlyField(source='following.username')
+
+    class Meta:
+        model = UserFollowing
+        fields = ['id', 'follower', 'following', 'created_at']
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
