@@ -46,7 +46,9 @@
         "signOut": "Sign Out",
         "password": "Password Settings",
         "invitations": "My Invitations",
-        "myCommunities": "My Communities"
+        "myCommunities": "My Communities",
+        "myBadges": "My Badges",
+        "myNotifications": "My Notifications"
     },
     "settings": {
         "title": "General",

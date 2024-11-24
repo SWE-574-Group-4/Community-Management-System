@@ -44,6 +44,26 @@ export async function apiGetInvitations(userId: string) {
     })
 }
 
+export async function apiGetBadges(userId: string) {
+    return ApiService.fetchData({
+        url: `/user/badges/`,
+        method: 'get',
+        params: {
+            user_id: userId,
+        },
+    })
+}
+
+export async function apiGetNotifications(userId: string) {
+    return ApiService.fetchData({
+        url: `/user/notifications/`,
+        method: 'get',
+        params: {
+            user_id: userId,
+        },
+    })
+}
+
 export async function apiGetUserCommunities(userId: string) {
     return ApiService.fetchData({
         url: `/user/communities/`,

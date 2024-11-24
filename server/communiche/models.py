@@ -1,5 +1,6 @@
+from django.utils import timezone
 from django.db import models
-from django.db.models import JSONField
+from django.db.models import JSONField, Sum, Count
 from django.contrib.auth.hashers import check_password
 
 from .constants import DATA_TYPES
@@ -126,3 +127,69 @@ class PComment(models.Model):
     content = models.CharField(max_length=5000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Badge(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    tier = models.CharField(max_length=20)
+    criteria = models.JSONField()
+    icon = models.ImageField(upload_to='badges/icons/', null=True, blank=True)  # Image field for badge icons
+
+    def post_criteria(self, user):
+        user_posts = user.posts_set.count()
+        
+        return user_posts >= self.criteria.get("posts", 0)
+    
+    def get_like_criteria(self, user):
+        user_upvotes_received = sum(post.likes.count() for post in user.posts_set.all())
+
+        return user_upvotes_received >= self.criteria.get("single_post_likes", 0)
+        print(user_upvotes_received)
+
+    def give_like_criteria(self, user):
+        user_upvotes_given = user.post_likes.count()
+
+        return user_upvotes_given >= self.criteria.get("likes_given", 0)
+        print(user_upvotes_given)
+
+class UserBadge(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(default=timezone.now)
+
+    @classmethod
+    def assign_badge(cls, user, badge):
+        # Check if user already has this badge
+        if not cls.objects.filter(user=user, badge=badge).exists():
+            cls.objects.create(user=user, badge=badge)
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"
+        
+class Report(models.Model):
+    REPORT_CHOICES = [
+        ('SPAM', 'Spam'),
+        ('INAPPROPRIATE', 'Inappropriate Content'),
+        ('HARASSMENT', 'Harassment'),
+        ('DUPLICATE', 'Duplicate Content'),
+        ('MISLEADING', 'Misleading/Wrong Content'),
+        ('OTHER', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(PComment, on_delete=models.CASCADE, null=True, blank=True)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True)
+    reason = models.CharField(choices=REPORT_CHOICES, max_length=50)
+    comment_text = models.CharField(max_length=250, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=0)  # 0 for pending, 1 for in review, 2 for resolved
+
+    def __str__(self):
+        return f"{self.reason} - {self.community} - {self.created_at}"
