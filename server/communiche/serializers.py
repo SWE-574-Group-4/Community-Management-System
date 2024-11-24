@@ -1,8 +1,22 @@
+from asyncio import constants
 import json
 from rest_framework import serializers
 from .models import (
-    Template, User, Community, JoinRequest, CommunityUser, 
-    TemplateCommunity, Posts, PComment, Invitation, Report, Tag
+    Badge, 
+    Notification, 
+    Template, 
+    User, 
+    Community, 
+    JoinRequest, 
+    CommunityUser, 
+    TemplateCommunity, 
+    Posts, 
+    PComment, 
+    Invitation, 
+    UserBadge, 
+    Report, 
+    UserFollowing, 
+    Tag
 )
 
 class TagSerializer(serializers.ModelSerializer):
@@ -98,10 +112,11 @@ class PostSerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
     # comments = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Posts
-        fields = ['id', 'community', 'content', 'created_at', 'updated_at', 'user', 'likes']
+        fields = ['id', 'community', 'content', 'created_at', 'updated_at', 'user', 'likes', 'tags']
 
     # def get_comments(self, obj):
     #     return PostCommentSerializer(obj.post_comments.all(), many=True).data
@@ -114,6 +129,9 @@ class PostSerializer(serializers.ModelSerializer):
             return json.loads(obj.content)
         except json.JSONDecodeError:
             return None  # or return some default value
+    
+    def get_tags(self, obj):
+        return [tag.name for tag in obj.tags.all()]
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
@@ -149,3 +167,36 @@ class ReportSerializer(serializers.ModelSerializer):
         if obj.user:
             return UserSerializer(obj.user).data
         return None
+
+class UserFollowingSerializer(serializers.ModelSerializer):
+    follower = serializers.ReadOnlyField(source='follower.username')
+    following = serializers.ReadOnlyField(source='following.username')
+
+    class Meta:
+        model = UserFollowing
+        fields = ['id', 'follower', 'following', 'created_at']
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'user', 'message', 'is_read', 'created_at']
+
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ['id', 'name', 'description', 'tier']
+
+class UserBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBadge
+        fields = ['id', 'earned_at', 'badge']
+
+class UserBadgeDetailedSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='badge.name')
+    description = serializers.CharField(source='badge.description')
+    tier = serializers.CharField(source='badge.tier')
+    icon = serializers.ImageField(source='badge.icon')
+    earned_at = serializers.DateTimeField()
+
+    class Meta:
+        model = UserBadge
+        fields = ['name', 'description', 'tier', 'icon', 'earned_at']

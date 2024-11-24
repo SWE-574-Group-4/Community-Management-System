@@ -9,6 +9,8 @@ export type UserResponseType = {
     short_bio: string | null
     username: string
     is_invited?: boolean
+    is_followed?: boolean
+
 }
 
 export type PasswordType = {
@@ -36,6 +38,21 @@ export type InvitationsType = {
     status: boolean
 }
 
+export type BadgeType = {
+    id: number
+    name: string
+    description?: string
+    tier?: string
+    status: boolean
+}
+
+export type NotificationType = {
+    id: number
+    name: string
+    is_read?: boolean
+    created_at?: string
+}
+
 export type ProfileType = {
     id: number
     firstname: string
@@ -48,6 +65,9 @@ export type ProfileType = {
     short_bio: string | null
     posts: Post[]
     communities: Community[]
+    is_followed?: boolean // Add follow status here too if needed
+    followers_count?: number
+    following_count?: number
 }
 
 export type Post = {
