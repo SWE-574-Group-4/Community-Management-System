@@ -1,7 +1,7 @@
 // src/post/components/DisplayPost.tsx
 import { CommentResponseType, PostData, _Field } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
-import { Badge, Button, Card, Input, Tag } from '@/components/ui'
+import { Button, Card, Input, Tag } from '@/components/ui'
 import {
     apiDeletePost,
     apiGetComments,
