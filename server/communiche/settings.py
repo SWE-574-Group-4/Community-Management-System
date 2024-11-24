@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure--x&acod-6vwu^!_s1t_(9*x!79=abpd+)ypt5@wg9)5v6aqcz@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["54.171.199.115", "my-backend-container", "127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
+ALLOWED_HOSTS = ["communiche.site", "54.171.199.115", "my-backend-container", "127.0.0.1", '13.49.73.218', "www.kodigate.com", "kodigate.com", "localhost"]
 
 
 # Application definition
@@ -135,4 +135,6 @@ STATIC_URL = '/static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+MEDIA_URL = '/img/'
+MEDIA_ROOT = BASE_DIR / 'img'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

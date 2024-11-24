@@ -36,6 +36,21 @@ export type InvitationsType = {
     status: boolean
 }
 
+export type BadgeType = {
+    id: number
+    name: string
+    description?: string
+    tier?: string
+    status: boolean
+}
+
+export type NotificationType = {
+    id: number
+    name: string
+    is_read?: boolean
+    created_at?: string
+}
+
 export type ProfileType = {
     id: number
     firstname: string

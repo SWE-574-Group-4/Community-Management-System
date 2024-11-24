@@ -23,6 +23,10 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
         () => dispatch(toggleFetchTrigger())
     )
 
+    const handleReport = () => {
+        navigate(`/community/${comment.community.id}/create-report?post_id=${comment.post}&comment_id=${comment.id}`)
+    }
+
     return (
         <Card
             className="min-w-[320px] md:min-w-[450px] mt-3 ml-5"
@@ -62,20 +66,31 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
             {isOpen && (
                 <div className="body">{<div>{comment.content}</div>}</div>
             )}
-            {isOpen && comment.user.id === userId && (
+            
                 <div className="footer mt-5">
-                    <Button
-                        className="text-red-500"
-                        onClick={() => {
-                            if (typeof handleRemove === 'function') {
-                                handleRemove(comment.id)
-                            }
-                        }}
-                    >
-                        Delete
-                    </Button>
+                {isOpen && (
+                    <>
+                        {comment.user.id === userId && (
+                            <Button
+                                className="text-red-500"
+                                onClick={() => {
+                                    if (typeof handleRemove === 'function') {
+                                        handleRemove(comment.id)
+                                    }
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        )}
+                        <Button
+                            className="text-red-500 mx-1.5"
+                            onClick={handleReport}
+                        >
+                            Report
+                        </Button>
+                    </>
+                )}
                 </div>
-            )}
         </Card>
     )
 }

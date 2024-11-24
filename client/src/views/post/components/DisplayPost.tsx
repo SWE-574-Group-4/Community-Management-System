@@ -214,6 +214,18 @@ export default function DisplayPost({
                             )}
                             <p>{`(${likes})`}</p>
                         </div>
+                        <div>
+                        <Button
+                            size="xs"
+                            variant="solid"
+                            className="mx-2 bg-red-500 text-white"
+                            onClick={() =>
+                                navigate(`/community/${community.id}/create-report/?post_id=${id}`)
+                            }
+                        >
+                            Report
+                        </Button>
+                        </div>
                     </div>
                 </div>
                 {userId === user.id &&

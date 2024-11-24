@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag
+from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, UserBadge, Report, Tag, Badge, Notification
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -117,7 +117,61 @@ class PostSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    community = serializers.SerializerMethodField()
 
     class Meta:
         model = PComment
-        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user']
+        fields = ['id', 'post', 'content', 'created_at', 'updated_at', 'user', 'community']
+
+    def get_community(self, obj):
+        # Assuming the post has a foreign key to community
+        community = obj.post.community
+        return CommunitySerializer(community).data
+
+class ReportSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    comment = CommentSerializer()
+    post = PostSerializer()
+
+    class Meta:
+        model = Report
+        fields = ['id', 'user', 'post', 'comment', 'community', 'reason', 'comment_text' ,'created_at', 'status']
+
+    def get_comment(self, obj):
+        if obj.comment:
+            return CommentSerializer(obj.comment).data
+        return None 
+    def get_post(self, obj):
+        if obj.post:
+            return PostSerializer(obj.post).data
+        return None
+    def get_user(self, obj):
+        if obj.user:
+            return UserSerializer(obj.user).data
+        return None
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'user', 'message', 'is_read', 'created_at']
+
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ['id', 'name', 'description', 'tier']
+
+class UserBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBadge
+        fields = ['id', 'earned_at', 'badge']
+
+class UserBadgeDetailedSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='badge.name')
+    description = serializers.CharField(source='badge.description')
+    tier = serializers.CharField(source='badge.tier')
+    icon = serializers.ImageField(source='badge.icon')
+    earned_at = serializers.DateTimeField()
+
+    class Meta:
+        model = UserBadge
+        fields = ['name', 'description', 'tier', 'icon', 'earned_at']
