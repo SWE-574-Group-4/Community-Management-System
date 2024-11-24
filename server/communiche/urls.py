@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from communiche import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +27,9 @@ urlpatterns = [
     path('user/<int:user_id>/invitations/', views.invitations, name='invitations'),
     path('user/<int:invitation_id>/accept_reject_invitation/', views.accept_reject_invitation, name='accept_reject_invitation'),
     path('user/communities/', views.user_communities, name='user_communities'),
+    path('user/badges/', views.get_user_badges, name='user_badges'),
+    path('user/notifications/', views.get_user_notifications, name='user_notifications'),
+    path('user/<int:user_id>/assign-badge/<int:badge_id>/', views.assign_badge_to_user, name='assign_badge_to_user'),
     path('signup/', views.signup),
     path('login/', views.login),
 
@@ -77,3 +82,5 @@ urlpatterns = [
     path('community/<int:community_id>/reports/<int:id>/delete/', views.report_delete, name='report-delete'),
     path('community/<int:community_id>/reports/<int:report_id>/update_status/', views.update_report_status, name='update-report-status'),
 ]
+
+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

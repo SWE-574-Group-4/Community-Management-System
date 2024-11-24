@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Report
+from .models import Badge, Notification, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, UserBadge, Report
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -140,3 +140,29 @@ class ReportSerializer(serializers.ModelSerializer):
         if obj.user:
             return UserSerializer(obj.user).data
         return None
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'user', 'message', 'is_read', 'created_at']
+
+class BadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Badge
+        fields = ['id', 'name', 'description', 'tier']
+
+class UserBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBadge
+        fields = ['id', 'earned_at', 'badge']
+
+class UserBadgeDetailedSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='badge.name')
+    description = serializers.CharField(source='badge.description')
+    tier = serializers.CharField(source='badge.tier')
+    icon = serializers.ImageField(source='badge.icon')
+    earned_at = serializers.DateTimeField()
+
+    class Meta:
+        model = UserBadge
+        fields = ['name', 'description', 'tier', 'icon', 'earned_at']
