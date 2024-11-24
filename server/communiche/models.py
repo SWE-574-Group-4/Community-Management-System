@@ -165,3 +165,25 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username}: {self.message}"
+        
+class Report(models.Model):
+    REPORT_CHOICES = [
+        ('SPAM', 'Spam'),
+        ('INAPPROPRIATE', 'Inappropriate Content'),
+        ('HARASSMENT', 'Harassment'),
+        ('DUPLICATE', 'Duplicate Content'),
+        ('MISLEADING', 'Misleading/Wrong Content'),
+        ('OTHER', 'Other'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey(PComment, on_delete=models.CASCADE, null=True, blank=True)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, null=True, blank=True)
+    reason = models.CharField(choices=REPORT_CHOICES, max_length=50)
+    comment_text = models.CharField(max_length=250, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(default=0)  # 0 for pending, 1 for in review, 2 for resolved
+
+    def __str__(self):
+        return f"{self.reason} - {self.community} - {self.created_at}"
