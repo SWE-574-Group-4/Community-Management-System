@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from communiche import views
+from .views import follow_user, unfollow_user
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -32,7 +33,12 @@ urlpatterns = [
     path('user/<int:user_id>/assign-badge/<int:badge_id>/', views.assign_badge_to_user, name='assign_badge_to_user'),
     path('signup/', views.signup),
     path('login/', views.login),
+    path('follow/<int:user_id>/<int:follower_id>', follow_user, name='follow_user'),
+    path('unfollow/<int:user_id>/<int:follower_id>', unfollow_user, name='unfollow_user'),
+    path('is_following/<int:user_id>/<int:follower_id>', views.is_following, name='is_following'),
 
+    # other paths...
+    
     # community
     path('communities/', views.communities, name='communities'),
     path('community/<int:id>/', views.community_detail, name='community-detail'),

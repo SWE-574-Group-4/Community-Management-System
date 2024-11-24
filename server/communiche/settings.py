@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -84,27 +85,27 @@ WSGI_APPLICATION = 'communiche.wsgi.application'
 # Load environment variables from .env file
 load_dotenv()
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': os.getenv('DB_NAME'),
-#        'USER': os.getenv('DB_USER'),
-#        'PASSWORD': os.getenv('DB_PASSWORD'),
-#        'HOST': os.getenv('DB_HOST'),
-#        'PORT': os.getenv('DB_PORT'),
-#    }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'communiche_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.mysql',
+       'NAME': os.getenv('DB_NAME'),
+       'USER': os.getenv('DB_USER'),
+       'PASSWORD': os.getenv('DB_PASSWORD'),
+       'HOST': os.getenv('DB_HOST'),
+       'PORT': os.getenv('DB_PORT'),
+   }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'communiche_db',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation

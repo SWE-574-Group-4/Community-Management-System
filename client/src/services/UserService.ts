@@ -93,3 +93,31 @@ export async function apiGetUserInformation(userId: string) {
         method: 'get',
     })
 }
+
+export async function followUser(userId: number, authedUserId: number) {
+        const response = await ApiService.fetchData({
+            url: `follow/${userId}/${authedUserId}`,
+            method: 'post',
+            data: {
+                user_id: userId,
+            },
+        });
+        return response.data;
+}
+
+export async function unfollowUser(userId: number, authedUserId: number) {
+        const response = await ApiService.fetchData({
+            url: `unfollow/${userId}/${authedUserId}`, 
+            method: 'post',
+
+        });
+        return response.data;
+}
+
+export async function isFollowing(userId: number, authedUserId: number) {
+    return ApiService.fetchData({
+        url: `is_following/${userId}/${authedUserId}`,
+        method: 'get',
+    });
+
+}

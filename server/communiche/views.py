@@ -1,9 +1,10 @@
 import json
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Badge, Notification, Report, Template, User, Posts, UserBadge
+from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
 from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
@@ -15,7 +16,8 @@ from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
+from . import constants
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 
 @api_view(['GET'])
@@ -44,6 +46,7 @@ def user_list(request):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def user_detail(request, id):
+    print("user ", request.user.id)
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
@@ -961,3 +964,34 @@ def update_report_status(request, community_id, report_id):
         return Response({"error": "Report not found."}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def follow_user(request, user_id, follower_id):  
+    try:
+        follower = User.objects.get(pk=follower_id)
+        following = User.objects.get(pk=user_id)
+        
+        if follower != following:
+            UserFollowing.objects.get_or_create(follower=follower, following=following)
+        return Response({'message': 'User followed successfully'}, status=status.HTTP_201_CREATED)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def unfollow_user(request, user_id, follower_id):
+    try:
+        follower = User.objects.get(pk=follower_id)
+        following = User.objects.get(id=user_id)
+        if follower != following:
+            UserFollowing.objects.filter(follower=follower, following=following).delete()
+        return Response({'message': 'User unfollowed successfully'}, status=status.HTTP_204_NO_CONTENT)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['GET'])
+def is_following(request, user_id, follower_id):
+    follower = User.objects.get(pk=follower_id)
+    following = User.objects.get(id=user_id)
+    is_following = UserFollowing.objects.filter(follower=follower, following=following).exists()
+    return Response(is_following, status=status.HTTP_200_OK)

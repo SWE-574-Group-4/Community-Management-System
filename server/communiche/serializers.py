@@ -1,6 +1,7 @@
+from asyncio import constants
 import json
 from rest_framework import serializers
-from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -150,6 +151,13 @@ class ReportSerializer(serializers.ModelSerializer):
             return UserSerializer(obj.user).data
         return None
 
+class UserFollowingSerializer(serializers.ModelSerializer):
+    follower = serializers.ReadOnlyField(source='follower.username')
+    following = serializers.ReadOnlyField(source='following.username')
+
+    class Meta:
+        model = UserFollowing
+        fields = ['id', 'follower', 'following', 'created_at']
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
