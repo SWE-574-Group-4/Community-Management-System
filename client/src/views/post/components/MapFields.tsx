@@ -11,7 +11,8 @@ import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification
 import { apiGetTags, apiPost } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
-import Select, { MultiValue } from 'react-select'
+import Select from '@/components/ui/Select'
+import { MultiValue } from 'react-select'
 import { AxiosResponse } from 'axios'
 
 const FieldComponent = ({
