@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import (
@@ -40,6 +41,10 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
+from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Tag, Posts, User, CommunityUser
+from . import constants
+from datetime import datetime, timedelta
+from .models import Community, TemplateCommunity
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
@@ -560,8 +565,6 @@ def accept_reject_join_request(request, request_id):
     else:
         return Response({'message': 'Invalid action'}, status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework import status
-
 @api_view(['POST'])
 def accept_reject_invitation(request, invitation_id):
     try:
@@ -603,7 +606,8 @@ def post(request):
     data = request.data.copy()
     user_id = data.get('user_id')
     community_id = data.get('community_id')
-    content = data.get('content')
+    content = json.dumps(data.get('content', []))
+    tag_ids = data.get('tag_ids', [])
     
     try:
         user = User.objects.get(pk=user_id)
@@ -615,6 +619,10 @@ def post(request):
     
     post = Posts(user=user, community=community, content=content)
     post.save()
+
+    if tag_ids:
+        tags = Tag.objects.filter(id__in=tag_ids)
+        post.tags.set(tags)
     
     # Update the community's updated_at field
     community.updated_at = datetime.now()
@@ -671,8 +679,6 @@ def send_invitation(request, community_id, user_id):
 
     return Response(status=status.HTTP_200_OK)
 
-from rest_framework import status
-
 @api_view(['GET'])
 def check_invitation(request, community_id, user_id):
     # Check if invitation exists for the user and community
@@ -710,6 +716,9 @@ def post_detail(request, post_id):
         data['is_liked'] = user in post.likes.all()
     else:
         data['is_liked'] = False
+
+    data['tags'] = [tag.name for tag in post.tags.all()]
+
     # data.pop('community', None)
     return Response(data, status=status.HTTP_200_OK)
 
@@ -740,13 +749,7 @@ def like_post(request, user_id, post_id):
 
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
 
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from .models import Posts, User, CommunityUser
-from . import constants
-from .models import Community
-from .serializers import CommunitySerializer
+
 
 @api_view(['DELETE'])
 def remove_post(request, post_id):
@@ -1037,3 +1040,8 @@ def is_following(request, user_id, follower_id):
     following = User.objects.get(id=user_id)
     is_following = UserFollowing.objects.filter(follower=follower, following=following).exists()
     return Response(is_following, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

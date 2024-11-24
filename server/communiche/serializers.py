@@ -1,3 +1,4 @@
+from asyncio import constants
 import json
 from rest_framework import serializers
 from .models import (
@@ -111,10 +112,11 @@ class PostSerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
     # comments = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Posts
-        fields = ['id', 'community', 'content', 'created_at', 'updated_at', 'user', 'likes']
+        fields = ['id', 'community', 'content', 'created_at', 'updated_at', 'user', 'likes', 'tags']
 
     # def get_comments(self, obj):
     #     return PostCommentSerializer(obj.post_comments.all(), many=True).data
@@ -127,6 +129,9 @@ class PostSerializer(serializers.ModelSerializer):
             return json.loads(obj.content)
         except json.JSONDecodeError:
             return None  # or return some default value
+    
+    def get_tags(self, obj):
+        return [tag.name for tag in obj.tags.all()]
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer()
