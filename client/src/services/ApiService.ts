@@ -6,7 +6,6 @@ const ApiService = {
         param: AxiosRequestConfig<Request>
     ) {
         return new Promise<AxiosResponse<Response>>((resolve, reject) => {
-
             BaseService(param)
                 .then((response: AxiosResponse<Response>) => {
                     resolve(response)
