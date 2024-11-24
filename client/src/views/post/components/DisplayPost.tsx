@@ -90,7 +90,9 @@ export default function DisplayPost({
                 bodyClass="cursor-pointer"
             >
                 <div className="header justify-between">
-                    <h3>{content[0]?.field_value || 'No Title'}</h3>
+                    {content && content.length > 0 && (
+                        <h3>{content[0]?.field_value || 'No Title'}</h3>
+                    )}
                     {showCommunityName && (
                         <div className="flex items-center">
                             <p className="mr-3">{community.name}</p>
