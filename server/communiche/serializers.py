@@ -1,9 +1,21 @@
 import json
 from rest_framework import serializers
-
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Report
-from .models import UserFollowing
-from .models import Badge, Notification, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, UserBadge, Report
+from .models import (
+    Badge, 
+    Notification, 
+    Template, 
+    User, 
+    Community, 
+    JoinRequest, 
+    CommunityUser, 
+    TemplateCommunity, 
+    Posts, 
+    PComment, 
+    Invitation, 
+    UserBadge, 
+    Report, 
+    UserFollowing
+)
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
