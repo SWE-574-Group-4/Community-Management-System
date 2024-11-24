@@ -8,6 +8,8 @@ import Profile from './components/Profile'
 import { useAppSelector } from '@/store'
 import Invitations from './components/Invitations'
 import Communities from './components/Communities'
+import Badges from './components/Badges'
+import Notifications from './components/Notifications'
 
 const { TabNav, TabList } = Tabs
 
@@ -40,6 +42,11 @@ const Settings = () => {
         profile: { label: t('settings.profile.title'), path: 'profile' },
         invitations: { label: t('Invitations'), path: 'invitations' },
         myCommunities: { label: t('My Communities'), path: 'myCommunities' },
+        myBadges: { label: t('My Badges'), path: 'myBadges' },
+        myNotifications: {
+            label: t('My Notifications'),
+            path: 'myNotifications',
+        },
     }
 
     return (
@@ -63,6 +70,8 @@ const Settings = () => {
                         {currentTab === 'profile' && <Profile data={user} />}
                         {currentTab === 'invitations' && <Invitations />}
                         {currentTab === 'myCommunities' && <Communities />}
+                        {currentTab === 'myBadges' && <Badges />}
+                        {currentTab === 'myNotifications' && <Notifications />}
                     </Suspense>
                 </div>
             </AdaptableCard>
