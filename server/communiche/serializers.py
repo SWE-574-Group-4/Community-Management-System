@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from .models import Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
