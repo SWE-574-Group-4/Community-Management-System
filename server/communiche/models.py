@@ -123,7 +123,6 @@ class PComment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Badge(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField()
     tier = models.CharField(max_length=20)
