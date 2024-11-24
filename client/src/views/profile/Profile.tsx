@@ -28,8 +28,13 @@ export default function Profile() {
     const authUser = useAppSelector((state) => state.auth.user)
 
     // Fetch user information using the provided userId
-    const userInfo = useFetchData<AxiosResponse>(apiGetUserInformation, [userId])
-    const userFollowing = useFetchData<AxiosResponse>(isFollowing, [userId, authUser?.id])
+    const userInfo = useFetchData<AxiosResponse>(apiGetUserInformation, [
+        userId,
+    ])
+    const userFollowing = useFetchData<AxiosResponse>(isFollowing, [
+        userId,
+        authUser?.id,
+    ])
     const isFollowingUser = userFollowing?.data ?? false
 
     const {
@@ -45,21 +50,26 @@ export default function Profile() {
         communities,
     } = userInfo?.data || {}
 
-
-    
     return (
         <div>
             {authUser?.id === userId && 'This is your profile page'}
             {/* Follow Button for other users */}
             {authUser?.id !== id && id !== undefined && (
-            <div className="mt-4">
-                <FollowButton userId={id} authUserId={authUser?.id} isFollowed={isFollowingUser} />
-            </div>
+                <div className="mt-4">
+                    <FollowButton
+                        userId={id}
+                        authUserId={authUser?.id}
+                        isFollowed={isFollowingUser}
+                    />
+                </div>
             )}
             <div className="grid grid-cols-1 xl:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-8">
-                <CustomerInfoField title="Full Name" value={`${firstname} ${lastname}`} />
+                <CustomerInfoField
+                    title="Full Name"
+                    value={`${firstname} ${lastname}`}
+                />
                 <CustomerInfoField title="Email" value={email} />
-                
+
                 {/* Username Field */}
                 <CustomerInfoField title="Username" value={username} />
                 <CustomerInfoField title="Date of birth" value={dob} />
@@ -73,7 +83,23 @@ export default function Profile() {
                         {posts?.map((post: Post) => (
                             <div key={post.id}>
                                 <ActionLink to={`/post/${post.id}`}>
-                                    {JSON.parse(post.content)[0].field_value}
+                                    {(() => {
+                                        try {
+                                            const parsedContent = JSON.parse(
+                                                post?.content
+                                            )
+                                            return (
+                                                parsedContent[0]?.field_value ||
+                                                'No content'
+                                            )
+                                        } catch (error) {
+                                            console.error(
+                                                'Error parsing post content:',
+                                                error
+                                            )
+                                            return 'Invalid content'
+                                        }
+                                    })()}
                                 </ActionLink>
                             </div>
                         ))}
@@ -86,7 +112,9 @@ export default function Profile() {
                     <div>
                         {communities?.map((community: Community) => (
                             <div key={community.id}>
-                                <ActionLink to={`/community/${community.id}/details`}>
+                                <ActionLink
+                                    to={`/community/${community.id}/details`}
+                                >
                                     {community.name}
                                 </ActionLink>
                             </div>
