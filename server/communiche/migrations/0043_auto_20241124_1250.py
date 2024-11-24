@@ -14,7 +14,8 @@ def create_tags(apps, schema_editor):
     ]
     
     for tag in tags:
-        Tag.objects.create(name=tag)
+        if not Tag.objects.filter(name=tag).exists():
+            Tag.objects.create(name=tag)
 
 class Migration(migrations.Migration):
 
