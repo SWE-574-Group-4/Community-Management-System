@@ -19,13 +19,6 @@ from django.shortcuts import get_object_or_404
 from . import constants
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-
-@api_view(['GET'])
-def get_tags(request):
-    tags = Tag.objects.all()
-    serializer = TagSerializer(tags, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
 @api_view(['GET', 'POST'])
 def user_list(request):
     # get all the users
@@ -995,3 +988,8 @@ def is_following(request, user_id, follower_id):
     following = User.objects.get(id=user_id)
     is_following = UserFollowing.objects.filter(follower=follower, following=following).exists()
     return Response(is_following, status=status.HTTP_200_OK)
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
