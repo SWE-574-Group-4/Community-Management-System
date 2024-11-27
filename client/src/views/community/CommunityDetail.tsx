@@ -24,7 +24,7 @@ const Settings = () => {
     const [community, setCommunity] = useState<IndividualCommunityType>(
         {} as IndividualCommunityType
     )
-    const [currentTab, setCurrentTab] = useState('profile')
+    const [currentTab, setCurrentTab] = useState('posts')
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -36,6 +36,7 @@ const Settings = () => {
     )
 
     const onTabChange = (val: string) => {
+        console.log({ val })
         setCurrentTab(val)
         navigate(`/community/${id}/${val}`)
     }
@@ -48,16 +49,6 @@ const Settings = () => {
         }
     }, [userRole])
 
-    useEffect(() => {
-        const pathSegments = location.pathname.split('/')
-        const lastPathSegment = pathSegments[pathSegments.length - 1]
-        setCurrentTab(lastPathSegment)
-    }, [location.pathname])
-
-    useEffect(() => {
-        console.log({ mappedRole })
-    }, [mappedRole])
-
     const communityDetailsMenu: Record<
         string,
         {
@@ -66,12 +57,13 @@ const Settings = () => {
             authority?: string[]
         }
     > = {
-        details: { label: 'Details', path: 'details' },
-        members: { label: 'Members', path: 'members' },
         posts: {
             label: 'Posts',
             path: 'posts',
         },
+        details: { label: 'Details', path: 'details' },
+        members: { label: 'Members', path: 'members' },
+
         requests: {
             label: 'Requests',
             path: 'requests',
@@ -160,13 +152,14 @@ const Settings = () => {
                 )}
                 <div className="px-1 py-2 md:px-4 md:py-6">
                     <Suspense fallback={<></>}>
+                        {currentTab === 'posts' && <Posts />}
                         {currentTab === 'details' && (
                             <CommunityDetail community={community} />
                         )}
                         {currentTab === 'members' && (
                             <Members community={community} />
                         )}
-                        {currentTab === 'posts' && <Posts />}
+
                         {currentTab === 'requests' && (
                             <PendingRequests community={community} />
                         )}
@@ -174,9 +167,7 @@ const Settings = () => {
                         {currentTab === 'templates' && (
                             <CommunitySpecificTemplates />
                         )}
-                        {currentTab === 'reports' && (
-                            <Reports />
-                        )}
+                        {currentTab === 'reports' && <Reports />}
                     </Suspense>
                 </div>
             </AdaptableCard>
