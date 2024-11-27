@@ -80,6 +80,10 @@ export default function DisplayPost({
         () => dispatch(toggleFetchTrigger())
     )
 
+    const handleCommunityNavigate = () => {
+        navigate(`/community/${community.id}/details`)
+    }
+
     return (
         <div className="mb-8">
             {' '}
@@ -94,7 +98,10 @@ export default function DisplayPost({
                         <h3>{content[0]?.field_value || 'No Title'}</h3>
                     )}
                     {showCommunityName && (
-                        <div className="flex items-center">
+                        <div
+                            className="flex items-center"
+                            onClick={handleCommunityNavigate}
+                        >
                             <p className="mr-3">{community.name}</p>
                             <HiUserGroup />
                         </div>
