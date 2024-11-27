@@ -8,8 +8,6 @@ import {
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { useEffect, useState } from 'react'
-import { FaExternalLinkAlt } from 'react-icons/fa'
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -91,11 +89,6 @@ export default function IndividualCommunity({
         <div className="flex items-center justify-between">
             {renderButton()}
             <span className="flex items-center">
-                <FaExternalLinkAlt
-                    className="mr-2"
-                    size={'20'}
-                    onClick={() => navigate(`/community/${id}/details`)}
-                />
                 <div>
                     <h6 className="text-sm">Last Activity</h6>
                     <span className="text-xs">{formatDate(updated_at)}</span>
@@ -113,6 +106,7 @@ export default function IndividualCommunity({
                 headerClass="p-0"
                 footerBorder={false}
                 headerBorder={false}
+                onClick={() => navigate(`/community/${id}/details`)}
             >
                 <div className="w-full flex justify-between">
                     <span className="text-emerald-600 font-semibold">
