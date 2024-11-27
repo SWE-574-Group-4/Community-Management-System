@@ -5,6 +5,7 @@ import { apiRemoveComment } from '@/services/PostService'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate, truncateText } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
+import { set } from 'lodash'
 import { useState } from 'react'
 import { CgMoreVerticalO } from 'react-icons/cg'
 import { HiChevronDown } from 'react-icons/hi'
@@ -14,6 +15,7 @@ import { useNavigate } from 'react-router-dom'
 export default function Comment({ comment }: { comment: CommentResponseType }) {
     const navigate = useNavigate()
     const userId = useAppSelector((state) => state.auth.user.id)
+    const [showMore, setShowMore] = useState(false)
     const dispatch = useDispatch()
 
     const [handleRemove, isRemoving] = useRequestWithNotification(
@@ -27,6 +29,14 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
         navigate(
             `/community/${comment.community.id}/create-report?post_id=${comment.post}&comment_id=${comment.id}`
         )
+    }
+
+    const contentLengthBasedOnWidth = () => {
+        if (window.innerWidth < 768) {
+            return 200
+        } else {
+            return 500
+        }
     }
 
     return (
@@ -49,7 +59,26 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
                     </div>
                 }
             </div>
-            <div className="body">{<div>{comment.content}</div>}</div>
+            <div className="body">
+                {comment.content.length > contentLengthBasedOnWidth() &&
+                !showMore ? (
+                    <div>
+                        {truncateText(
+                            comment.content,
+                            contentLengthBasedOnWidth()
+                        )}
+                        <Button
+                            size="xs"
+                            onClick={() => setShowMore(!showMore)}
+                            className="ml-2"
+                        >
+                            See more
+                        </Button>
+                    </div>
+                ) : (
+                    <div>{comment.content}</div>
+                )}
+            </div>
 
             <div className="footer mt-5 flex justify-end">
                 <>
