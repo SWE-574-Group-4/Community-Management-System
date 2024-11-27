@@ -45,7 +45,8 @@ export default function DisplayPost({
 
     const comments = useFetchData(apiGetComments, [id]) as AxiosResponse
 
-    const handleClick = () => {
+    const handleClick = (event: React.MouseEvent) => {
+        // event.preventDefault()
         navigate(`/post/${id}`)
     }
 
@@ -53,7 +54,8 @@ export default function DisplayPost({
         apiLikePost,
         'Action successful!',
         'Action failed!',
-        () => dispatch(toggleFetchTrigger())
+        () => dispatch(toggleFetchTrigger()),
+        false
     )
 
     const [handleDelete, isDeleting] = useRequestWithNotification(
@@ -84,18 +86,18 @@ export default function DisplayPost({
         navigate(`/community/${community.id}/details`)
     }
 
+    const highlevelNavigate = !detailed ? handleClick : undefined
+
     return (
         <div className="mb-8">
             {' '}
             {/* Add margin between posts */}
-            <Card
-                className="mt-3"
-                onClick={!detailed ? handleClick : undefined}
-                bodyClass="cursor-pointer"
-            >
+            <Card className="mt-3" bodyClass="cursor-pointer">
                 <div className="header justify-between">
                     {content && content.length > 0 && (
-                        <h3>{content[0]?.field_value || 'No Title'}</h3>
+                        <h3 onClick={highlevelNavigate}>
+                            {content[0]?.field_value || 'No Title'}
+                        </h3>
                     )}
                     {showCommunityName && (
                         <div
@@ -107,7 +109,7 @@ export default function DisplayPost({
                         </div>
                     )}
                 </div>
-                <div className="body mt-5 mb-5">
+                <div className="body mt-5 mb-5" onClick={highlevelNavigate}>
                     {detailed && (
                         <div className="mt-5">
                             {content?.map((item: _Field) => {
@@ -157,7 +159,10 @@ export default function DisplayPost({
 
                 {/* Tags Section */}
                 {post.tags && post.tags.length > 0 && (
-                    <div className="tags-section mt-3">
+                    <div
+                        className="tags-section mt-3"
+                        onClick={highlevelNavigate}
+                    >
                         <strong>Tags:</strong>
                         <span className="ml-2">
                             {post.tags.map((tag, index) => (
@@ -191,7 +196,10 @@ export default function DisplayPost({
                         </span>
                     </p>
                     <div className="flex items-end justify-between">
-                        <div className="comments flex items-center justify-between mr-5">
+                        <div
+                            className="comments flex items-center justify-between mr-5"
+                            onClick={highlevelNavigate}
+                        >
                             <FaCommentAlt
                                 className=""
                                 size={20}
