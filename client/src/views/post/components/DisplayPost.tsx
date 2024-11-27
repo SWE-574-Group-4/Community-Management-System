@@ -110,7 +110,7 @@ export default function DisplayPost({
                 <div className="body mt-5 mb-5">
                     {detailed && (
                         <div className="mt-5">
-                            {content.map((item: _Field) => {
+                            {content?.map((item: _Field) => {
                                 // Exclude the title field
                                 if (item.field_name.toLowerCase() === 'title')
                                     return null
