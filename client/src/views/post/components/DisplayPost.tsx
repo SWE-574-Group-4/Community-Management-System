@@ -21,7 +21,7 @@ import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
 import RenderField from './RenderField'
 import RenderGeo from './RenderGeo'
-import { String } from 'lodash'
+import { String, startCase, toLower } from 'lodash'
 
 export default function DisplayPost({
     post,
@@ -144,9 +144,18 @@ export default function DisplayPost({
                                 return (
                                     <div
                                         key={item.field_name}
-                                        className="flex items-center"
+                                        className={
+                                            detailed
+                                                ? 'block'
+                                                : 'flex items-center'
+                                        }
                                     >
-                                        <strong>{item.field_name}: </strong>
+                                        <strong>
+                                            {startCase(
+                                                toLower(item.field_name)
+                                            )}
+                                            :{' '}
+                                        </strong>
                                         <span className="ml-2">
                                             <RenderField field={item} />
                                         </span>
