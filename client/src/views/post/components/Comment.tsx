@@ -1,17 +1,17 @@
 import { CommentResponseType } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Dropdown } from '@/components/ui'
 import { apiRemoveComment } from '@/services/PostService'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate, truncateText } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { useState } from 'react'
+import { CgMoreVerticalO } from 'react-icons/cg'
 import { HiChevronDown } from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 export default function Comment({ comment }: { comment: CommentResponseType }) {
-    const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
     const userId = useAppSelector((state) => state.auth.user.id)
     const dispatch = useDispatch()
@@ -24,7 +24,9 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
     )
 
     const handleReport = () => {
-        navigate(`/community/${comment.community.id}/create-report?post_id=${comment.post}&comment_id=${comment.id}`)
+        navigate(
+            `/community/${comment.community.id}/create-report?post_id=${comment.post}&comment_id=${comment.id}`
+        )
     }
 
     return (
@@ -32,65 +34,57 @@ export default function Comment({ comment }: { comment: CommentResponseType }) {
             className="min-w-[320px] md:min-w-[450px] mt-3 ml-5"
             bodyClass="md:p-4"
         >
-            <div className="flex justify-between items-center header">
-                <div
-                    className="flex items-center cursor-pointer"
-                    onClick={() => {
-                        setIsOpen(!isOpen)
-                    }}
-                >
-                    {isOpen ? (
-                        <HiChevronDown
-                            size="30"
-                            className="mr-3 transform rotate-180"
-                        />
-                    ) : (
-                        <HiChevronDown size="30" className="mr-3 transform" />
-                    )}
-                    <div className="text-gray">
-                        {truncateText(comment.content, 50)}
+            <div className="header text-xs font-semibold mb-2">
+                {
+                    <div className="flex items-center justify-between w-full">
+                        <ActionLink to={`/profile/${comment?.user?.id}`}>
+                            {comment.user.firstname} {comment.user.lastname} @
+                            <span className="italic">
+                                {comment.user.username}
+                            </span>
+                        </ActionLink>
+                        <span className="">
+                            {formatDate(comment.created_at)}
+                        </span>
                     </div>
-                </div>
-                <div className="flex">
-                    <ActionLink
-                        className="mr-2 cursor-pointer"
-                        onClick={() => {
-                            navigate(`/profile/${comment.user.id}`)
-                        }}
-                    >
-                        {comment.user.firstname} {comment.user.lastname}
-                    </ActionLink>
-                    <p>{formatDate(comment.created_at)}</p>
-                </div>
+                }
             </div>
-            {isOpen && (
-                <div className="body">{<div>{comment.content}</div>}</div>
-            )}
-            
-                <div className="footer mt-5">
-                {isOpen && (
-                    <>
-                        {comment.user.id === userId && (
-                            <Button
-                                className="text-red-500"
-                                onClick={() => {
-                                    if (typeof handleRemove === 'function') {
-                                        handleRemove(comment.id)
-                                    }
+            <div className="body">{<div>{comment.content}</div>}</div>
+
+            <div className="footer mt-5 flex justify-end">
+                <>
+                    <Dropdown
+                        renderTitle={
+                            <CgMoreVerticalO
+                                size={20}
+                                className="items-end cursor-pointer"
+                                style={{
+                                    height: '25px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
                                 }}
-                            >
-                                Delete
-                            </Button>
-                        )}
-                        <Button
-                            className="text-red-500 mx-1.5"
-                            onClick={handleReport}
+                            />
+                        }
+                        placement="bottom-end"
+                    >
+                        <Dropdown.Item
+                            eventKey="a"
+                            onClick={() => {
+                                if (typeof handleRemove === 'function') {
+                                    handleRemove(comment.id)
+                                }
+                            }}
+                            disabled={comment?.user?.id !== userId}
                         >
+                            Delete
+                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="b" onClick={handleReport}>
                             Report
-                        </Button>
-                    </>
-                )}
-                </div>
+                        </Dropdown.Item>
+                    </Dropdown>
+                </>
+            </div>
         </Card>
     )
 }
