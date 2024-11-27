@@ -268,6 +268,7 @@ export default function DisplayPost({
                                 />
                             }
                             className="hello"
+                            placement="bottom-end"
                         >
                             <Dropdown.Item
                                 eventKey="a"
