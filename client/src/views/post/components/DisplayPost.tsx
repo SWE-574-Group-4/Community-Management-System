@@ -1,7 +1,7 @@
 // src/post/components/DisplayPost.tsx
 import { CommentResponseType, PostData, _Field } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
-import { Button, Card, Input, Tag } from '@/components/ui'
+import { Button, Card, Dropdown, Input, Tag } from '@/components/ui'
 import {
     apiDeletePost,
     apiGetComments,
@@ -12,7 +12,12 @@ import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { FaCommentAlt } from 'react-icons/fa'
-import { HiOutlineThumbUp, HiThumbUp, HiUserGroup } from 'react-icons/hi'
+import {
+    HiOutlineThumbUp,
+    HiThumbUp,
+    HiUserGroup,
+    HiWifi,
+} from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Comment from './Comment'
@@ -22,6 +27,8 @@ import { AxiosResponse } from 'axios'
 import RenderField from './RenderField'
 import RenderGeo from './RenderGeo'
 import { String, startCase, toLower } from 'lodash'
+import Menu from '@/components/ui/Menu'
+import { CgMore, CgMoreVertical, CgMoreVerticalO } from 'react-icons/cg'
 
 export default function DisplayPost({
     post,
@@ -87,6 +94,8 @@ export default function DisplayPost({
     }
 
     const highlevelNavigate = !detailed ? handleClick : undefined
+
+    const Toggle = <CgMoreVerticalO></CgMoreVerticalO>
 
     return (
         <div className="mb-8">
@@ -244,11 +253,24 @@ export default function DisplayPost({
                             )}
                             <p>{`(${likes})`}</p>
                         </div>
-                        <div>
-                            <Button
-                                size="xs"
-                                variant="solid"
-                                className="mx-2 bg-red-500 text-white"
+
+                        <Dropdown
+                            renderTitle={
+                                <CgMoreVerticalO
+                                    size={20}
+                                    className="items-end mx-2"
+                                    style={{
+                                        height: '25px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                />
+                            }
+                            className="hello"
+                        >
+                            <Dropdown.Item
+                                eventKey="a"
                                 onClick={() =>
                                     navigate(
                                         `/community/${community.id}/create-report/?post_id=${id}`
@@ -256,8 +278,8 @@ export default function DisplayPost({
                                 }
                             >
                                 Report
-                            </Button>
-                        </div>
+                            </Dropdown.Item>
+                        </Dropdown>
                     </div>
                 </div>
                 {userId === user.id &&
