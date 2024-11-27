@@ -34,6 +34,7 @@ export default function IndividualCommunity({
         description,
         num_members,
         members,
+        number_of_posts,
     } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -110,7 +111,8 @@ export default function IndividualCommunity({
             >
                 <div className="w-full flex justify-between">
                     <span className="text-emerald-600 font-semibold">
-                        {num_members || members?.length} members, 20 posts
+                        {num_members || members?.length} members,{' '}
+                        {number_of_posts} posts
                     </span>
                     <span className="font-semibold">
                         {is_public ? (

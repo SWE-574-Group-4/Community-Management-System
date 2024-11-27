@@ -30,8 +30,16 @@ export default function CommunityDetail({
         (state) => state.community.community.fetchTrigger
     )
     const userId = useAppSelector((state) => state.auth.user?.id)
-    const { id, members, num_members, name, description, is_public, is_owner } =
-        community
+    const {
+        id,
+        members,
+        num_members,
+        name,
+        description,
+        is_public,
+        is_owner,
+        number_of_posts,
+    } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
         apiJoinCommunity,
@@ -139,7 +147,8 @@ export default function CommunityDetail({
             >
                 <div className="w-full flex justify-between">
                     <span className="text-emerald-600 font-semibold">
-                        {num_members || members?.length} members, 20 posts
+                        {num_members || members?.length} members,{' '}
+                        {number_of_posts} posts
                         <br />
                         {is_owner && (
                             <div className="flex text-yellow-300 items-center">

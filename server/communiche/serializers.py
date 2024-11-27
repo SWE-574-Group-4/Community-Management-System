@@ -38,10 +38,11 @@ class CommunitySerializer(serializers.ModelSerializer):
     is_member = serializers.SerializerMethodField()
     has_user_requested = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
+    number_of_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
-        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner']
+        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner', 'number_of_posts']
 
     def get_is_member(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
@@ -55,6 +56,9 @@ class CommunitySerializer(serializers.ModelSerializer):
     def get_is_owner(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
         return str(obj.owner_id) == str(user_id)
+
+    def get_number_of_posts(self, obj):
+        return Posts.objects.filter(community=obj).count()
     
 
 class CommunityUserSerializer(serializers.ModelSerializer):
