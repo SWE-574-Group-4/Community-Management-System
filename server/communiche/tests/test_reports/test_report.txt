@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform linux -- Python 3.9.18, pytest-7.4.4, pluggy-1.2.0
+django: version: 3.2.8, settings: communiche.settings_test (from ini)
+rootdir: /home/u27p56/boun_2024/Community-Management-System/server
+configfile: pytest.ini
+plugins: django-4.9.0
+collected 45 items
+
+communiche/tests/test_views.py ......................................... [ 91%]
+....                                                                     [100%]
+
+=============================== warnings summary ===============================
+communiche/tests/test_views.py::test_join_requests
+  /home/u27p56/boun_2024/Community-Management-System/server/venv/lib/python3.9/site-packages/django/db/models/fields/__init__.py:1416: RuntimeWarning: DateTimeField JoinRequest.created_at received a naive datetime (2024-10-29 02:50:50.412674) while time zone support is active.
+    warnings.warn("DateTimeField %s received a naive datetime (%s)"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 45 passed, 1 warning in 1.75s =========================
