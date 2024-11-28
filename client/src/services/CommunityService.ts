@@ -177,6 +177,13 @@ export async function apiAddTemplate(data: any) {
     })
 }
 
+export async function apiDeleteTemplate(id: any) {
+    return ApiService.fetchData({
+        url: `/template/${id}/delete/`,
+        method: 'delete',
+    })
+}
+
 export async function apiTransferOwnership(data: any) {
     console.log('data', data)
     const { community_id, user_id, new_owner_id } = data

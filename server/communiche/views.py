@@ -278,6 +278,16 @@ def default_template(request):
         else:
             return Response({"detail": "Default template not found"}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['DELETE'])
+def delete_template(request, template_id):
+    try:
+        template = Template.objects.get(pk=template_id)
+    except Template.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    template.delete()
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def template_detail(request, id):
     try:
