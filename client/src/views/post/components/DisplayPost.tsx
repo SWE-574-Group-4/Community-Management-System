@@ -280,20 +280,19 @@ export default function DisplayPost({
                             >
                                 Report
                             </Dropdown.Item>
+                            {userId === user.id &&
+                                typeof handleDelete === 'function' && (
+                                    <Dropdown.Item
+                                        onClick={() => {
+                                            handleDelete(id)
+                                        }}
+                                    >
+                                        Delete
+                                    </Dropdown.Item>
+                                )}
                         </Dropdown>
                     </div>
                 </div>
-                {userId === user.id &&
-                    detailed &&
-                    typeof handleDelete === 'function' && (
-                        <Button
-                            onClick={() => {
-                                handleDelete(id)
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    )}
             </Card>
             {detailed && (
                 <div className="comment-action ml-5 mt-2">
