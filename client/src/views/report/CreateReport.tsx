@@ -93,7 +93,7 @@ const CreateReport = () => {
                                 label="Reason"
                                 invalid={touched.reason && !!errors.reason}
                                 errorMessage={errors.reason}
-                                className="flex flex-col w-1/3"
+                                className="flex flex-col"
                             >
                                 <Field name="reason">
                                     {({ field, form }: any) => (
@@ -118,7 +118,7 @@ const CreateReport = () => {
                                 label="Additional Comments"
                                 invalid={touched.comment_text && !!errors.comment_text}
                                 errorMessage={errors.comment_text}
-                                className="flex flex-col w-1/3"
+                                className="flex flex-col"
                             >
                                 <Field
                                         type="text"
