@@ -864,9 +864,22 @@ def get_user_badges(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    all_badges = Badge.objects.all()
     user_badges = UserBadge.objects.filter(user=user)
-    serializer = UserBadgeDetailedSerializer(user_badges, many=True)
-    return Response(serializer.data)
+    user_badge_ids = user_badges.values_list('badge_id', flat=True)
+
+    badge_data = []
+    for badge in all_badges:
+        is_owned = badge.id in user_badge_ids
+        badge_data.append({
+            'name': badge.name,
+            'description': badge.description,
+            'tier': badge.tier,
+            'icon': badge.icon.url if badge.icon else None,
+            'is_owned': is_owned
+        })
+
+    return Response(badge_data)
 
 # Get all available badges (for admins or others)
 @api_view(['GET'])
