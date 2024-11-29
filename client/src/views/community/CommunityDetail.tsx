@@ -6,7 +6,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useAppSelector } from '@/store'
 import { IndividualCommunityType } from '@/@types/community'
 import { apiGetCommunity, apiGetUserRole } from '@/services/CommunityService'
-import { Notification, Tag, toast } from '@/components/ui'
+import { Button, Notification, Tag, toast } from '@/components/ui'
 import CommunityDetail from './components/CommunityDetail'
 import Members from './components/Members'
 import { AuthorityCheck } from '@/components/shared'
@@ -17,6 +17,7 @@ import Invite from './Invite'
 import Posts from './components/Posts'
 import Reports from './components/Reports'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
+import { HiOutlineDocumentAdd } from 'react-icons/hi'
 
 const { TabNav, TabList } = Tabs
 
@@ -132,7 +133,7 @@ const Settings = () => {
                         variant="pill"
                         onChange={(val) => onTabChange(val)}
                     >
-                        <TabList className="pb-4">
+                        <TabList className="pb-2">
                             {Object.keys(communityDetailsMenu).map((key) => (
                                 <AuthorityCheck
                                     key={key}
@@ -150,7 +151,23 @@ const Settings = () => {
                         </TabList>
                     </Tabs>
                 )}
-                <div className="px-1 py-2 md:px-4 md:py-6">
+                <div className="py-4">
+                    <Button
+                        disabled={!community.is_member}
+                        className="mb-3 flex items-center justify-center gap-x-0.5"
+                        size="sm"
+                        variant="twoTone"
+                        color="emerald-600"
+                        block
+                        onClick={() =>
+                            navigate(`/community/${id}/post`, {
+                                state: { community },
+                            })
+                        }
+                    >
+                        <HiOutlineDocumentAdd className="" />
+                        <span>Post</span>
+                    </Button>
                     <Suspense fallback={<></>}>
                         {currentTab === 'posts' && <Posts />}
                         {currentTab === 'details' && (

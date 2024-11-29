@@ -175,22 +175,6 @@ export default function CommunityDetail({
                 <p>{description}</p>
                 {/* <Members /> */}
             </Card>
-            <Button
-                disabled={!community.is_member}
-                className="mt-5 flex items-center justify-center gap-x-0.5"
-                size="sm"
-                variant="twoTone"
-                color="emerald-600"
-                block
-                onClick={() =>
-                    navigate(`/community/${id}/post`, {
-                        state: { community },
-                    })
-                }
-            >
-                <HiOutlineDocumentAdd className="" />
-                <span>Post</span>
-            </Button>
         </div>
     )
 }
