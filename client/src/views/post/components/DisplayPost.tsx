@@ -280,16 +280,16 @@ export default function DisplayPost({
                             >
                                 Report
                             </Dropdown.Item>
-                            {userId === user.id &&
-                                typeof handleDelete === 'function' && (
-                                    <Dropdown.Item
-                                        onClick={() => {
-                                            handleDelete(id)
-                                        }}
-                                    >
-                                        Delete
-                                    </Dropdown.Item>
-                                )}
+                            {typeof handleDelete === 'function' && (
+                                <Dropdown.Item
+                                    onClick={() => {
+                                        handleDelete(id)
+                                    }}
+                                    disabled={userId !== user.id}
+                                >
+                                    Delete
+                                </Dropdown.Item>
+                            )}
                         </Dropdown>
                     </div>
                 </div>
