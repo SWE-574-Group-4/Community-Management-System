@@ -192,7 +192,7 @@ export default function DisplayPost({
                     </div>
                 )}
 
-                <div className="footer flex justify-between">
+                <div className="footer flex flex-col md:flex-row justify-between">
                     <p>
                         Posted by
                         {detailed ? (
@@ -213,7 +213,7 @@ export default function DisplayPost({
                             {formatDate(created_at)}
                         </span>
                     </p>
-                    <div className="flex items-end justify-between">
+                    <div className="flex items-end mt-2 md:mt-0">
                         <div
                             className="comments flex items-center justify-between mr-5"
                             onClick={highlevelNavigate}
