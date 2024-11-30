@@ -44,6 +44,7 @@ export type BadgeType = {
     description?: string
     tier?: string
     status: boolean
+    icon?: string 
 }
 
 export type NotificationType = {

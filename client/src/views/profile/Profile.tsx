@@ -6,6 +6,9 @@ import { useAppSelector } from '@/store'
 import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
 import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { apiGetBadges } from '@/services/UserService'
+import { BadgeType } from '@/@types/user'
 
 type CustomerInfoFieldProps = {
     title?: string
@@ -49,6 +52,22 @@ export default function Profile() {
         posts,
         communities,
     } = userInfo?.data || {}
+
+    const [badges, setBadges] = useState<BadgeType[]>([])
+    useEffect(() => {
+        const fetchBadges = async () => {
+            try {
+                const response = await apiGetBadges(String(userId) ?? '')
+                setBadges(response.data as BadgeType[])
+            } catch (error) {
+                console.error('Error fetching badges:', error)
+            }
+        }
+
+        if (userId) {
+            fetchBadges()
+        }
+    }, [userId])
 
     return (
         <div>
@@ -120,6 +139,24 @@ export default function Profile() {
                             </div>
                         ))}
                     </div>
+                </div>
+
+                {/* User's Badges Section */}
+                <div>
+                <span>Communiche Badges</span>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        {badges.map((badge: BadgeType) => (
+                            <img
+                                key={badge.id}
+                                src={badge.icon}
+                                alt={badge.name}
+                                title={badge.name}
+                                className="w-6 h-6"
+                            />
+                        ))}
+                    </div>
+                    <br/>
+                <span>Badges from Communities</span>
                 </div>
             </div>
         </div>
