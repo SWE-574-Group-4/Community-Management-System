@@ -35,6 +35,7 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
                         alt={row.name}
                         width={50}
                         height={50}
+                        className={row?.is_owned ? '' : 'filter grayscale'}
                     />
                 )
             },
