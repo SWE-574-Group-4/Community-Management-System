@@ -1,8 +1,39 @@
 import json
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
-from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
+from .models import (
+    Badge, 
+    Notification, 
+    Template, 
+    User, 
+    Posts, 
+    Tag,
+    UserBadge, 
+    Community, 
+    JoinRequest, 
+    CommunityUser, 
+    Invitation, 
+    PComment, 
+    Report, 
+    TemplateCommunity, 
+    UserFollowing
+)
+from .serializers import (
+    TagSerializer, 
+    TemplateSerializer, 
+    UserBadgeDetailedSerializer, 
+    UserBadgeSerializer, 
+    UserSerializer, 
+    CommunitySerializer, 
+    JoinRequestSerializer, 
+    TemplateCommunitySerializer, 
+    PostSerializer, 
+    InvitationSerializer, 
+    CommentSerializer, 
+    BadgeSerializer, 
+    ReportSerializer, 
+    UserFollowingSerializer
+)
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -18,6 +49,19 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_tags(request):
+    tags = Tag.objects.all()
+    serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -168,13 +212,19 @@ def add_community(request):
         serializer = CommunitySerializer(data=request.data)
         if serializer.is_valid():
             user_id = request.data.get('user_id')
-            serializer.save(owner_id=user_id)
+            tags = request.data.getlist('tag_ids[]')
+            serializer.save(owner_id=user_id, tags=tags)
             
             # Add owner to communityuser table with role -1
             community = serializer.instance
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
-            
+
+            for tag_id in tags:
+                if tag_id:
+                    tag = Tag.objects.get(id=tag_id)
+                    print("tag data:", tag)
+                    community.tags.add(tag)         
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -226,6 +276,8 @@ def community_detail(request, id):
             community_data['has_user_requested'] = JoinRequest.objects.filter(community=community, user=user).exists()
             community_data['is_member'] = user in community.members.all()
         
+        # Get the tag ids associated with the community
+        community_data['tags'] = [tag.name for tag in community.tags.all()]
         community_data['num_members'] = community.members.count()
 
         # community_data.pop('members', None)  # Remove the 'members' field
