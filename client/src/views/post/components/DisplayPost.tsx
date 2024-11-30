@@ -1,7 +1,7 @@
 // src/post/components/DisplayPost.tsx
 import { CommentResponseType, PostData, _Field } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
-import { Button, Card, Input } from '@/components/ui'
+import { Button, Card, Input, Tag } from '@/components/ui'
 import {
     apiDeletePost,
     apiGetComments,
@@ -155,8 +155,7 @@ export default function DisplayPost({
                         <span className="ml-2">
                             {post.tags.map((tag, index) => (
                                 <span key={index}>
-                                    {tag}
-                                    {index < post.tags.length - 1 && ', '}
+                                    <Tag className="mr-1">{tag}</Tag>
                                 </span>
                             ))}
                         </span>
