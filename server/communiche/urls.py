@@ -36,6 +36,8 @@ urlpatterns = [
     path('follow/<int:user_id>/<int:follower_id>', follow_user, name='follow_user'),
     path('unfollow/<int:user_id>/<int:follower_id>', unfollow_user, name='unfollow_user'),
     path('is_following/<int:user_id>/<int:follower_id>', views.is_following, name='is_following'),
+    path('followers/<int:user_id>/', views.get_followers, name='get_followers'),
+    path('following/<int:user_id>/', views.get_following, name='get_following'),
 
     # other paths...
     
@@ -47,7 +49,6 @@ urlpatterns = [
     path('template/<int:id>/', views.template_detail, name='template-detail'),
     path('add_template/', views.add_template, name='add_template'),
     path('default_template/', views.default_template, name='default_template'),
-    path('template/<int:template_id>/delete/', views.delete_template, name='delete_template'),
     path('data_types/', views.data_types, name='data_types'),
     path('join_community/<int:community_id>/<int:user_id>/', views.join_community, name='join_community'),
     path('leave_community/<int:community_id>/<int:user_id>/', views.leave_community, name='leave_community'),

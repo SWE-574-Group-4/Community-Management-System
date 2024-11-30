@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
-from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
+from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -277,16 +277,6 @@ def default_template(request):
             return Response(serializer.data)
         else:
             return Response({"detail": "Default template not found"}, status=status.HTTP_404_NOT_FOUND)
-
-@api_view(['DELETE'])
-def delete_template(request, template_id):
-    try:
-        template = Template.objects.get(pk=template_id)
-    except Template.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    template.delete()
-    return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def template_detail(request, id):
@@ -607,19 +597,9 @@ def delete_post(request, post_id):
 
 @api_view(['GET'])
 def posts(request):
-    user_id = request.query_params.get('user_id')
-    user = User.objects.get(pk=user_id) if user_id else None
-
     posts = Posts.objects.all().order_by('-created_at')
-    serializer = PostSerializer(posts, many=True)
-    data = serializer.data
-
-    for post_data in data:
-        post = Posts.objects.get(pk=post_data['id'])
-        post_data['is_liked'] = user in post.likes.all() if user else False
-        post_data['tags'] = [tag.name for tag in post.tags.all()]
-
-    return Response(data, status=status.HTTP_200_OK)
+    serializer = PostSerializer(posts, context = {'request': request}, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def search(request):
@@ -1012,4 +992,18 @@ def is_following(request, user_id, follower_id):
 def get_tags(request):
     tags = Tag.objects.all()
     serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_following(request, user_id):
+    user = User.objects.get(pk=user_id)
+    following = UserFollowing.objects.filter(follower=user)
+    serializer = UserFollowingSerializer(following, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_followers(request, user_id):
+    user = User.objects.get(pk=user_id)
+    followers = UserFollowing.objects.filter(following=user)
+    serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
