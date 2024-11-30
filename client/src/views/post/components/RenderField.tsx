@@ -8,8 +8,13 @@ export default function RenderField({ field }: { field: _Field }) {
                 <p>{field.field_value}</p>
             )}
             {field.field_type === 'textarea' && <p>{field.field_value}</p>}
-            {field.field_type === 'image' && field.field_value !== "" && (
-                <img src={field.field_value} alt="Image" />
+            {field.field_type === 'image' && field.field_value !== '' && (
+                <img
+                    src={field.field_value}
+                    alt="Image"
+                    style={{ maxWidth: '400px' }}
+                    className="rounded-lg"
+                />
             )}
             {field.field_type === 'video' && (
                 <video src={field.field_value} controls />

@@ -5,7 +5,7 @@ import { toSentenceCase } from '@/utils/helpers'
 import useFieldToComponent from '@/utils/hooks/useFieldToComponent'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { apiGetTags, apiPost } from '@/services/PostService'
@@ -14,6 +14,7 @@ import RenderGeo from './RenderGeo'
 import Select from '@/components/ui/Select'
 import { MultiValue } from 'react-select'
 import { AxiosResponse } from 'axios'
+import { Notification, Tag, toast } from '@/components/ui'
 
 const FieldComponent = ({
     field,
@@ -28,6 +29,7 @@ const FieldComponent = ({
     const [longitude, setLongitude] = useState<number | null>(null)
     const Component = useFieldToComponent(field.field_type)
     const field_name = toSentenceCase(field.field_name)
+    const navigate = useNavigate()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value)
@@ -94,6 +96,7 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
     const { id } = useParams<{ id: string }>()
     const userId = useAppSelector((state) => state.auth.user?.id)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const [handlePost, isPosting] = useRequestWithNotification(
         apiPost,
@@ -132,7 +135,7 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
         setSelectedTags(selectedOptions)
     }
 
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         const formData = fields.map((field) => ({
@@ -145,10 +148,26 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
             return tag.value
         })
 
-        // TODO: why is this not notifyin the user that the post was successful?
-        // turn form data into a string with JSON.stringify
-        if (typeof handlePost === 'function') {
-            handlePost(id, userId, formData, tags)
+        try {
+            if (typeof handlePost === 'function') {
+                await handlePost(id, userId, formData, tags)
+
+                toast.push(
+                    <Notification title={'Post successful'} type="success" />,
+                    {
+                        placement: 'top-center',
+                    }
+                )
+
+                setTimeout(() => {
+                    navigate(`/`)
+                }, 1000)
+            }
+        } catch (error) {
+            toast.push(<Notification title={'Post fail'} type="danger" />, {
+                placement: 'top-center',
+            })
+            console.error('Error posting:', error)
         }
     }
 

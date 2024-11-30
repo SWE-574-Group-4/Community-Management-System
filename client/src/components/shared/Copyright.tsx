@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 const Copyright = () => {
     const { t } = useTranslation()
     return (
-        <span className="text-white">
+        <span className="dark:text-white">
             &copy;
             {t('footer.copyright', {
                 year: `${new Date().getFullYear()}`,

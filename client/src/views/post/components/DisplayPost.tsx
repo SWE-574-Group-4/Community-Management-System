@@ -1,7 +1,7 @@
 // src/post/components/DisplayPost.tsx
 import { CommentResponseType, PostData, _Field } from '@/@types/post'
 import { ActionLink } from '@/components/shared'
-import { Button, Card, Input, Tag } from '@/components/ui'
+import { Button, Card, Dropdown, Input, Tag } from '@/components/ui'
 import {
     apiDeletePost,
     apiGetComments,
@@ -12,7 +12,12 @@ import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { FaCommentAlt } from 'react-icons/fa'
-import { HiOutlineThumbUp, HiThumbUp, HiUserGroup } from 'react-icons/hi'
+import {
+    HiOutlineThumbUp,
+    HiThumbUp,
+    HiUserGroup,
+    HiWifi,
+} from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Comment from './Comment'
@@ -21,7 +26,9 @@ import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
 import RenderField from './RenderField'
 import RenderGeo from './RenderGeo'
-import { String } from 'lodash'
+import { String, startCase, toLower } from 'lodash'
+import Menu from '@/components/ui/Menu'
+import { CgMore, CgMoreVertical, CgMoreVerticalO } from 'react-icons/cg'
 
 export default function DisplayPost({
     post,
@@ -45,7 +52,8 @@ export default function DisplayPost({
 
     const comments = useFetchData(apiGetComments, [id]) as AxiosResponse
 
-    const handleClick = () => {
+    const handleClick = (event: React.MouseEvent) => {
+        // event.preventDefault()
         navigate(`/post/${id}`)
     }
 
@@ -53,7 +61,8 @@ export default function DisplayPost({
         apiLikePost,
         'Action successful!',
         'Action failed!',
-        () => dispatch(toggleFetchTrigger())
+        () => dispatch(toggleFetchTrigger()),
+        false
     )
 
     const [handleDelete, isDeleting] = useRequestWithNotification(
@@ -80,30 +89,39 @@ export default function DisplayPost({
         () => dispatch(toggleFetchTrigger())
     )
 
+    const handleCommunityNavigate = () => {
+        navigate(`/community/${community.id}/details`)
+    }
+
+    const highlevelNavigate = !detailed ? handleClick : undefined
+
+    const Toggle = <CgMoreVerticalO></CgMoreVerticalO>
+
     return (
         <div className="mb-8">
             {' '}
             {/* Add margin between posts */}
-            <Card
-                className="mt-3"
-                onClick={!detailed ? handleClick : undefined}
-                bodyClass="cursor-pointer"
-            >
+            <Card className="mt-3" bodyClass="cursor-pointer">
                 <div className="header justify-between">
                     {content && content.length > 0 && (
-                        <h3>{content[0]?.field_value || 'No Title'}</h3>
+                        <h3 onClick={highlevelNavigate}>
+                            {content[0]?.field_value || 'No Title'}
+                        </h3>
                     )}
                     {showCommunityName && (
-                        <div className="flex items-center">
+                        <div
+                            className="flex items-center"
+                            onClick={handleCommunityNavigate}
+                        >
                             <p className="mr-3">{community.name}</p>
                             <HiUserGroup />
                         </div>
                     )}
                 </div>
-                <div className="body mt-5 mb-5">
+                <div className="body mt-5 mb-5" onClick={highlevelNavigate}>
                     {detailed && (
                         <div className="mt-5">
-                            {content.map((item: _Field) => {
+                            {content?.map((item: _Field) => {
                                 // Exclude the title field
                                 if (item.field_name.toLowerCase() === 'title')
                                     return null
@@ -135,9 +153,18 @@ export default function DisplayPost({
                                 return (
                                     <div
                                         key={item.field_name}
-                                        className="flex items-center"
+                                        className={
+                                            detailed
+                                                ? 'block'
+                                                : 'flex items-center'
+                                        }
                                     >
-                                        <strong>{item.field_name}: </strong>
+                                        <strong>
+                                            {startCase(
+                                                toLower(item.field_name)
+                                            )}
+                                            :{' '}
+                                        </strong>
                                         <span className="ml-2">
                                             <RenderField field={item} />
                                         </span>
@@ -150,7 +177,10 @@ export default function DisplayPost({
 
                 {/* Tags Section */}
                 {post.tags && post.tags.length > 0 && (
-                    <div className="tags-section mt-3">
+                    <div
+                        className="tags-section mt-3"
+                        onClick={highlevelNavigate}
+                    >
                         <strong>Tags:</strong>
                         <span className="ml-2">
                             {post.tags.map((tag, index) => (
@@ -162,7 +192,7 @@ export default function DisplayPost({
                     </div>
                 )}
 
-                <div className="footer flex justify-between">
+                <div className="footer flex flex-col md:flex-row justify-between">
                     <p>
                         Posted by
                         {detailed ? (
@@ -183,8 +213,11 @@ export default function DisplayPost({
                             {formatDate(created_at)}
                         </span>
                     </p>
-                    <div className="flex items-end justify-between">
-                        <div className="comments flex items-center justify-between mr-5">
+                    <div className="flex items-end mt-2 md:mt-0">
+                        <div
+                            className="comments flex items-center justify-between mr-5"
+                            onClick={highlevelNavigate}
+                        >
                             <FaCommentAlt
                                 className=""
                                 size={20}
@@ -220,11 +253,25 @@ export default function DisplayPost({
                             )}
                             <p>{`(${likes})`}</p>
                         </div>
-                        <div>
-                            <Button
-                                size="xs"
-                                variant="solid"
-                                className="mx-2 bg-red-500 text-white"
+
+                        <Dropdown
+                            renderTitle={
+                                <CgMoreVerticalO
+                                    size={20}
+                                    className="items-end mx-2"
+                                    style={{
+                                        height: '25px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                />
+                            }
+                            className="hello"
+                            placement="bottom-end"
+                        >
+                            <Dropdown.Item
+                                eventKey="a"
                                 onClick={() =>
                                     navigate(
                                         `/community/${community.id}/create-report/?post_id=${id}`
@@ -232,21 +279,20 @@ export default function DisplayPost({
                                 }
                             >
                                 Report
-                            </Button>
-                        </div>
+                            </Dropdown.Item>
+                            {typeof handleDelete === 'function' && (
+                                <Dropdown.Item
+                                    onClick={() => {
+                                        handleDelete(id)
+                                    }}
+                                    disabled={userId !== user.id}
+                                >
+                                    Delete
+                                </Dropdown.Item>
+                            )}
+                        </Dropdown>
                     </div>
                 </div>
-                {userId === user.id &&
-                    detailed &&
-                    typeof handleDelete === 'function' && (
-                        <Button
-                            onClick={() => {
-                                handleDelete(id)
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    )}
             </Card>
             {detailed && (
                 <div className="comment-action ml-5 mt-2">

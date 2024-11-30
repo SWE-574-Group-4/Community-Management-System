@@ -18,16 +18,22 @@ const ReportsTable = ({ reports }: { reports: Report[] }) => {
 
     const columns: ColumnDef<any>[] = [
         {
-            header: 'Reported by',
-            accessorKey: 'user',
+            header: 'ID',
+            accessorKey: 'id',
             cell: (props) => {
                 const row = props.row.original;
-                return row.user && row.user.username ? (
-                    <ActionLink to={`/profile/${row.user.id}`}>{row.user.username}</ActionLink>
-                ) : row.user ? (
-                    `User ${row.user}` // If `user` is an ID but no username
+                return row.id 
+            },
+        },
+        {
+            header: 'Created At',
+            accessorKey: 'created_at',
+            cell: (props) => {
+                const row = props.row.original;
+                return row.created_at ? (
+                    <div className="flex">{formatDate(row.created_at)}</div>
                 ) : (
-                    'Anonymous'
+                    'N/A'
                 );
             },
         },
@@ -52,79 +58,13 @@ const ReportsTable = ({ reports }: { reports: Report[] }) => {
             },
         },
         {
-            header: 'Report Explanation',
-            accessorKey: 'comment_text',
-            cell: (props) => {
-                const row = props.row.original;
-                return <div className="flex">{row.comment_text || 'N/A'}</div>;
-            },
-        },
-        {
-            header: 'Post',
-            accessorKey: 'post',
-            cell: (props) => {
-                const row = props.row.original;
-                return row.post ? (
-                    <ActionLink to={`/post/${row.post.id}`}>View Post</ActionLink>
-                ) : (
-                    'N/A'
-                );
-            },
-        },
-        {
-            header: 'Comment',
-            accessorKey: 'comment',
-            cell: (props) => {
-                const row = props.row.original;
-                return row.comment && row.comment.content ? (
-                    <div className="flex">{row.comment.content}</div>
-                ) : (
-                    'N/A'
-                );
-            },
-        },
-        {
-            header: 'Reported User',
-            accessorKey: 'comment_user',
-            cell: (props) => {
-                const row = props.row.original;
-                return row.comment ? (
-                    row.comment.user ? (
-                        <ActionLink to={`/profile/${row.comment.user.id}`}>
-                            {row.comment.user.username}
-                        </ActionLink>
-                    ) : (
-                        'N/A'
-                    )
-                ) : row.post && row.post.user ? (
-                    <ActionLink to={`/profile/${row.post.user.id}`}>
-                        {row.post.user.username}
-                    </ActionLink>
-                ) : (
-                    'N/A'
-                );
-            },
-        },
-        {
-            header: 'Created At',
-            accessorKey: 'created_at',
-            cell: (props) => {
-                const row = props.row.original;
-                return row.created_at ? (
-                    <div className="flex">{formatDate(row.created_at)}</div>
-                ) : (
-                    'N/A'
-                );
-            },
-        },
-        {
             header: 'Status',
             accessorKey: 'status',
             cell: (props) => {
                 const row = props.row.original;
                 const status = STATUS_LABELS[row.status as keyof typeof STATUS_LABELS] || { label: 'Unknown', color: 'text-gray-500' };
                 return (
-                    <div className={`flex ${status.color}`}>
+                    <div className={`flex ${status.color} font-bold`}>
                         {status.label}
                     </div>
                 );
@@ -166,7 +106,7 @@ const ReportsTable = ({ reports }: { reports: Report[] }) => {
                 };
 
                 return (
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center">
                         <Button
                             className="bg-blue-500 text-white"
                             size="sm"
@@ -175,7 +115,7 @@ const ReportsTable = ({ reports }: { reports: Report[] }) => {
                         >
                             Review
                         </Button>
-                        <span className="mx-0.5"></span>
+                        <span className="mx-5"></span>
                         <Button
                             className="bg-red-500 text-white"
                             size="sm"
