@@ -152,24 +152,30 @@ const Settings = () => {
                     </Tabs>
                 )}
                 <div className="py-4">
-                    <Button
-                        disabled={!community.is_member}
-                        className="mb-3 flex items-center justify-center gap-x-0.5"
-                        size="sm"
-                        variant="twoTone"
-                        color="emerald-600"
-                        block
-                        onClick={() =>
-                            navigate(`/community/${id}/post`, {
-                                state: { community },
-                            })
-                        }
-                    >
-                        <HiOutlineDocumentAdd className="" />
-                        <span>Post</span>
-                    </Button>
+                    
                     <Suspense fallback={<></>}>
-                        {currentTab === 'posts' && <Posts />}
+                    {currentTab === 'posts' && (
+                        <>
+                        <Button
+                            disabled={!community.is_member}
+                            className="mb-3 flex items-center justify-center gap-x-0.5"
+                            size="sm"
+                            variant="twoTone"
+                            color="emerald-600"
+                            block
+                            onClick={() =>
+                                navigate(`/community/${id}/post`, {
+                                    state: { community },
+                                })
+                            }
+                        >
+                            <HiOutlineDocumentAdd className="" />
+                            <span>Post</span>
+                        </Button>
+                        <Posts />
+                            
+                        </>
+                    )}
                         {currentTab === 'details' && (
                             <CommunityDetail community={community} />
                         )}

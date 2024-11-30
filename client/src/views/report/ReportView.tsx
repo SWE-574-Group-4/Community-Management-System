@@ -65,7 +65,7 @@ export default function ReportView() {
         <div>
             {report?.data && (
                 <Card className="min-w-[320px] md:min-w-[600px] mt-5 mx-auto">
-                    <h2 className="text-xl font-bold mb-4">Report Details</h2>
+                    <h2 className="text-xl font-bold mb-4">#{reportId} Report Details </h2>
                     <div className="mb-4">
                         <strong>Reported By:</strong>{' '}
                         {report.data.user ? (
@@ -156,16 +156,16 @@ export default function ReportView() {
                     </div>
                     <div className="flex justify-end">
                         <Button
-                            className="bg-red-500 text-white mx-2"
+                            className="bg-red-500 mx-2"
                             onClick={handleDeleteReport}
                         >
                             Delete Report
                         </Button>
                         <Button
-                            className="bg-gray-500 text-white"
+                            className="bg-gray-500"
                             onClick={() => navigate(`/community/${communityId}/reports`)}
                         >
-                            Back to Reports
+                            Back to Community
                         </Button>
                     </div>
                 </Card>
