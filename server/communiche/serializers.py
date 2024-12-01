@@ -158,10 +158,12 @@ class ReportSerializer(serializers.ModelSerializer):
 class UserFollowingSerializer(serializers.ModelSerializer):
     follower = serializers.ReadOnlyField(source='follower.username')
     following = serializers.ReadOnlyField(source='following.username')
+    follower_id = serializers.ReadOnlyField(source='follower.id')
+    following_id = serializers.ReadOnlyField(source='following.id')
 
     class Meta:
         model = UserFollowing
-        fields = ['id', 'follower', 'following', 'created_at']
+        fields = ['id', 'follower', 'following', 'following_id', 'follower_id', 'created_at']
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification

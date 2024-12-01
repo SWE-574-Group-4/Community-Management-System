@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
-from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
+from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -39,7 +39,6 @@ def user_list(request):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def user_detail(request, id):
-    print("user ", request.user.id)
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
@@ -1025,4 +1024,18 @@ def is_following(request, user_id, follower_id):
 def get_tags(request):
     tags = Tag.objects.all()
     serializer = TagSerializer(tags, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_following(request, user_id):
+    user = User.objects.get(pk=user_id)
+    following = UserFollowing.objects.filter(follower=user)
+    serializer = UserFollowingSerializer(following, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_followers(request, user_id):
+    user = User.objects.get(pk=user_id)
+    followers = UserFollowing.objects.filter(following=user)
+    serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
