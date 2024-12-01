@@ -10,6 +10,8 @@ import Invitations from './components/Invitations'
 import Communities from './components/Communities'
 import Badges from './components/Badges'
 import Notifications from './components/Notifications'
+import Followers from './components/Followers'
+import Followings from './components/Followings'
 
 const { TabNav, TabList } = Tabs
 
@@ -47,6 +49,8 @@ const Settings = () => {
             label: t('My Notifications'),
             path: 'myNotifications',
         },
+        followers: { label: t('My Followers'), path: 'followers' },
+        followings: { label: t('My Followings'), path: 'followings' },
     }
 
     return (
@@ -72,6 +76,8 @@ const Settings = () => {
                         {currentTab === 'myCommunities' && <Communities />}
                         {currentTab === 'myBadges' && <Badges />}
                         {currentTab === 'myNotifications' && <Notifications />}
+                        {currentTab === 'followers' && <Followers/>}
+                        {currentTab === 'followings' && <Followings />}
                     </Suspense>
                 </div>
             </AdaptableCard>

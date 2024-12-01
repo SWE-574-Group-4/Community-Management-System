@@ -121,3 +121,16 @@ export async function isFollowing(userId: number, authedUserId: number) {
     });
 
 }
+export async function getFollowers(userId: number) {
+    return ApiService.fetchData({
+        url: `followers/${userId}`,  // Pass the userId directly in the URL
+        method: 'get',
+    });
+}
+
+export async function getFollowing(userId: number) {
+    return ApiService.fetchData({
+        url: `following/${userId}`,
+        method: 'get',
+    });
+}

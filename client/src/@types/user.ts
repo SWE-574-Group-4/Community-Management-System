@@ -81,3 +81,12 @@ export type Community = {
     id: number
     name: string
 }
+
+export type FollowerType = {
+    id: number
+    user_name: string
+    follower: string
+    following: string
+    follower_id: number
+    following_id: number
+}
