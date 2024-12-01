@@ -1,13 +1,12 @@
 import { Card } from '@/components/ui'
 import { useAppSelector } from '@/store'
 import { useEffect, useState } from 'react'
-import InvitationsTable from './InvitationsTable'
 import { apiGetBadges } from '@/services/UserService'
-import { BadgeType, InvitationsType } from '@/@types/user'
+import { BadgeType } from '@/@types/user'
 import BadgesTable from './BadgesTable'
 
 export default function Badges() {
-    const [badges, setBadges] = useState<BadgeType[]>([]) // TODO: Change to Invitations type
+    const [badges, setBadges] = useState<BadgeType[]>([])
     const fetchTrigger = useAppSelector(
         (state) => state.community.community.fetchTrigger
     )
@@ -21,10 +20,10 @@ export default function Badges() {
                 if (response.status === 200) {
                     setBadges(response.data as BadgeType[])
                 }
-                // fetch invitations data
-                console.log('fetching invitations')
+                // fetch badges data
+                console.log('fetching badges')
             } catch (error) {
-                console.error('Error fetching invitations', error)
+                console.error('Error fetching badges', error)
             }
         }
 

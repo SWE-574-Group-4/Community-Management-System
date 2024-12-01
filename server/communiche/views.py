@@ -856,29 +856,38 @@ def get_user_notifications(request):
     return Response(notifications_data)
 
 @api_view(['GET'])
-def get_user_badges(request):
-    user_id = request.query_params.get('user_id')
+def get_user_badges(request, user_id):
+    # Validate that the user exists
     try:
         user = User.objects.get(pk=user_id)
     except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Fetch all badges
     all_badges = Badge.objects.all()
-    user_badges = UserBadge.objects.filter(user=user)
+
+    # Fetch user-specific badges in a single query
+    user_badges = UserBadge.objects.filter(user=user).select_related('badge')
     user_badge_ids = user_badges.values_list('badge_id', flat=True)
 
-    badge_data = []
-    for badge in all_badges:
-        is_owned = badge.id in user_badge_ids
-        badge_data.append({
+    # Build the badge response
+    badge_data = [
+        {
+            'id': badge.id,
             'name': badge.name,
             'description': badge.description,
             'tier': badge.tier,
             'icon': badge.icon.url if badge.icon else None,
-            'is_owned': is_owned
-        })
+            'is_owned': badge.id in user_badge_ids,
+            'earned_at': next(
+                (ub.earned_at for ub in user_badges if ub.badge_id == badge.id),
+                None,
+            )
+        }
+        for badge in all_badges
+    ]
 
-    return Response(badge_data)
+    return Response(badge_data, status=status.HTTP_200_OK)
 
 # Get all available badges (for admins or others)
 @api_view(['GET'])

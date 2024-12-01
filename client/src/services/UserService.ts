@@ -46,7 +46,7 @@ export async function apiGetInvitations(userId: string) {
 
 export async function apiGetBadges(userId: string) {
     return ApiService.fetchData({
-        url: `/user/badges/`,
+        url: `/user/${userId}/badges/`,
         method: 'get',
         params: {
             user_id: userId,
