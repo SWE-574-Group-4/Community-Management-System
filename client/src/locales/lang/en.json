@@ -48,7 +48,9 @@
         "invitations": "My Invitations",
         "myCommunities": "My Communities",
         "myBadges": "My Badges",
-        "myNotifications": "My Notifications"
+        "myNotifications": "My Notifications",
+        "followers": "My Followers",
+        "followings": "My Following"
     },
     "settings": {
         "title": "General",

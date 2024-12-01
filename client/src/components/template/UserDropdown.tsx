@@ -10,6 +10,7 @@ import {
     HiOutlineKey,
     HiBadgeCheck,
     HiPhoneMissedCall,
+    
 } from 'react-icons/hi'
 import { BsCardChecklist } from 'react-icons/bs'
 import { IoFastFoodOutline } from 'react-icons/io5'
@@ -21,7 +22,7 @@ import { useAppSelector } from '@/store'
 
 type DropdownList = {
     label: string
-    path: string
+    path: string,
     icon: JSX.Element
 }
 
@@ -50,6 +51,16 @@ const dropdownItemList: DropdownList[] = [
         label: 'nav.myNotifications',
         path: '/app/account/settings/myNotifications',
         icon: <HiPhoneMissedCall />,
+    },
+    {
+        label: 'nav.followers',
+        path: '/app/account/settings/followers',
+        icon: <BsCardChecklist />,
+    },
+    {
+        label: 'nav.followings',
+        path: '/app/account/settings/followings',
+        icon: <BsCardChecklist />,
     },
 ]
 
