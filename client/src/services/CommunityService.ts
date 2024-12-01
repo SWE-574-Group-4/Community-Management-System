@@ -1,15 +1,8 @@
 import { CommunityFormModel } from '@/@types/community'
 import ApiService from './ApiService'
 
-export async function apiGetTags() {
-    return ApiService.fetchData({
-        url: '/tags/',
-        method: 'get',
-    })
-}
-
 export async function apiAddCommunity(data: CommunityFormModel) {
-    const { is_public, userId, tag_ids, ...rest } = data
+    const { is_public, userId, ...rest } = data
     return ApiService.fetchData({
         url: '/add_community/',
         method: 'post',
@@ -17,7 +10,6 @@ export async function apiAddCommunity(data: CommunityFormModel) {
             ...rest,
             is_public,
             user_id: userId,
-            tag_ids,
         },
     })
 }

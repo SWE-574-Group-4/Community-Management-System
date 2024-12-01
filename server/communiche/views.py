@@ -1,39 +1,8 @@
 import json
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import (
-    Badge, 
-    Notification, 
-    Template, 
-    User, 
-    Posts, 
-    Tag,
-    UserBadge, 
-    Community, 
-    JoinRequest, 
-    CommunityUser, 
-    Invitation, 
-    PComment, 
-    Report, 
-    TemplateCommunity, 
-    UserFollowing
-)
-from .serializers import (
-    TagSerializer, 
-    TemplateSerializer, 
-    UserBadgeDetailedSerializer, 
-    UserBadgeSerializer, 
-    UserSerializer, 
-    CommunitySerializer, 
-    JoinRequestSerializer, 
-    TemplateCommunitySerializer, 
-    PostSerializer, 
-    InvitationSerializer, 
-    CommentSerializer, 
-    BadgeSerializer, 
-    ReportSerializer, 
-    UserFollowingSerializer
-)
+from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
+from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -49,19 +18,6 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-
-
-@api_view(['GET'])
-def get_tags(request):
-    tags = Tag.objects.all()
-    serializer = TagSerializer(tags, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def get_tags(request):
-    tags = Tag.objects.all()
-    serializer = TagSerializer(tags, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -212,19 +168,13 @@ def add_community(request):
         serializer = CommunitySerializer(data=request.data)
         if serializer.is_valid():
             user_id = request.data.get('user_id')
-            tags = request.data.getlist('tag_ids[]')
-            serializer.save(owner_id=user_id, tags=tags)
+            serializer.save(owner_id=user_id)
             
             # Add owner to communityuser table with role -1
             community = serializer.instance
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
-
-            for tag_id in tags:
-                if tag_id:
-                    tag = Tag.objects.get(id=tag_id)
-                    print("tag data:", tag)
-                    community.tags.add(tag)         
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -276,8 +226,6 @@ def community_detail(request, id):
             community_data['has_user_requested'] = JoinRequest.objects.filter(community=community, user=user).exists()
             community_data['is_member'] = user in community.members.all()
         
-        # Get the tag ids associated with the community
-        community_data['tags'] = [tag.name for tag in community.tags.all()]
         community_data['num_members'] = community.members.count()
 
         # community_data.pop('members', None)  # Remove the 'members' field
@@ -916,9 +864,22 @@ def get_user_badges(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    all_badges = Badge.objects.all()
     user_badges = UserBadge.objects.filter(user=user)
-    serializer = UserBadgeDetailedSerializer(user_badges, many=True)
-    return Response(serializer.data)
+    user_badge_ids = user_badges.values_list('badge_id', flat=True)
+
+    badge_data = []
+    for badge in all_badges:
+        is_owned = badge.id in user_badge_ids
+        badge_data.append({
+            'name': badge.name,
+            'description': badge.description,
+            'tier': badge.tier,
+            'icon': badge.icon.url if badge.icon else None,
+            'is_owned': is_owned
+        })
+
+    return Response(badge_data)
 
 # Get all available badges (for admins or others)
 @api_view(['GET'])

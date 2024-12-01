@@ -1,23 +1,7 @@
 from asyncio import constants
 import json
 from rest_framework import serializers
-from .models import (
-    Badge, 
-    Notification, 
-    Template, 
-    User, 
-    Community, 
-    JoinRequest, 
-    CommunityUser, 
-    TemplateCommunity, 
-    Posts, 
-    PComment, 
-    Invitation, 
-    UserBadge, 
-    Report, 
-    UserFollowing, 
-    Tag
-)
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,12 +38,11 @@ class CommunitySerializer(serializers.ModelSerializer):
     is_member = serializers.SerializerMethodField()
     has_user_requested = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
-    tags = TagSerializer(many=True, read_only=True)
     number_of_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
-        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner', 'number_of_posts', 'tags']
+        fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner', 'number_of_posts']
 
     def get_is_member(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
@@ -200,7 +183,12 @@ class UserBadgeDetailedSerializer(serializers.ModelSerializer):
     tier = serializers.CharField(source='badge.tier')
     icon = serializers.ImageField(source='badge.icon')
     earned_at = serializers.DateTimeField()
+    is_owned = serializers.SerializerMethodField()
 
     class Meta:
         model = UserBadge
-        fields = ['name', 'description', 'tier', 'icon', 'earned_at']
+        fields = ['name', 'description', 'tier', 'icon', 'earned_at', 'is_owned']
+
+    def get_is_owned(self, obj):
+        user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
+        return str(obj.user_id) == str(user_id)
