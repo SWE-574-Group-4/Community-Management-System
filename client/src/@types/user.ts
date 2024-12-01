@@ -45,6 +45,7 @@ export type BadgeType = {
     tier?: string
     status: boolean
     icon?: string 
+    is_owned?: boolean
 }
 
 export type NotificationType = {

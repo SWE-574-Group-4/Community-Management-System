@@ -28,7 +28,7 @@ urlpatterns = [
     path('user/<int:user_id>/invitations/', views.invitations, name='invitations'),
     path('user/<int:invitation_id>/accept_reject_invitation/', views.accept_reject_invitation, name='accept_reject_invitation'),
     path('user/communities/', views.user_communities, name='user_communities'),
-    path('user/badges/', views.get_user_badges, name='user_badges'),
+    path('user/<int:user_id>/badges/', views.get_user_badges, name='user_badges'),
     path('user/notifications/', views.get_user_notifications, name='user_notifications'),
     path('user/<int:user_id>/assign-badge/<int:badge_id>/', views.assign_badge_to_user, name='assign_badge_to_user'),
     path('signup/', views.signup),

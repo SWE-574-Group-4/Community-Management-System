@@ -145,15 +145,17 @@ export default function Profile() {
                 <div>
                 <span>Communiche Badges</span>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {badges.map((badge: BadgeType) => (
-                            <img
-                                key={badge.id}
-                                src={badge.icon}
-                                alt={badge.name}
-                                title={badge.name}
-                                className="w-6 h-6"
-                            />
-                        ))}
+                        {badges
+                            .filter((badge: BadgeType) => badge.is_owned)
+                            .map((badge: BadgeType) => (
+                                <img
+                                    key={badge.id}
+                                    src={badge.icon}
+                                    alt={badge.name}
+                                    title={badge.name}
+                                    className="w-6 h-6"
+                                />
+                            ))}
                     </div>
                     <br/>
                 <span>Badges from Communities</span>
