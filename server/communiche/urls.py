@@ -38,6 +38,7 @@ urlpatterns = [
     path('is_following/<int:user_id>/<int:follower_id>', views.is_following, name='is_following'),
     path('followers/<int:user_id>/', views.get_followers, name='get_followers'),
     path('following/<int:user_id>/', views.get_following, name='get_following'),
+    path('users/<int:user_id>/interests/', views.user_specific_interests, name='user-specific-interests'),
 
 
     # other paths...

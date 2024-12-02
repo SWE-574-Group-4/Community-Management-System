@@ -2,7 +2,7 @@ import json
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
-from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
+from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer, UserInterestSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -10,7 +10,7 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 import jwt
 from datetime import datetime, timedelta
-from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Tag, Posts, User, CommunityUser
+from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Tag, Posts, User, CommunityUser, UserInterest
 from . import constants
 from datetime import datetime, timedelta
 from .models import Community, TemplateCommunity
@@ -1048,3 +1048,71 @@ def get_followers(request, user_id):
     followers = UserFollowing.objects.filter(following=user)
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST', 'DELETE', 'PUT'])
+def user_specific_interests(request, user_id):
+    from .models import User, UserInterest, Tag
+    from .serializers import UserInterestSerializer
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        # Fetch all interests for the specified user
+        interests = UserInterest.objects.filter(user=user)
+        serializer = UserInterestSerializer(interests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        # Add a new interest for the specified user
+        tag_id = request.data.get('tag')
+        if not tag_id:
+            return Response({'error': 'Tag ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            tag = Tag.objects.get(id=tag_id)
+        except Tag.DoesNotExist:
+            return Response({'error': 'Tag not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        UserInterest.objects.get_or_create(user=user, tag=tag)
+        return Response({'message': 'Interest added successfully.'}, status=status.HTTP_201_CREATED)
+
+    elif request.method == 'DELETE':
+        # Delete a specific interest for the user
+        interest_id = request.data.get('interest_id')
+        if not interest_id:
+            return Response({'error': 'Interest ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            interest = UserInterest.objects.get(id=interest_id, user=user)
+        except UserInterest.DoesNotExist:
+            return Response({'error': 'Interest not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        interest.delete()
+        return Response({'message': 'Interest deleted successfully.'}, status=status.HTTP_200_OK)
+
+    elif request.method == 'PUT':
+        # Update an existing interest for the user
+        interest_id = request.data.get('interest_id')
+        new_tag_id = request.data.get('tag')
+        if not interest_id or not new_tag_id:
+            return Response({'error': 'Interest ID and new Tag ID are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            interest = UserInterest.objects.get(id=interest_id, user=user)
+        except UserInterest.DoesNotExist:
+            return Response({'error': 'Interest not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            new_tag = Tag.objects.get(id=new_tag_id)
+        except Tag.DoesNotExist:
+            return Response({'error': 'New Tag not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update the tag for this interest
+        interest.tag = new_tag
+        interest.save()
+
+        return Response({'message': 'Interest updated successfully.'}, status=status.HTTP_200_OK)

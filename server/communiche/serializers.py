@@ -1,7 +1,7 @@
 from asyncio import constants
 import json
 from rest_framework import serializers
-from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, UserInterest
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -194,3 +194,11 @@ class UserBadgeDetailedSerializer(serializers.ModelSerializer):
     def get_is_owned(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
         return str(obj.user_id) == str(user_id)
+
+class UserInterestSerializer(serializers.ModelSerializer):
+    tag_name = serializers.CharField(source='tag.name', read_only=True)
+
+    class Meta:
+        model = UserInterest
+        fields = ['id', 'user', 'tag', 'tag_name']
+        read_only_fields = ['id']
