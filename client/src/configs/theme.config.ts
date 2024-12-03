@@ -30,7 +30,7 @@ export type ThemeConfig = {
 export const themeConfig: ThemeConfig = {
     themeColor: 'indigo',
     direction: THEME_ENUM.DIR_LTR,
-    mode: THEME_ENUM.MODE_DARK,
+    mode: THEME_ENUM.MODE_LIGHT,
     primaryColorLevel: 600,
     cardBordered: false,
     panelExpand: false,

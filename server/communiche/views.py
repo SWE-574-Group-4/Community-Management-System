@@ -330,6 +330,16 @@ def default_template(request):
         else:
             return Response({"detail": "Default template not found"}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['DELETE'])
+def delete_template(request, template_id):
+    try:
+        template = Template.objects.get(pk=template_id)
+    except Template.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    template.delete()
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def template_detail(request, id):
     try:
@@ -649,9 +659,19 @@ def delete_post(request, post_id):
 
 @api_view(['GET'])
 def posts(request):
+    user_id = request.query_params.get('user_id')
+    user = User.objects.get(pk=user_id) if user_id else None
+
     posts = Posts.objects.all().order_by('-created_at')
-    serializer = PostSerializer(posts, context = {'request': request}, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    serializer = PostSerializer(posts, many=True)
+    data = serializer.data
+
+    for post_data in data:
+        post = Posts.objects.get(pk=post_data['id'])
+        post_data['is_liked'] = user in post.likes.all() if user else False
+        post_data['tags'] = [tag.name for tag in post.tags.all()]
+
+    return Response(data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def search(request):
@@ -896,9 +916,22 @@ def get_user_badges(request):
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     
+    all_badges = Badge.objects.all()
     user_badges = UserBadge.objects.filter(user=user)
-    serializer = UserBadgeDetailedSerializer(user_badges, many=True)
-    return Response(serializer.data)
+    user_badge_ids = user_badges.values_list('badge_id', flat=True)
+
+    badge_data = []
+    for badge in all_badges:
+        is_owned = badge.id in user_badge_ids
+        badge_data.append({
+            'name': badge.name,
+            'description': badge.description,
+            'tier': badge.tier,
+            'icon': badge.icon.url if badge.icon else None,
+            'is_owned': is_owned
+        })
+
+    return Response(badge_data)
 
 # Get all available badges (for admins or others)
 @api_view(['GET'])
