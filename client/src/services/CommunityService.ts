@@ -22,6 +22,7 @@ export async function apiUpdateCommunity(data: CommunityFormModel) {
         method: 'put',
         data: {
             ...rest,
+            //todo add rules
         },
     })
 }
