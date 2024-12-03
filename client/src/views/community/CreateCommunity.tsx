@@ -29,6 +29,9 @@ const validationSchema = Yup.object().shape({
     description: Yup.string(),
     avatar: Yup.string(),
     isPublic: Yup.boolean(),
+    rules: Yup.string()
+    .min(3, 'Rule is too short')
+    .max(500, 'Rule is too long'),
 })
 
 const CreateCommunity = () => {
@@ -36,6 +39,7 @@ const CreateCommunity = () => {
         name: '',
         description: '',
         is_public: true,
+        rules: '',
     })
     const cid = useParams<{ id: string }>().id
     const [editMode, setEditMode] = useState(false)
@@ -57,7 +61,7 @@ const CreateCommunity = () => {
                 description,
                 is_public,
             })
-        }
+        } 
     }, [community])
 
     const onFormSubmit = async (
@@ -208,6 +212,19 @@ const CreateCommunity = () => {
                                         prefix={
                                             <HiOutlineBriefcase className="text-xl" />
                                         }
+                                    />
+                                </FormRow>
+                                <FormRow
+                                    name="rules"
+                                    label="Community Rules"
+                                    {...validatorProps}
+                                >
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="rules"
+                                        placeholder="Add a community rule"
+                                        component={Input}
                                     />
                                 </FormRow>
 
