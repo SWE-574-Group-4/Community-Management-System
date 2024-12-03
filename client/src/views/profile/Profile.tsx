@@ -145,17 +145,42 @@ export default function Profile() {
                 <div>
                 <span>Communiche Badges</span>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {badges
-                            .filter((badge: BadgeType) => badge.is_owned)
-                            .map((badge: BadgeType) => (
+                        {Object.values(
+                            badges
+                                .filter((badge: BadgeType) => badge.is_owned)
+                                .reduce((acc: { [key: string]: BadgeType }, badge: BadgeType) => {
+                                    if (
+                                        !acc[badge.name] ||
+                                        (acc[badge.name].tier !== 'Gold' &&
+                                            (badge.tier === 'Gold' ||
+                                                (acc[badge.name].tier !== 'Silver' &&
+                                                    badge.tier === 'Silver')))
+                                    ) {
+                                        acc[badge.name] = badge
+                                    }
+                                    return acc
+                                }, {})
+                        ).map((badge: BadgeType) => (
+                            <div
+                                key={badge.id}
+                                className={`w-10 h-10 flex items-center justify-center rounded-full border-2 border-white ${
+                                    badge.tier === 'Gold'
+                                        ? 'bg-yellow-300'
+                                        : badge.tier === 'Silver'
+                                        ? 'bg-gray-300'
+                                        : badge.tier === 'Bronze'
+                                        ? 'bg-yellow-600 bg-opacity-40'
+                                        : 'bg-white-500'
+                                }`}
+                                title={`${badge.name} - ${badge.tier}`}
+                            >
                                 <img
-                                    key={badge.id}
                                     src={badge.icon}
-                                    alt={badge.name}
-                                    title={badge.name}
+                                    alt={`${badge.name} - ${badge.tier}`}
                                     className="w-6 h-6"
                                 />
-                            ))}
+                            </div>
+                        ))}
                     </div>
                     <br/>
                 <span>Badges from Communities</span>
