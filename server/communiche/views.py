@@ -39,7 +39,6 @@ def user_list(request):
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def user_detail(request, id):
-    print("user ", request.user.id)
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
