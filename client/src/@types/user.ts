@@ -10,7 +10,6 @@ export type UserResponseType = {
     username: string
     is_invited?: boolean
     is_followed?: boolean
-
 }
 
 export type PasswordType = {
@@ -44,7 +43,8 @@ export type BadgeType = {
     description?: string
     tier?: string
     status: boolean
-    icon?: string 
+    icon?: string
+    criteria?: string
     is_owned?: boolean
 }
 

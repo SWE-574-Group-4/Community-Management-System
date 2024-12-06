@@ -20,3 +20,28 @@ export async function apiAssignBadge(userId: string, badgeId: string) {
         method: 'post',
     })
 }
+
+export async function apiSetCommunityBadge({
+    badgeName,
+    badgeDescription,
+    badgeTier,
+    badgeCriteria,
+    communityId,
+}: {
+    badgeName: string
+    badgeDescription: string
+    badgeTier: string
+    badgeCriteria: string
+    communityId: string
+}) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/setCommunityBadges/`,
+        method: 'post',
+        data: {
+            name: badgeName,
+            description: badgeDescription,
+            tier: badgeTier,
+            criteria: badgeCriteria,
+        },
+    })
+}

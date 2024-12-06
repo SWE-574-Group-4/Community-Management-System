@@ -143,7 +143,7 @@ export default function Profile() {
 
                 {/* User's Badges Section */}
                 <div>
-                <span>Communiche Badges</span>
+                    <span>Communiche Badges</span>
                     <div className="flex flex-wrap gap-2 mt-2">
                         {badges
                             .filter((badge: BadgeType) => badge.is_owned)
@@ -157,8 +157,8 @@ export default function Profile() {
                                 />
                             ))}
                     </div>
-                    <br/>
-                <span>Badges from Communities</span>
+                    <br />
+                    <span>Badges from Communities</span>
                 </div>
             </div>
         </div>

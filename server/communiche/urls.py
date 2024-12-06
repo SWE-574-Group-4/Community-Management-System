@@ -69,6 +69,8 @@ urlpatterns = [
     path('community/<int:community_id>/add_template/', views.add_template, name='community-add-template'),
     path('search/', views.search, name='search'),
     path('community/<int:community_id>/transfer_ownership/<int:owner_id>/<int:new_owner_id>', views.transfer_ownership, name='transfer_ownership'),
+    path('api/community/<int:community_id>/setCommunityBadges/', views.set_community_badges, name='set_community_badges'),
+    path('community/<int:community_id>/setCommunityBadges/', views.set_community_badges, name='set_community_badges'),
 
     # post
     path('post/', views.post, name='post'),

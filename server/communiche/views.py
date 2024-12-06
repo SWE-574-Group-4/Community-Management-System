@@ -27,7 +27,7 @@ def user_list(request):
 
     if request.method == 'GET':
         query = request.query_params.get('query', '')
-        users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
+        users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains(query)) | Q(firstname__icontains=query) | Q(lastname__icontains(query)))
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -460,7 +460,6 @@ def community_non_members(request, community_id):
 
     return Response(serializer.data)
 
-# TODO: Check this later 
 @api_view(['GET'])
 def join_requests(request, community_id):
     community = Community.objects.get(pk=community_id)
@@ -879,6 +878,7 @@ def get_user_badges(request, user_id):
             'tier': badge.tier,
             'icon': badge.icon.url if badge.icon else None,
             'is_owned': badge.id in user_badge_ids,
+            'criteria': badge.criteria,
             'earned_at': next(
                 (ub.earned_at for ub in user_badges if ub.badge_id == badge.id),
                 None,
@@ -1048,3 +1048,20 @@ def get_followers(request, user_id):
     followers = UserFollowing.objects.filter(following=user)
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def set_community_badges(request, community_id):
+    try:
+        community = Community.objects.get(pk=community_id)
+    except Community.DoesNotExist:
+        return Response({'error': 'Community not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    badge_data = request.data
+    badge = Badge.objects.create(
+        name=badge_data.get('name'),
+        description=badge_data.get('description'),
+        tier=badge_data.get('tier'),
+        criteria=badge_data.get('criteria')
+    )
+    community.badges.add(badge)
+    return Response({'message': 'Badge added successfully'}, status=status.HTTP_201_CREATED)

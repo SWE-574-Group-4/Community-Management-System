@@ -16,6 +16,7 @@ import PendingRequests from './components/PendingRequests'
 import Invite from './Invite'
 import Posts from './components/Posts'
 import Reports from './components/Reports'
+import CommunityBadges from './components/CommunityBadges'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
 
@@ -85,6 +86,11 @@ const Settings = () => {
             path: 'reports',
             authority: ['owner', 'moderator'],
         },
+        communityBadges: {
+            label: 'Community Badges',
+            path: 'communityBadges',
+            authority: ['owner'],
+        },
     }
 
     useEffect(() => {
@@ -152,37 +158,34 @@ const Settings = () => {
                     </Tabs>
                 )}
                 <div className="py-4">
-                    
                     <Suspense fallback={<></>}>
-                    {currentTab === 'posts' && (
-                        <>
-                        <Button
-                            disabled={!community.is_member}
-                            className="mb-3 flex items-center justify-center gap-x-0.5"
-                            size="sm"
-                            variant="twoTone"
-                            color="emerald-600"
-                            block
-                            onClick={() =>
-                                navigate(`/community/${id}/post`, {
-                                    state: { community },
-                                })
-                            }
-                        >
-                            <HiOutlineDocumentAdd className="" />
-                            <span>Post</span>
-                        </Button>
-                        <Posts />
-                            
-                        </>
-                    )}
+                        {currentTab === 'posts' && (
+                            <>
+                                <Button
+                                    disabled={!community.is_member}
+                                    className="mb-3 flex items-center justify-center gap-x-0.5"
+                                    size="sm"
+                                    variant="twoTone"
+                                    color="emerald-600"
+                                    block
+                                    onClick={() =>
+                                        navigate(`/community/${id}/post`, {
+                                            state: { community },
+                                        })
+                                    }
+                                >
+                                    <HiOutlineDocumentAdd className="" />
+                                    <span>Post</span>
+                                </Button>
+                                <Posts />
+                            </>
+                        )}
                         {currentTab === 'details' && (
                             <CommunityDetail community={community} />
                         )}
                         {currentTab === 'members' && (
                             <Members community={community} />
                         )}
-
                         {currentTab === 'requests' && (
                             <PendingRequests community={community} />
                         )}
@@ -191,6 +194,9 @@ const Settings = () => {
                             <CommunitySpecificTemplates />
                         )}
                         {currentTab === 'reports' && <Reports />}
+                        {currentTab === 'communityBadges' && (
+                            <CommunityBadges />
+                        )}{' '}
                     </Suspense>
                 </div>
             </AdaptableCard>

@@ -185,11 +185,12 @@ class UserBadgeDetailedSerializer(serializers.ModelSerializer):
     tier = serializers.CharField(source='badge.tier')
     icon = serializers.ImageField(source='badge.icon')
     earned_at = serializers.DateTimeField()
+    criteria = serializers.CharField(source='badge.criteria')
     is_owned = serializers.SerializerMethodField()
 
     class Meta:
         model = UserBadge
-        fields = ['name', 'description', 'tier', 'icon', 'earned_at', 'is_owned']
+        fields = ['name', 'description', 'tier', 'icon', 'earned_at', 'criteria', 'is_owned']
 
     def get_is_owned(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None

@@ -192,3 +192,11 @@ export async function apiTransferOwnership(data: any) {
         method: 'post',
     })
 }
+
+export async function apiSetCommunityBadges(communityId: string, data: any) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/setCommunityBadges/`,
+        method: 'post',
+        data,
+    })
+}
