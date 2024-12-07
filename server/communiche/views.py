@@ -18,6 +18,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+import requests
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -1048,3 +1049,38 @@ def get_followers(request, user_id):
     followers = UserFollowing.objects.filter(following=user)
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def fetch_enumerated_options(request):
+    keyword_id = request.query_params.get('keyword_id', None)
+
+    if not keyword_id:
+        return Response({'error': 'Keyword ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    sparql_query = f"""
+    SELECT ?subclass ?subclassLabel
+    WHERE {{
+      ?subclass wdt:P279 wd:{keyword_id}.
+      SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+    }}
+    """
+    try:
+        response = requests.get(
+            'https://query.wikidata.org/sparql',
+            params={'query': sparql_query},
+            headers={'Accept': 'application/json'}
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        options = [
+            {
+                'id': binding['subclass']['value'].split('/')[-1],
+                'label': binding['subclassLabel']['value']
+            }
+            for binding in data['results']['bindings']
+        ]
+        return Response(options, status=status.HTTP_200_OK)
+
+    except requests.exceptions.RequestException as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

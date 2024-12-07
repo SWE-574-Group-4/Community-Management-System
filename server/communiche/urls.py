@@ -82,6 +82,7 @@ urlpatterns = [
     path('comment/<int:comment_id>/edit', views.edit_comment, name='edit-comment'),
     path('post/<int:post_id>/comments', views.comments, name='comments'),
     path('tags/', views.get_tags, name='get_tags'),
+    path('enumerated_options/', views.fetch_enumerated_options, name='fetch-enumerated-options'),
 
     # search
     path('advance_search/', views.advance_search, name='advance-search'),

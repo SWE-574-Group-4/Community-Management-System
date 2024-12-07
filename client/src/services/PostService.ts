@@ -101,3 +101,11 @@ export async function apiGetTags() {
         method: 'get',
     })
 }
+
+export async function apiFetchEnumeratedOptions(keywordId: string) {
+    return ApiService.fetchData({
+        url: '/enumerated_options/',
+        method: 'get',
+        params: { keyword_id: keywordId },
+    })
+}
