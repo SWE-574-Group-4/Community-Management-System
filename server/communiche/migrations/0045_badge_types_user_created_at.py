@@ -65,9 +65,9 @@ class Migration(migrations.Migration):
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.RunPython(
-            create_badges, reverse_code=migrations.RunPython.noop
+            create_badges
         ),
         migrations.RunPython(
-            set_default_created_at, reverse_code=migrations.RunPython.noop
+            set_default_created_at
         ),
     ]
