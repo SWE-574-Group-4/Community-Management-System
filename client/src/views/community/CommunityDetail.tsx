@@ -18,6 +18,7 @@ import Posts from './components/Posts'
 import Reports from './components/Reports'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
+import { rule } from 'postcss'
 
 const { TabNav, TabList } = Tabs
 
@@ -63,6 +64,7 @@ const Settings = () => {
             path: 'posts',
         },
         details: { label: 'Details', path: 'details' },
+        rules: { label: 'Rules', path: 'rules' },
         members: { label: 'Members', path: 'members' },
 
         requests: {

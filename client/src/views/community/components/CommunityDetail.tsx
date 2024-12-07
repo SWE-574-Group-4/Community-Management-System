@@ -37,6 +37,7 @@ export default function CommunityDetail({
         is_public,
         is_owner,
         number_of_posts,
+        rules,
         tags,
     } = community
 
@@ -171,7 +172,8 @@ export default function CommunityDetail({
                     </span>
                 </div>
                 <h4 className="font-bold my-3">{name}</h4>
-                <p>{description}</p>
+                <p><strong>Description:</strong> {description}</p>
+                <p><strong>Rules:</strong> {rules}</p>
                 {tags && tags.length > 0 && (
                     <div
                         className="tags-section mt-3"
