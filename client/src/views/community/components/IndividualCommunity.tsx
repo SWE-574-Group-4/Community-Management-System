@@ -8,6 +8,7 @@ import {
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
+import { rule } from 'postcss'
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -35,6 +36,7 @@ export default function IndividualCommunity({
         num_members,
         members,
         number_of_posts,
+        rules
     } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -129,7 +131,12 @@ export default function IndividualCommunity({
                     </span>
                 </div>
                 <h4 className="font-bold my-3">{name}</h4>
-                <p>{description}</p>
+                <div>
+                    <strong>Description: {description}</strong>
+                </div>
+                <div>
+                    <strong>Rules: {rules}</strong>
+                </div>
             </Card>
         </div>
     )

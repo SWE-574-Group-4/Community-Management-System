@@ -55,11 +55,12 @@ const CreateCommunity = () => {
         if (community) {
             console.log('community', community)
 
-            const { name, description, is_public } = community
+            const { name, description, is_public, rules } = community
             setData({
                 name,
                 description,
                 is_public,
+                rules,
             })
         } 
     }, [community])
@@ -182,7 +183,7 @@ const CreateCommunity = () => {
                             <FormContainer>
                                 <FormDesription
                                     title=""
-                                    desc="Add community info, like community name, description, avatar, and visibility."
+                                    desc="Add community info, like community name, description, and visibility."
                                 />
                                 <FormRow
                                     name="name"
