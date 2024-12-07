@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { apiGetTags, apiPost, apiTriggerRelatedEntities } from '@/services/PostService'
+import { apiGetTags, apiPost, apiFetchEnumeratedOptions, apiTriggerRelatedEntities } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
 import Select from '@/components/ui/Select'
@@ -30,6 +30,7 @@ const FieldComponent = ({
     const Component = useFieldToComponent(field.field_type)
     const field_name = toSentenceCase(field.field_name)
     const navigate = useNavigate()
+    const [options, setOptions] = useState<{ value: string; label: string }[]>([])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value)
@@ -55,8 +56,23 @@ const FieldComponent = ({
                 console.error('Geolocation is not supported by this browser.')
                 onChange('Geolocation is not supported by this browser.')
             }
+        } else if (field.field_type === 'enumerated' && field.keyword_id) {
+            try {
+                const fetchOptions = async () => {
+                    if (field.keyword_id) {
+                        const response = await apiFetchEnumeratedOptions(field.keyword_id)
+                        setOptions((response.data as { id: string; label: string }[]).map((item) => ({
+                            label: item.label,
+                            value: item.label,
+                        })))
+                    }
+                }
+                fetchOptions()
+            } catch (error) {
+                console.error('Error fetching enumerated options:', error)
+            }
         }
-    }, [field.field_type])
+    }, [field.field_type, field.keyword_id])
 
     return (
         <FormItem
@@ -67,23 +83,31 @@ const FieldComponent = ({
             asterisk={field.isRequired}
         >
             {Component && (
-                <Component
-                    type={
-                        field.field_type == 'image' ? 'text' : field.field_type
-                    }
-                    className={
-                        field.field_type == 'geolocation' ? 'hidden' : ''
-                    }
-                    name={field_name}
-                    placeholder={field_name}
-                    value={value}
-                    onChange={handleChange}
-                />
+            <Component
+                type={
+                field.field_type == 'image' ? 'text' : field.field_type
+                }
+                className={
+                field.field_type == 'geolocation' || field.field_type == 'enumerated' ? 'hidden' : ''
+                }
+                name={field_name}
+                placeholder={field_name}
+                value={value}
+                onChange={handleChange}
+            />
             )}
 
             {field.field_type === 'geolocation' && (
-                <RenderGeo coordinates={[latitude, longitude]} />
+            <RenderGeo coordinates={[latitude, longitude]} />
             )}
+
+            {field.field_type === 'enumerated' ?
+            <Select
+                options={options}
+                value={options.find((option) => option.value === value) || null}
+                onChange={(selectedOption) => onChange(selectedOption?.value || '')}
+            /> : null
+        }
         </FormItem>
     )
 }
