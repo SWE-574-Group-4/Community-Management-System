@@ -117,3 +117,16 @@ export async function apiFetchEnumeratedOptions(keywordId: string) {
         params: { keyword_id: keywordId },
     })
 }
+
+export async function apiFetchWikidataResults(preferred_keyword: string) {
+    try {
+        return await ApiService.fetchData({
+            url: '/get_keywords/',
+            method: 'get',
+            params: { keyword: preferred_keyword },
+        })
+    } catch (error) {
+        console.error('Error fetching keywords:', error)
+        throw error
+    }
+}

@@ -1146,6 +1146,36 @@ def fetch_enumerated_options(request):
 
     except requests.exceptions.RequestException as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+def get_keywords(keyword, language='en', limit=100):
+    url = "https://www.wikidata.org/w/api.php"
+    params = {
+        "action": "wbsearchentities",
+        "search": keyword,
+        "language": language,
+        "format": "json",
+        "limit": limit  # Limit to top N results
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()
+        if 'search' in data:
+            # Extract id and label for each result
+            results = [{"id": item["id"], "label": item["label"]} for item in data["search"]]
+            return results
+    return []
+
+@api_view(['GET'])
+def fetch_keywords(request):
+    keyword = request.query_params.get('keyword', None)
+    if not keyword:
+        return Response({'error': 'Keyword is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        results = get_keywords(keyword)
+        return Response(results, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 def search_wikidata(query, language="en", limit=10):
     """
