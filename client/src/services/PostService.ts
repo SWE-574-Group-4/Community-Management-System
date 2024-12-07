@@ -109,3 +109,11 @@ export async function apiGetTags(searchQuery: string) {
         params: { query: searchQuery, limit: 10 },
     })
 }
+
+export async function apiFetchEnumeratedOptions(keywordId: string) {
+    return ApiService.fetchData({
+        url: '/enumerated_options/',
+        method: 'get',
+        params: { keyword_id: keywordId },
+    })
+}
