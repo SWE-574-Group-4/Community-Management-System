@@ -46,6 +46,7 @@ export type BadgeType = {
     status: boolean
     icon?: string 
     is_owned?: boolean
+    earned_at?: string
 }
 
 export type NotificationType = {

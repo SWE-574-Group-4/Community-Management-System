@@ -2,26 +2,8 @@
 
 from django.db import migrations
 
-def update_badges(apps, schema_editor):
-    Badge = apps.get_model('communiche', 'Badge')
-    
-    badges = [
-        {"name": "Contributor", "icon": "badges/contributor.png"},
-        {"name": "Influencer", "icon": "badges/influencer.png"},
-        {"name": "Veteran", "icon": "badges/veteran.png"},
-        {"name": "Community Leader", "icon": "badges/community_leader.png"},
-        {"name": "Popular Post", "icon": "badges/popular_post.png"},
-    ]
-    
-    for badge in badges:
-        Badge.objects.filter(name=badge["name"]).update(icon=badge["icon"])
-
 class Migration(migrations.Migration):
 
     dependencies = [
         ('communiche', '0040_auto_20241124_0926'),  # Replace with the actual previous migration file
-    ]
-
-    operations = [
-        migrations.RunPython(update_badges),
     ]
