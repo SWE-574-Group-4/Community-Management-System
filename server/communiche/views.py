@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from .models import Community, JoinRequest, CommunityUser, Invitation, PComment, Tag, Posts, User, CommunityUser
 from . import constants
 from datetime import datetime, timedelta
-from .models import Community, TemplateCommunity
+from .models import Community, TemplateCommunity, UserInterest, RelatedEntity
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
@@ -603,8 +603,16 @@ def post(request):
     post.save()
 
     if tag_ids:
-        tags = Tag.objects.filter(id__in=tag_ids)
-        post.tags.set(tags)
+        resolved_tags = []
+        for qid in tag_ids:
+            wikidata_results = search_wikidata(query=qid, limit=1)
+            label = wikidata_results[0].get("label") if wikidata_results else None
+
+            if label:
+                tag, created = Tag.objects.get_or_create(qid=qid, defaults={"label": label})
+                resolved_tags.append(tag)
+
+        post.tags.set(resolved_tags)
     
     # Update the community's updated_at field
     community.updated_at = datetime.now()
