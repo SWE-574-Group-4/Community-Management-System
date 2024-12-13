@@ -18,6 +18,19 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from . import constants
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from rest_framework import viewsets
+from .models import CommunityBadge
+from .serializers import CommunityBadgeSerializer
+
+
+class CommunityBadgeViewSet(viewsets.ModelViewSet):
+    queryset = CommunityBadge.objects.all()
+    serializer_class = CommunityBadgeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save()
+        # Ensure the badge is saved to the correct table
+        CommunityBadge.objects.using('communiche_db').create(**serializer.validated_data)
 
 @api_view(['GET', 'POST'])
 def user_list(request):
@@ -27,7 +40,7 @@ def user_list(request):
 
     if request.method == 'GET':
         query = request.query_params.get('query', '')
-        users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains(query)) | Q(firstname__icontains=query) | Q(lastname__icontains(query)))
+        users = User.objects.filter(Q(username__icontains(query)) | Q(email__icontains(query)) | Q(firstname__icontains(query)) | Q(lastname__icontains(query)))
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -445,7 +458,7 @@ def community_non_members(request, community_id):
 
     # Get all users who are not members of the community and not invited
     non_members = User.objects.filter(~Q(id__in=members))
-    non_members = non_members.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
+    non_members = non_members.filter(Q(username__icontains(query)) | Q(email__icontains(query)) | Q(firstname__icontains(query)) | Q(lastname__icontains(query)))
     serializer = UserSerializer(non_members, many=True)
     
     # Add is_invited field to each member
@@ -454,10 +467,6 @@ def community_non_members(request, community_id):
         is_invited = Invitation.objects.filter(community=community, user_id=user_id).exists()
         member['is_invited'] = is_invited
     
-    return Response(serializer.data)
-
-    serializer = UserSerializer(non_members, many=True)
-
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -591,6 +600,7 @@ def post(request):
             UserBadge.assign_badge(user, badge)
             send_in_app_notification(user, badge)
     
+    evaluate_badge_criteria(user, community)
     return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['DELETE'])
@@ -623,8 +633,8 @@ def posts(request):
 def search(request):
     query = request.query_params.get('query', '')
 
-    communities = Community.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
-    posts = Posts.objects.filter(content__icontains=query)
+    communities = Community.objects.filter(Q(name__icontains(query)) | Q(description__icontains(query)))
+    posts = Posts.objects.filter(content__icontains(query))
 
     community_serializer = CommunitySerializer(communities, many=True)
     post_serializer = PostSerializer(posts, many=True)
@@ -745,6 +755,7 @@ def comment(request, post_id):
     p_comment = PComment(user=user, post=post, content=content)
     p_comment.save()
     
+    evaluate_badge_criteria(user, post.community)
     return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['DELETE'])
@@ -792,10 +803,10 @@ def advance_search(request):
     posts = Posts.objects.filter(q_objects, content__icontains=query)
     post_serializer = PostSerializer(posts, many=True)
 
-    communities = Community.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+    communities = Community.objects.filter(Q(name__icontains(query)) | Q(description__icontains(query)))
     community_serializer = CommunitySerializer(communities, many=True)
 
-    users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
+    users = User.objects.filter(Q(username__icontains(query)) | Q(email__icontains(query)) | Q(firstname__icontains(query)) | Q(lastname__icontains(query)))
     user_serializer = UserSerializer(users, many=True)
 
     # Construct a Q object to filter templates based on the fields
@@ -805,7 +816,7 @@ def advance_search(request):
 
     # Search for templates that match the query and fields
     templates = Template.objects.filter(
-        Q(name__icontains=query) | Q(description__icontains=query) & template_q_objects | Q(fields__icontains=query)
+        Q(name__icontains=query) | Q(description__icontains(query)) & template_q_objects | Q(fields__icontains(query))
     )
 
     template_serializer = TemplateSerializer(templates, many=True)
@@ -868,11 +879,16 @@ def get_user_badges(request, user_id):
     # Fetch user-specific badges in a single query
     user_badges = UserBadge.objects.filter(user=user).select_related('badge')
     user_badge_ids = user_badges.values_list('badge_id', flat=True)
+    
+    community_badges = CommunityBadge.objects.all()
+    community_badge_ids = community_badges.values_list('badge', flat=True)
+    
 
     # Build the badge response
     badge_data = [
         {
             'id': badge.id,
+            'is_community_badge': badge.id in user_badge_ids,
             'name': badge.name,
             'description': badge.description,
             'tier': badge.tier,
@@ -889,20 +905,17 @@ def get_user_badges(request, user_id):
 
     return Response(badge_data, status=status.HTTP_200_OK)
 
-# Get all available badges (for admins or others)
 @api_view(['GET'])
 def get_all_badges(request):
     badges = Badge.objects.all()
     serializer = BadgeSerializer(badges, many=True)
     return Response(serializer.data)
 
-# Assign badge to user (admin or system logic)
 @api_view(['POST'])
 def assign_badge_to_user(request, user_id, badge_id):
     user = User.objects.get(id=user_id)
     badge = Badge.objects.get(id=badge_id)
     
-    # Example: Here, you can use your logic to assign a badge to the user
     UserBadge.assign_badge(user, badge)
     
     return Response({"message": f"Badge {badge.name} assigned to user {user.username}"})
@@ -918,11 +931,9 @@ def report_create(request, community_id):
     user_id = request.data.get('user_id')
     user = User.objects.get(pk=request.data.get('user_id'))
 
-    # Ensure at least one of post_id or comment_id is provided
     if not post_id and not comment_id:
         return Response({'error': 'post_id or comment_id required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Get the community from post if reporting a comment
     if comment_id:
         comment = PComment.objects.get(id=comment_id)
         post = comment.post
@@ -931,7 +942,6 @@ def report_create(request, community_id):
         post = Posts.objects.get(id=post_id)
         community = post.community
 
-    # Create the report
     report = Report.objects.create(
         user=user,
         post=post if post_id else None,
@@ -948,17 +958,14 @@ def report_create(request, community_id):
 
 @api_view(['GET'])
 def report_list(request, community_id):
-    # Retrieve all reports for the specified community
     reports = Report.objects.filter(community_id=community_id).order_by('-created_at')
     
-    # Serialize and return the list of reports
     serializer = ReportSerializer(reports, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
     
 @api_view(['GET'])
 def report_detail(request, community_id, id):
     try:
-        # Retrieve the specific report for the given community
         report = Report.objects.get(pk=id, community_id=community_id)
     except Report.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -970,7 +977,6 @@ def report_detail(request, community_id, id):
 @api_view(['DELETE'])
 def report_delete(request, community_id, id):
     try:
-        # Retrieve the specific report for the given community
         report = Report.objects.get(pk=id, community_id=community_id)
     except Report.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -1049,19 +1055,91 @@ def get_followers(request, user_id):
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .models import Community, Badge
+import json
+
 @api_view(['POST'])
 def set_community_badges(request, community_id):
     try:
         community = Community.objects.get(pk=community_id)
     except Community.DoesNotExist:
-        return Response({'error': 'Community not found'}, status=status.HTTP_404_NOT_FOUND)
-
+        return JsonResponse({'error': 'Community not found'}, status=status.HTTP_404_NOT_FOUND)
+    
     badge_data = request.data
+    criteria = badge_data.get('criteria')
+    
+    if not criteria:
+        return JsonResponse({'error': 'Criteria is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        criteria = json.loads(criteria)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid criteria format'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    icon_path = f"badges/community_badges/{badge_data.get('icon')}" if badge_data.get('icon') else None
+    
     badge = Badge.objects.create(
         name=badge_data.get('name'),
         description=badge_data.get('description'),
         tier=badge_data.get('tier'),
-        criteria=badge_data.get('criteria')
+        criteria=criteria,
+        icon=icon_path  # Save the selected icon with the correct path
     )
     community.badges.add(badge)
-    return Response({'message': 'Badge added successfully'}, status=status.HTTP_201_CREATED)
+    # Ensure the badge is saved to the correct table
+    CommunityBadge.objects.create(community=community, badge=badge)
+    return JsonResponse({'message': 'Badge created successfully'}, status=status.HTTP_201_CREATED)
+
+from .models import Badge, UserBadge, Posts, PComment
+from django.utils import timezone
+import json
+
+def evaluate_badge_criteria(user, community):
+    badges = Badge.objects.filter(communities=community)
+    for badge in badges:
+        criteria = badge.criteria
+        if isinstance(criteria, dict):
+            criteria = json.dumps(criteria)
+        criteria = json.loads(criteria)
+        criteria_met = True
+
+        if 'posts_count' in criteria:
+            post_count = Posts.objects.filter(user=user, community=community).count()
+            if post_count < criteria['posts_count']:
+                criteria_met = False
+
+        if 'comments_count' in criteria:
+            comment_count = PComment.objects.filter(user=user, post__community=community).count()
+            if comment_count < criteria['comments_count']:
+                criteria_met = False
+
+        if 'membership_duration_days' in criteria:
+            community_user = CommunityUser.objects.filter(user=user, community=community).first()
+            if community_user:
+                membership_duration = (timezone.now() - community_user.joined_at).days
+                if membership_duration < criteria['membership_duration_days']:
+                    criteria_met = False
+            else:
+                criteria_met = False
+
+        # Add more criteria checks as needed
+
+        if criteria_met:
+            UserBadge.objects.get_or_create(user=user, badge=badge, defaults={'earned_at': timezone.now()})
+
+# Call this function after a post is created
+def create_post(request):
+    # ...existing code...
+    post = Posts.objects.create(user=request.user, content=request.data['content'], community=request.data['community'])
+    evaluate_badge_criteria(request.user, post.community)
+    # ...existing code...
+
+# Call this function after a comment is created
+def create_comment(request):
+    # ...existing code...
+    comment = PComment.objects.create(user=request.user, post_id=request.data['post_id'], content=request.data['content'])
+    evaluate_badge_criteria(request.user, comment.post.community)
+    # ...existing code...

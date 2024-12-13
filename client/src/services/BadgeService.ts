@@ -27,12 +27,14 @@ export async function apiSetCommunityBadge({
     badgeTier,
     badgeCriteria,
     communityId,
+    icon, // Add icon to the parameters
 }: {
     badgeName: string
     badgeDescription: string
     badgeTier: string
     badgeCriteria: string
     communityId: string
+    icon: string // Add icon to the parameters
 }) {
     return ApiService.fetchData({
         url: `/community/${communityId}/setCommunityBadges/`,
@@ -41,7 +43,8 @@ export async function apiSetCommunityBadge({
             name: badgeName,
             description: badgeDescription,
             tier: badgeTier,
-            criteria: badgeCriteria,
+            criteria: badgeCriteria, // Ensure criteria is sent correctly
+            icon, // Include icon in the request data
         },
     })
 }

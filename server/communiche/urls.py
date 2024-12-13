@@ -15,11 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from communiche import views
-from .views import follow_user, unfollow_user
+from .views import follow_user,  unfollow_user, CommunityBadgeViewSet
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -69,9 +72,7 @@ urlpatterns = [
     path('community/<int:community_id>/add_template/', views.add_template, name='community-add-template'),
     path('search/', views.search, name='search'),
     path('community/<int:community_id>/transfer_ownership/<int:owner_id>/<int:new_owner_id>', views.transfer_ownership, name='transfer_ownership'),
-    path('api/community/<int:community_id>/setCommunityBadges/', views.set_community_badges, name='set_community_badges'),
     path('community/<int:community_id>/setCommunityBadges/', views.set_community_badges, name='set_community_badges'),
-
     # post
     path('post/', views.post, name='post'),
     path('post/<int:post_id>/delete/', views.delete_post, name='delete-post'),
@@ -87,13 +88,13 @@ urlpatterns = [
 
     # search
     path('advance_search/', views.advance_search, name='advance-search'),
-
     # reports within a community
     path('community/<int:community_id>/create_report/', views.report_create, name='report-create'),
     path('community/<int:community_id>/reports/', views.report_list, name='community-report-list'),
     path('community/<int:community_id>/reports/<int:id>/', views.report_detail, name='community-report-detail'),
     path('community/<int:community_id>/reports/<int:id>/delete/', views.report_delete, name='report-delete'),
     path('community/<int:community_id>/reports/<int:report_id>/update_status/', views.update_report_status, name='update-report-status'),
+    path('', include(router.urls)),
 ]
 
 static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

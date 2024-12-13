@@ -8,14 +8,38 @@ import { useDispatch } from 'react-redux'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
 import { apiSetCommunityBadge } from '@/services/BadgeService'
 import { useParams } from 'react-router-dom'
-import { Alert } from '@/components/ui'
+import { Alert, Select } from '@/components/ui'
+
+const criteriaOptions = [
+    { value: 'posts_count', label: 'Post Count' },
+    { value: 'comments_count', label: 'Comment Count' },
+    { value: 'single_post_comments', label: 'Single Post Comment' },
+    { value: 'single_post_likes', label: 'Single Post Like' },
+    { value: 'likes_given', label: 'Likes Given' },
+    { value: 'membership_duration_days', label: 'Membership Duration' },
+]
+
+const badgeImages = [
+    'badge.png',
+    'diploma.png',
+    'medal.png',
+    'money-bag.png',
+    'reward.png',
+    'shield.png',
+    'trophy_1.png',
+    'trophy_2.png',
+    'trophy_3.png',
+    'trophy.png',
+]
 
 export default function AddCommunityBadgeForm() {
     const [badgeName, setBadgeName] = useState('')
     const [badgeDescription, setBadgeDescription] = useState('')
     const [badgeTier, setBadgeTier] = useState('')
     const [badgeCriteria, setBadgeCriteria] = useState('')
-    const communityId = useParams<{ id: string }>().id
+    const [criteriaValue, setCriteriaValue] = useState('')
+    const [selectedImage, setSelectedImage] = useState('')
+    const communityId = useParams<{ id: string }>().id || ''
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -25,9 +49,14 @@ export default function AddCommunityBadgeForm() {
             setBadgeDescription(value)
         } else if (name === 'badgeTier') {
             setBadgeTier(value)
-        } else if (name === 'badgeCriteria') {
-            setBadgeCriteria(value)
+        } else if (name === 'criteriaValue') {
+            setCriteriaValue(value)
         }
+    }
+
+    const handleCriteriaChange = (selectedOption: any) => {
+        setBadgeCriteria(selectedOption.value)
+        setCriteriaValue('')
     }
 
     const dispatch = useDispatch()
@@ -36,7 +65,7 @@ export default function AddCommunityBadgeForm() {
         // Add any post action logic here
     }
 
-    const [handleCreateBadge, isBadgeCreating] = useRequestWithNotification(
+    const [createBadgeRequest, isBadgeCreating] = useRequestWithNotification(
         apiSetCommunityBadge,
         'You have successfully created the badge!',
         'Error creating badge',
@@ -47,8 +76,25 @@ export default function AddCommunityBadgeForm() {
         name: Yup.string().required('Please enter a name'),
         description: Yup.string().required('Please enter a description'),
         tier: Yup.string().required('Please enter a tier'),
-        criteria: Yup.string().required('Please enter criteria'),
+        criteria: Yup.string().required('Please select a criteria'),
+        criteriaValue: Yup.string().required(
+            'Please enter a value for the selected criteria'
+        ),
     })
+
+    const handleCreateBadge = async () => {
+        const criteria = {
+            [badgeCriteria]: Number(criteriaValue), // Parse criteria value to number
+        }
+        await apiSetCommunityBadge({
+            badgeName,
+            badgeDescription,
+            badgeTier,
+            badgeCriteria: JSON.stringify(criteria), // Ensure criteria is a JSON string
+            communityId,
+            icon: selectedImage, // Add selected image to the payload
+        })
+    }
 
     return (
         <div className="min-h-fit">
@@ -97,15 +143,58 @@ export default function AddCommunityBadgeForm() {
                                 />
                             </FormItem>
                             <FormItem label={'Badge Criteria'} className="my-5">
-                                <Field
-                                    type="text"
-                                    autoComplete="off"
-                                    name="badgeCriteria"
-                                    placeholder={'Badge Criteria'}
-                                    component={Input}
-                                    onChange={handleChange}
-                                    value={badgeCriteria}
+                                <Select
+                                    options={criteriaOptions}
+                                    onChange={handleCriteriaChange}
+                                    value={criteriaOptions.find(
+                                        (option) =>
+                                            option.value === badgeCriteria
+                                    )}
                                 />
+                            </FormItem>
+                            {badgeCriteria && (
+                                <FormItem
+                                    label={`Enter ${badgeCriteria.replace(
+                                        '_',
+                                        ' '
+                                    )}`}
+                                    className="my-5"
+                                >
+                                    <Field
+                                        type="text"
+                                        autoComplete="off"
+                                        name="criteriaValue"
+                                        placeholder={`Enter ${badgeCriteria.replace(
+                                            '_',
+                                            ' '
+                                        )}`}
+                                        component={Input}
+                                        onChange={handleChange}
+                                        value={criteriaValue}
+                                    />
+                                </FormItem>
+                            )}
+                            <FormItem
+                                label={'Select Badge Icon'}
+                                className="my-5"
+                            >
+                                <div className="grid grid-cols-3 gap-2">
+                                    {badgeImages.map((image) => (
+                                        <img
+                                            key={image}
+                                            src={`/img/badges/community_badges/${image}`} // Ensure the path is correct
+                                            alt={image}
+                                            className={`w-16 h-16 cursor-pointer ${
+                                                selectedImage === image
+                                                    ? 'border-2 border-blue-500'
+                                                    : ''
+                                            }`}
+                                            onClick={() =>
+                                                setSelectedImage(image)
+                                            }
+                                        />
+                                    ))}
+                                </div>
                             </FormItem>
                             <Alert showIcon className="mb-4" type="info">
                                 Please fill in all the fields to create a new
@@ -120,13 +209,7 @@ export default function AddCommunityBadgeForm() {
                                     if (
                                         typeof handleCreateBadge === 'function'
                                     ) {
-                                        handleCreateBadge({
-                                            badgeName,
-                                            badgeDescription,
-                                            badgeTier,
-                                            badgeCriteria,
-                                            communityId,
-                                        })
+                                        handleCreateBadge()
                                     }
                                 }}
                                 color="green-600"

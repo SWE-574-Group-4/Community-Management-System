@@ -1,4 +1,4 @@
-import { Community, Post } from '@/@types/user'
+import { Community, Post, BadgeType } from '@/@types/user'
 import { ActionLink } from '@/components/shared'
 import FollowButton from '@/views/profile/FollowButton'
 import { apiGetUserInformation, isFollowing } from '@/services/UserService'
@@ -7,8 +7,8 @@ import useFetchData from '@/utils/hooks/useFetchData'
 import { AxiosResponse } from 'axios'
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { apiGetBadges } from '@/services/UserService'
-import { BadgeType } from '@/@types/user'
+import { apiGetUserBadges } from '@/services/BadgeService'
+import { apiGetCommunityBadges } from '@/services/CommunityService'
 
 type CustomerInfoFieldProps = {
     title?: string
@@ -54,20 +54,54 @@ export default function Profile() {
     } = userInfo?.data || {}
 
     const [badges, setBadges] = useState<BadgeType[]>([])
+    const [communityBadges, setCommunityBadges] = useState<{
+        [key: string]: BadgeType[]
+    }>({})
+
     useEffect(() => {
         const fetchBadges = async () => {
             try {
-                const response = await apiGetBadges(String(userId) ?? '')
+                const response = await apiGetUserBadges(String(userId) ?? '')
                 setBadges(response.data as BadgeType[])
             } catch (error) {
                 console.error('Error fetching badges:', error)
             }
         }
 
+        const fetchCommunityBadges = async () => {
+            try {
+                const response = await apiGetCommunityBadges()
+                const communityBadgesMap: { [key: string]: BadgeType[] } = {}
+                ;(
+                    response.data as {
+                        community: { name: string }
+                        badge: BadgeType
+                    }[]
+                ).forEach((communityBadge) => {
+                    const communityName = communityBadge.community.name
+                    if (!communityBadgesMap[communityName]) {
+                        communityBadgesMap[communityName] = []
+                    }
+                    communityBadgesMap[communityName].push(communityBadge.badge)
+                })
+                setCommunityBadges(communityBadgesMap)
+            } catch (error) {
+                console.error('Error fetching community badges:', error)
+            }
+        }
+
         if (userId) {
             fetchBadges()
+            fetchCommunityBadges()
         }
     }, [userId])
+
+    const generalBadges = badges.filter(
+        (badge) =>
+            !Object.values(communityBadges)
+                .flat()
+                .some((cb) => cb.id === badge.id)
+    )
 
     return (
         <div>
@@ -143,9 +177,9 @@ export default function Profile() {
 
                 {/* User's Badges Section */}
                 <div>
-                    <span>Communiche Badges</span>
+                    <h2 className="text-lg font-bold">GENERAL BADGES</h2>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {badges
+                        {generalBadges
                             .filter((badge: BadgeType) => badge.is_owned)
                             .map((badge: BadgeType) => (
                                 <img
@@ -157,8 +191,28 @@ export default function Profile() {
                                 />
                             ))}
                     </div>
-                    <br />
-                    <span>Badges from Communities</span>
+                    {Object.keys(communityBadges).map((communityName) => (
+                        <div key={communityName} className="mt-4">
+                            <h2 className="text-lg font-bold">
+                                {communityName} BADGES
+                            </h2>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {communityBadges[communityName]
+                                    .filter(
+                                        (badge: BadgeType) => badge.is_owned
+                                    )
+                                    .map((badge: BadgeType) => (
+                                        <img
+                                            key={badge.id}
+                                            src={badge.icon}
+                                            alt={badge.name}
+                                            title={badge.name}
+                                            className="w-6 h-6"
+                                        />
+                                    ))}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

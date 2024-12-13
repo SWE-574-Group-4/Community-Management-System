@@ -200,3 +200,10 @@ export async function apiSetCommunityBadges(communityId: string, data: any) {
         data,
     })
 }
+
+export async function apiGetCommunityBadges() {
+    return ApiService.fetchData({
+        url: '/community_badges/',
+        method: 'get',
+    })
+}

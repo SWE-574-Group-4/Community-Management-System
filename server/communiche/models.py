@@ -153,6 +153,14 @@ class Badge(models.Model):
         return user_upvotes_given >= self.criteria.get("likes_given", 0)
         print(user_upvotes_given)
 
+class CommunityBadge(models.Model):
+    community = models.ForeignKey('Community', on_delete=models.CASCADE)
+    badge = models.ForeignKey('Badge', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'communiche_communitybadge'  # Specify the correct table name
+        unique_together = ('community', 'badge')
+
 class UserBadge(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     badge = models.ForeignKey(Badge, on_delete=models.CASCADE)

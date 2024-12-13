@@ -22,6 +22,7 @@ export default function Badges() {
                 }
                 // fetch badges data
                 console.log('fetching badges')
+                console.log(badges)
             } catch (error) {
                 console.error('Error fetching badges', error)
             }
