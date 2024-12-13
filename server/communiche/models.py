@@ -20,10 +20,11 @@ from .constants import DATA_TYPES
 }
 """
 class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    label = models.CharField(max_length=255, null=True)
+    qid = models.CharField(max_length=50, unique=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.label
 
 class User(models.Model):
     firstname = models.CharField(max_length=200)  # Required
@@ -230,3 +231,27 @@ class UserFollowing(models.Model):
     
     def __str__(self):
         return f"{self.follower.username} follows {self.following.username}"
+
+class RelatedEntity(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="related_entities")
+    related_label = models.CharField(max_length=255)  # Name of the related entity
+    qid = models.CharField(max_length=50, null=True, blank=True)
+    source = models.CharField(
+        max_length=50,
+        choices=[
+            ('user_interest', 'User Interest'),
+            ('post', 'Post')
+        ],
+        null=True,  # Allow null for backward compatibility
+        blank=True
+    ) 
+    
+class UserInterest(models.Model):
+    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='interests')
+    tag = models.ForeignKey('Tag', on_delete=models.CASCADE, related_name='user_interests')
+
+    class Meta:
+        unique_together = ('user', 'tag')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.tag.label}"
