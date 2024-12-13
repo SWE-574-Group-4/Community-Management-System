@@ -38,6 +38,11 @@ urlpatterns = [
     path('is_following/<int:user_id>/<int:follower_id>', views.is_following, name='is_following'),
     path('followers/<int:user_id>/', views.get_followers, name='get_followers'),
     path('following/<int:user_id>/', views.get_following, name='get_following'),
+    path('api/wikidata-search', views.wikidata_search_view, name='wikidata_search'),
+    path('api/save-tag', views.save_tag_view, name='save_tag'),
+    path('api/recommendations/', views.recommended_posts_view, name='recommended_posts'),
+    path('interests/<int:user_id>/', views.user_interests, name='user_interests'),
+    path('fetch-related/<str:qid>/<str:source>/', views.fetch_and_store_related_entities, name='fetch_related_entities'),
 
 
     # other paths...
