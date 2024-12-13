@@ -4,10 +4,31 @@ import DisplayPost from './post/components/DisplayPost'
 import { apiGetPosts } from '@/services/PostService'
 import { useAppSelector } from '@/store'
 import { AxiosResponse } from 'axios'
+import axios from 'axios'
+import { useState, useEffect } from 'react'
 
 const Home = () => {
     const userId = useAppSelector((state) => state.auth.user?.id)
     const data = useFetchData(apiGetPosts, [userId]) as AxiosResponse
+
+    // State for recommended posts and communities
+    const [recommendedData, setRecommendedData] = useState<any>({ recommended_posts: [], recommended_communities: [] })
+
+    // Fetch recommended posts and communities
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            if (userId) {
+                try {
+                    const response = await axios.post('http://localhost:8000/api/recommendations/', { user_id: userId })
+                    setRecommendedData(response.data)
+                } catch (error) {
+                    console.error('Error fetching recommendations:', error)
+                }
+            }
+        }
+        fetchRecommendations()
+    }, [userId])
+
     return (
         <div className="grid grid-cols-12 gap-4">
             <div className="lg:col-span-9 md:col-span-8 sm:col-span-12 col-span-12">
@@ -20,6 +41,53 @@ const Home = () => {
             </div>
             <div className="lg:col-span-3 md:col-span-4 sm:col-span-12 col-span-12">
                 <RecentCommunities />
+                
+                {/* Recommended Communities */}
+                <div className="mt-6 bg-white p-4 rounded shadow">
+                    <h3 className="text-lg font-bold mb-4">Recommended Communities</h3>
+                    {recommendedData.recommended_communities.length ? (
+                        <ul>
+                            {recommendedData.recommended_communities.map((community: any) => (
+                                <li key={community.id} className="mb-2">
+                                    <a
+                                        href={`/community/${community.id}/details`}
+                                        className="block border p-2 rounded hover:shadow"
+                                    >
+                                        <h4 className="font-bold">{community.name}</h4>
+                                        <p>{community.description}</p>
+                                        <small>{community.number_of_posts} posts</small>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p>No recommended communities available.</p>
+                    )}
+                </div>
+
+                {/* Recommended Posts */}
+                <div className="mt-6 bg-white p-4 rounded shadow">
+                    <h3 className="text-lg font-bold mb-4">Recommended Posts</h3>
+                    {recommendedData.recommended_posts.length ? (
+                        recommendedData.recommended_posts.map((post: any) => {
+                            // Parse the `content` field
+                            const parsedContent = JSON.parse(post.content);
+                            const titleField = parsedContent.find((field: any) => field.field_name === 'title');
+
+                            return (
+                                <a
+                                    key={post.id}
+                                    href={`/post/${post.id}`}
+                                    className="block border p-2 rounded mb-2 hover:shadow"
+                                >
+                                    <h4 className="font-bold">{titleField ? titleField.field_value : 'Untitled'}</h4>
+                                </a>
+                            );
+                        })
+                    ) : (
+                        <p>No recommended posts available.</p>
+                    )}
+                </div>
             </div>
         </div>
     )

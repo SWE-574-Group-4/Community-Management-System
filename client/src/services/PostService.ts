@@ -18,7 +18,7 @@ export async function apiPost(
             community_id: communityId,
             user_id: userId,
             content: fields,
-            tag_ids: tag_ids, // TODO: Look for a better way to process in the backend like content fields
+            tag_ids: tag_ids,
         },
     })
 }
