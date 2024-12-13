@@ -1,4 +1,4 @@
-import json
+import json,requests
 from django.http import JsonResponse
 from django.db.models import Q
 from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
@@ -649,7 +649,7 @@ def posts(request):
     for post_data in data:
         post = Posts.objects.get(pk=post_data['id'])
         post_data['is_liked'] = user in post.likes.all() if user else False
-        post_data['tags'] = [tag.name for tag in post.tags.all()]
+        post_data['tags'] = [tag.label for tag in post.tags.all()]
 
     return Response(data, status=status.HTTP_200_OK)
 
@@ -717,7 +717,7 @@ def post_detail(request, post_id):
     else:
         data['is_liked'] = False
 
-    data['tags'] = [tag.name for tag in post.tags.all()]
+    data['tags'] = [tag.label for tag in post.tags.all()]
 
     # data.pop('community', None)
     return Response(data, status=status.HTTP_200_OK)
@@ -1097,3 +1097,315 @@ def get_followers(request, user_id):
     followers = UserFollowing.objects.filter(following=user)
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def search_wikidata(query, language="en", limit=10):
+    """
+    Perform a search query on Wikidata using the API.
+    """
+    url = "https://www.wikidata.org/w/api.php"
+    params = {
+        "action": "wbsearchentities",
+        "search": query,
+        "language": language,
+        "format": "json",
+        "limit": limit
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        return data.get("search", [])
+    except requests.RequestException as e:
+        print(f"Error during Wikidata API request: {e}")
+        return []
+
+@csrf_exempt
+def wikidata_search_view(request):
+    """API view for searching Wikidata."""
+    if request.method == "GET":
+        query = request.GET.get("query", "")
+        language = request.GET.get("language", "en")
+        limit = int(request.GET.get("limit", 10))
+
+        if not query:
+            return JsonResponse({"error": "Query parameter is required."}, status=400)
+
+        raw_results = search_wikidata(query, language, limit)
+        cleaned_results = [
+            {
+                "id": result.get("id"),
+                "label": result.get("label"),
+                "description": result.get("description")
+            }
+            for result in raw_results
+        ]
+
+        return JsonResponse({"results": cleaned_results}, status=200, safe=False)
+    
+@csrf_exempt
+def save_tag_view(request):
+    """API endpoint for saving a tag and its related entities."""
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            tag_label = data.get("tag_label")
+            tag_qid = data.get("tag_qid")
+            related_entities = data.get("related_entities", [])
+
+            if not tag_label or not tag_qid:
+                return JsonResponse({"error": "Both 'tag_label' and 'tag_qid' are required."}, status=400)
+
+            tag, created = Tag.objects.get_or_create(label=tag_label, qid=tag_qid)
+
+            for entity in related_entities:
+                related_label = entity.get("related_label")
+                related_qid = entity.get("qid")
+                if related_label and related_qid:
+                    RelatedEntity.objects.get_or_create(tag=tag, related_label=related_label, qid=related_qid)
+
+            return JsonResponse({"message": "Tag and related entities saved successfully."}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload."}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+@api_view(['GET', 'POST', 'DELETE'])
+def user_interests(request, user_id):
+    """
+    Manage user interests:
+    - GET: List interests for a user.
+    - POST: Add a new interest for a user.
+    - DELETE: Remove an interest for a user.
+    """
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        interests = UserInterest.objects.filter(user=user)
+        interest_data = [{'id': interest.id, 'label': interest.tag.label, 'qid': interest.tag.qid} for interest in interests]
+        return Response(interest_data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        qid = request.data.get('qid')
+        if not qid:
+            return Response({'error': 'Tag QID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        wikidata_results = search_wikidata(query=qid, limit=1)
+        label = wikidata_results[0].get("label") if wikidata_results else None
+        if not label:
+            return Response({'error': 'Invalid QID or tag label not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        tag, _ = Tag.objects.get_or_create(qid=qid, defaults={'label': label})
+        UserInterest.objects.get_or_create(user=user, tag=tag)
+        return Response({'message': 'Interest added successfully.'}, status=status.HTTP_201_CREATED)
+
+    elif request.method == 'DELETE':
+        qid = request.data.get('qid')
+        if not qid:
+            return Response({'error': 'QID is required for deletion.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            tag = Tag.objects.get(qid=qid)
+            interest = UserInterest.objects.get(user=user, tag=tag)
+            interest.delete()
+            return Response({'message': 'Interest removed successfully.'}, status=status.HTTP_200_OK)
+        except (Tag.DoesNotExist, UserInterest.DoesNotExist):
+            return Response({'error': 'Interest not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+from django.http import JsonResponse
+
+def fetch_and_store_related_entities(request, qid, source):
+    """
+    Fetch related entities for a single QID from Wikidata and save them to the RelatedEntity table.
+
+    Args:
+        qid (str): A single QID for the user interest or post tag.
+        source (str): The source of the QID ('user_interest' or 'post').
+
+    Returns:
+        JsonResponse: A response indicating success or failure for the QID.
+    """
+    try:
+        try:
+            tag = Tag.objects.get(qid=qid)
+
+            if RelatedEntity.objects.filter(tag=tag).exists():
+                return JsonResponse({"message": f"Related entities for tag with QID {qid} already exist."}, status=200)
+        except Tag.DoesNotExist:
+            return JsonResponse({"error": f"No tag found with QID: {qid}"}, status=404)
+
+        endpoint_url = "https://query.wikidata.org/sparql"
+        query = f"""
+        SELECT DISTINCT ?item ?itemLabel ?relationship WHERE {{
+          {{
+            BIND(wd:{qid} AS ?item)
+            SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+            BIND("Self" AS ?relationship)
+          }}
+          UNION
+          {{
+            wd:{qid} wdt:P31 ?item.
+            BIND("InstanceOf" AS ?relationship)
+          }}
+          UNION
+          {{
+            wd:{qid} wdt:P279 ?item.
+            BIND("SubclassOf" AS ?relationship)
+          }}
+          UNION
+          {{
+            wd:{qid} wdt:P366 ?item.
+            BIND("HasUse" AS ?relationship)
+          }}
+          UNION
+          {{
+            {{
+              SELECT ?item ?itemLabel WHERE {{
+                ?item wdt:P279 wd:{qid}.
+                SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+              }}
+              LIMIT 10
+            }}
+            BIND("HasSubclass" AS ?relationship)
+          }}
+          UNION
+          {{
+            {{
+              SELECT ?item ?itemLabel WHERE {{
+                ?item wdt:P31 wd:{qid}.
+                SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+              }}
+              LIMIT 10
+            }}
+            BIND("HasInstance" AS ?relationship)
+          }}
+          SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
+        }}
+        """
+        headers = {
+            "User-Agent": "Python SPARQL Client/1.0",
+            "Accept": "application/json"
+        }
+
+        response = requests.get(endpoint_url, params={"query": query, "format": "json"}, headers=headers)
+
+        if response.status_code != 200:
+            raise ValueError(f"Query failed with status code {response.status_code}: {response.text}")
+
+        data = response.json()
+        related_entities = []
+        for item in data["results"]["bindings"]:
+            related_qid = item["item"]["value"].split("/")[-1]
+            item_label = item["itemLabel"]["value"] if "itemLabel" in item else "No label"
+            relationship = item["relationship"]["value"] if "relationship" in item else "No relationship"
+            related_entities.append((related_qid, item_label, relationship))
+
+        for related_qid, label, relationship in related_entities:
+            RelatedEntity.objects.get_or_create(
+                tag=tag,
+                related_label=label,
+                qid=related_qid,
+                source=source,
+            )
+
+        return JsonResponse({"message": "Related entities fetched and saved successfully."}, status=200)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+def recommend_posts_for_user(user_id):
+    """
+    Recommends posts for a given user based on matching user interests and related entities.
+
+    Args:
+        user_id (int): The ID of the user for whom to generate recommendations.
+
+    Returns:
+        QuerySet: A queryset of recommended posts.
+    """
+    user_interest_tag_ids = RelatedEntity.objects.filter(
+        source='user_interest',
+        tag_id__in=UserInterest.objects.filter(user_id=user_id).values_list('tag_id', flat=True)
+    ).values_list('qid', flat=True)
+
+    related_post_tag_ids = RelatedEntity.objects.filter(
+        source='post',
+        qid__in=user_interest_tag_ids
+    ).values_list('tag_id', flat=True)
+
+    recommended_posts = Posts.objects.filter(
+        tags__id__in=related_post_tag_ids
+    ).distinct()
+
+    return recommended_posts
+
+@csrf_exempt
+def recommended_posts_view(request):
+    """
+    API endpoint to get recommended posts for a user and their associated communities.
+    """
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body)
+            user_id = body.get('user_id')
+            if not user_id:
+                return JsonResponse({"error": "user_id is required"}, status=400)
+
+            recommended_posts = recommend_posts_for_user(user_id)
+
+            posts_data = [
+                {
+                    "id": post.id,
+                    "content": post.content,
+                    "created_at": post.created_at,
+                    "updated_at": post.updated_at,
+                    "community": {
+                        "id": post.community.id,
+                        "name": post.community.name,
+                        "description": post.community.description,
+                        "is_public": post.community.is_public,
+                    },
+                    "user": {
+                        "id": post.user.id,
+                        "firstname": post.user.firstname,
+                        "lastname": post.user.lastname,
+                        "username": post.user.username,
+                    },
+                    "tags": [tag.label for tag in post.tags.all()],
+                    "likes": post.likes.count(),
+                }
+                for post in recommended_posts
+            ]
+
+
+            community_ids = recommended_posts.values_list("community_id", flat=True).distinct()
+            communities = Community.objects.filter(id__in=community_ids)
+            communities_data = [
+                {
+                    "id": community.id,
+                    "name": community.name,
+                    "description": community.description,
+                    "is_public": community.is_public,
+                    "number_of_posts": community.posts_set.count(),
+                }
+                for community in communities
+            ]
+
+            return JsonResponse({
+                "recommended_posts": posts_data,
+                "recommended_communities": communities_data
+            })
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid HTTP method"}, status=405)
