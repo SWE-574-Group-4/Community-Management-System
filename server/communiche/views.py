@@ -1349,7 +1349,7 @@ def recommend_posts_for_user(user_id):
 
     recommended_posts = Posts.objects.filter(
         tags__id__in=related_post_tag_ids
-    ).distinct()
+    ).distinct().exclude(user_id=user_id).distinct()
 
     return recommended_posts
 
@@ -1393,7 +1393,7 @@ def recommended_posts_view(request):
 
 
             community_ids = recommended_posts.values_list("community_id", flat=True).distinct()
-            communities = Community.objects.filter(id__in=community_ids)
+            communities = Community.objects.filter(id__in=community_ids).exclude(members__id=user_id)
             communities_data = [
                 {
                     "id": community.id,
