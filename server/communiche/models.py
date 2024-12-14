@@ -243,7 +243,7 @@ class RelatedEntity(models.Model):
         ],
         null=True,  # Allow null for backward compatibility
         blank=True
-    ) 
+    )
     
 class UserInterest(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='interests')

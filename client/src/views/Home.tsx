@@ -11,8 +11,30 @@ const Home = () => {
     const userId = useAppSelector((state) => state.auth.user?.id)
     const data = useFetchData(apiGetPosts, [userId]) as AxiosResponse
 
+    // State for user's followed communities
+    const [userCommunities, setUserCommunities] = useState<number[]>([])
+
     // State for recommended posts and communities
     const [recommendedData, setRecommendedData] = useState<any>({ recommended_posts: [], recommended_communities: [] })
+
+    // Fetch user's followed communities
+    useEffect(() => {
+        const fetchUserCommunities = async () => {
+            if (userId) {
+                try {
+                    const response = await axios.get(`http://localhost:8000/user/communities/`, {
+                        params: { user_id: userId },
+                    })
+                    const communityIds = response.data.map((community: any) => community.id)
+                    setUserCommunities(communityIds)
+                } catch (error) {
+                    console.error('Error fetching user communities:', error)
+                }
+            }
+        }
+
+        fetchUserCommunities()
+    }, [userId])
 
     // Fetch recommended posts and communities
     useEffect(() => {
@@ -29,19 +51,25 @@ const Home = () => {
         fetchRecommendations()
     }, [userId])
 
+    // Filter posts by user's followed communities
+    const filteredPosts = (data?.data as any[])?.filter((post: any) =>
+        userCommunities.includes(post.community.id)
+    )
+
     return (
         <div className="grid grid-cols-12 gap-4">
+            {/* Main Feed */}
             <div className="lg:col-span-9 md:col-span-8 sm:col-span-12 col-span-12">
                 <h3>Feed</h3>
-                {(data?.data as any[])?.map((post: any) =>
-                    post.community.is_public || post.community.is_member ? (
-                        <DisplayPost key={post.id} post={post} />
-                    ) : null
-                )}
+                {filteredPosts?.map((post: any) => (
+                    <DisplayPost key={post.id} post={post} />
+                ))}
             </div>
+
+            {/* Sidebar */}
             <div className="lg:col-span-3 md:col-span-4 sm:col-span-12 col-span-12">
                 <RecentCommunities />
-                
+
                 {/* Recommended Communities */}
                 <div className="mt-6 bg-white p-4 rounded shadow">
                     <h3 className="text-lg font-bold mb-4">Recommended Communities</h3>
@@ -71,8 +99,8 @@ const Home = () => {
                     {recommendedData.recommended_posts.length ? (
                         recommendedData.recommended_posts.map((post: any) => {
                             // Parse the `content` field
-                            const parsedContent = JSON.parse(post.content);
-                            const titleField = parsedContent.find((field: any) => field.field_name === 'title');
+                            const parsedContent = JSON.parse(post.content)
+                            const titleField = parsedContent.find((field: any) => field.field_name === 'title')
 
                             return (
                                 <a
@@ -82,7 +110,7 @@ const Home = () => {
                                 >
                                     <h4 className="font-bold">{titleField ? titleField.field_value : 'Untitled'}</h4>
                                 </a>
-                            );
+                            )
                         })
                     ) : (
                         <p>No recommended posts available.</p>
