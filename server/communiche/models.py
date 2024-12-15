@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.db import models
-from django.db.models import JSONField, Sum, Count
+from django.db.models import JSONField, Sum, Count, Max
 from django.contrib.auth.hashers import check_password
 
 from .constants import DATA_TYPES
@@ -35,6 +35,7 @@ class User(models.Model):
     country = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=20, null=True)
     short_bio = models.CharField(max_length=600, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def check_password(self, raw_password):
             """
@@ -136,22 +137,45 @@ class Badge(models.Model):
     criteria = models.JSONField()
     icon = models.ImageField(upload_to='badges/icons/', null=True, blank=True)  # Image field for badge icons
 
+    def comment_criteria(self, user):
+        user_comments = user.pcomment_set.count()
+        
+        return user_comments >= self.criteria.get("comments_count", 0)
+    
+    def get_comment_criteria(self, user):
+        max_comments = user.posts_set.annotate(num_comments=Count('pcomment')).aggregate(max_comments=Max('num_comments'))['max_comments'] or 0
+
+        return max_comments >= self.criteria.get("single_post_comments", 0)
+
     def post_criteria(self, user):
         user_posts = user.posts_set.count()
         
-        return user_posts >= self.criteria.get("posts", 0)
+        return user_posts >= self.criteria.get("posts_count", 0)
     
-    def get_like_criteria(self, user):
-        user_upvotes_received = sum(post.likes.count() for post in user.posts_set.all())
+    def get_like_criteria(self, posts_user):
+        max_likes = posts_user.posts_set.annotate(num_likes=Count('likes')).aggregate(max_likes=Max('num_likes'))['max_likes'] or 0
 
-        return user_upvotes_received >= self.criteria.get("single_post_likes", 0)
-        print(user_upvotes_received)
+        return max_likes >= self.criteria.get("single_post_likes", 0)
 
     def give_like_criteria(self, user):
-        user_upvotes_given = user.post_likes.count()
+        user_likes_given = user.post_likes.count()
 
-        return user_upvotes_given >= self.criteria.get("likes_given", 0)
-        print(user_upvotes_given)
+        return user_likes_given >= self.criteria.get("likes_given", 0)
+    
+    def create_community_criteria(self, user):
+        user_communities = user.communities.count()
+
+        return user_communities >= self.criteria.get("communities_created", 0)
+
+    def join_community_criteria(self, user):
+        user_joined_communities = user.communityuser_set.count()
+
+        return user_joined_communities >= self.criteria.get("communities_joined", 0)
+    
+    def duration_criteria(self, user):
+        user_duration = (timezone.now() - user.created_at).total_seconds() / 60
+
+        return user_duration >= self.criteria.get("membership_duration_days", 0)
 
 class UserBadge(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)

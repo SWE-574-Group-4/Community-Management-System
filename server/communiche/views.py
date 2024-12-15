@@ -63,9 +63,14 @@ def user_detail(request, id):
         badges_data = [{'badge_name': ub.badge.name, 'earned_at': ub.earned_at} for ub in user_badges]
         user_data['badges'] = badges_data
         
+        for badge_id in [22, 23, 24]:
+            badge = get_object_or_404(Badge, pk=badge_id)
+            if badge.duration_criteria(user):
+                UserBadge.assign_badge(user, badge)
+                send_in_app_notification(user, badge)
+        
         return Response(user_data)
     
-
     elif request.method == 'PUT':
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
@@ -173,6 +178,12 @@ def add_community(request):
             community = serializer.instance
             owner = User.objects.get(pk=user_id)
             community_user = CommunityUser.objects.create(community=community, user=owner, role=-1)
+
+            for badge_id in [19, 20, 21]:
+                badge = get_object_or_404(Badge, pk=badge_id)
+                if badge.create_community_criteria(owner):
+                    UserBadge.assign_badge(owner, badge)
+                    send_in_app_notification(owner, badge)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -338,8 +349,22 @@ def join_community(request, community_id, user_id):
         # Register join request
         join_request = JoinRequest(community=community, user=user)
         join_request.save()
+
+        for badge_id in [16, 17, 18]:
+            badge = get_object_or_404(Badge, pk=badge_id)
+            if badge.join_community_criteria(user):
+                UserBadge.assign_badge(user, badge)
+                send_in_app_notification(user, badge)
+
         return Response(status=status.HTTP_200_OK)
     else:
+
+        for badge_id in [16, 17, 18]:
+            badge = get_object_or_404(Badge, pk=badge_id)
+            if badge.join_community_criteria(user):
+                UserBadge.assign_badge(user, badge)
+                send_in_app_notification(user, badge)
+
         community.members.add(user)
         return Response(status=status.HTTP_200_OK)
 
@@ -586,9 +611,9 @@ def post(request):
     community.save()
 
     # Check badge criteria for this user
-    badge = get_object_or_404(Badge, pk=1)
-
-    if badge.post_criteria(user):
+    for badge_id in [1, 2, 3]:
+        badge = get_object_or_404(Badge, pk=badge_id)
+        if badge.post_criteria(user):
             UserBadge.assign_badge(user, badge)
             send_in_app_notification(user, badge)
     
@@ -701,18 +726,21 @@ def like_post(request, user_id, post_id):
     else:
         post.likes.add(user)
 
-        giveLikeBadge = get_object_or_404(Badge, pk=2)
-        getLikeBadge = get_object_or_404(Badge, pk=5)
-
         postUser = post.user
 
-        if giveLikeBadge.give_like_criteria(user):
-            UserBadge.assign_badge(user, giveLikeBadge)
-            send_in_app_notification(user, giveLikeBadge)
+        for badge_id in [13, 14, 15]:
+            giveLikeBadge = get_object_or_404(Badge, pk=badge_id)
+            if giveLikeBadge.give_like_criteria(user):
+                UserBadge.assign_badge(user, giveLikeBadge)
+                send_in_app_notification(user, giveLikeBadge)
 
-        if getLikeBadge.get_like_criteria(postUser):
-            UserBadge.assign_badge(postUser, getLikeBadge)
-            send_in_app_notification(postUser, getLikeBadge)
+        for badge_id in [10, 11, 12]:
+            getLikeBadge = get_object_or_404(Badge, pk=badge_id)
+            if getLikeBadge.get_like_criteria(postUser):
+                UserBadge.assign_badge(postUser, getLikeBadge)
+                send_in_app_notification(postUser, getLikeBadge)
+
+        
 
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
 
@@ -745,7 +773,20 @@ def comment(request, post_id):
     content = request.data.get('content')
     p_comment = PComment(user=user, post=post, content=content)
     p_comment.save()
+
+    # Check badge criteria for this user
+    for badge_id in [4, 5, 6]:
+        badge = get_object_or_404(Badge, pk=badge_id)
+        if badge.comment_criteria(user):
+            UserBadge.assign_badge(user, badge)
+            send_in_app_notification(user, badge)
     
+    for badge_id in [7, 8, 9]:
+        badge = get_object_or_404(Badge, pk=badge_id)
+        if badge.get_comment_criteria(p_comment.post.user):
+            UserBadge.assign_badge(p_comment.post.user, badge)
+            send_in_app_notification(p_comment.post.user, badge)
+
     return Response(status=status.HTTP_201_CREATED)
 
 @api_view(['DELETE'])
