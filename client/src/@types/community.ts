@@ -60,6 +60,7 @@ export type CommunityType = {
     reputation_rating: string
     templates: DataTypeOption[]
     members: Member[]
+    rules: string
 }
 
 export type Member = {

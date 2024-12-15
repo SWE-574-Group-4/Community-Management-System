@@ -193,6 +193,15 @@ const Settings = () => {
                             <CommunitySpecificTemplates />
                         )}
                         {currentTab === 'reports' && <Reports />}
+                        {currentTab === 'rules' && (
+                            <div>
+                                {community.rules ? (
+                                    <p>{community.rules}</p>
+                                ) : (
+                                    <h1>No Community Rules Available</h1>
+                                )}
+                            </div>
+                        )}
                     </Suspense>
                 </div>
             </AdaptableCard>
