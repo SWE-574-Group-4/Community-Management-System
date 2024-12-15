@@ -10,14 +10,7 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
     }
 
     return (
-        <div
-            style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)', // 3 badges per row
-            gap: '20px', // Space between badges
-            padding: '20px',
-            }}
-        >
+        <div className="grid grid-cols-3 gap-5 p-5">
             {badges.map((badge, index) => {
             // Determine background color based on tier
             let backgroundColor = '';
@@ -40,97 +33,45 @@ const BadgesTable = ({ badges }: { badges: BadgeType[] }) => {
             return (
                 <div
                 key={index}
-                style={{
-                    position: 'relative',
-                    backgroundColor: '#f9f9f9',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                    textAlign: 'center',
-                    padding: '20px',
-                    filter: isAchieved ? 'none' : 'grayscale(100%)',
-                }}
+                className={`relative bg-gray-100 rounded-lg shadow-md text-center p-5 ${isAchieved ? '' : 'grayscale'}`}
                 >
                 {/* Green Check Mark */}
                 {isAchieved && (
-                    <div
-                    style={{
-                        position: 'absolute',
-                        top: '20px',
-                        right: '20px',
-                        width: '40px',
-                        height: '40px',
-                        backgroundColor: 'green',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: 'bold',
-                    }}
-                    >
+                    <div className="absolute top-5 right-5 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
                     ✓
                     </div>
                 )}
 
                 {/* Badge Icon */}
                 <div
-                    style={{
-                    backgroundColor,
-                    borderRadius: '50%',
-                    width: '80px',
-                    height: '80px',
-                    margin: '0 auto 10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    }}
+                    className="mx-auto mb-2 flex items-center justify-center rounded-full"
+                    style={{ backgroundColor, width: '80px', height: '80px' }}
                 >
                     <img
                     src={badge.icon}
                     alt={badge.name}
-                    style={{
-                        width: '60px',
-                        height: '60px',
-                        borderRadius: '50%',
-                    }}
+                    className="w-15 h-15 rounded-full"
                     />
                 </div>
 
                 {/* Badge Name and Tier */}
-                <div
-                    style={{
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                    marginBottom: '5px',
-                    }}
-                >
+                <div className="font-bold text-lg mb-1">
                     {`${badge.name} - ${badge.tier}`}
                 </div>
 
                 {/* Badge Description */}
-                <div
-                    style={{
-                    fontSize: '14px',
-                    color: '#555',
-                    marginBottom: '10px',
-                    }}
-                >
+                <div className="text-sm text-gray-600 mb-2">
                     {badge.description || 'No description available'}
                 </div>
 
                 {/* Received Date */}
-                <div
-                    style={{
-                    fontSize: '12px',
-                    color: '#777',
-                    }}
-                >
+                <div className="text-xs text-gray-500">
                     {isAchieved ? (
-                    <span style={{ color: 'green', fontWeight: 'bold' }}>
+                    <span className="text-green-500 font-bold">
                         {`Received on: ${formatDate(badge.earned_at || '')}`}
                     </span>
                     ) : (
-                    <span style={{ color: 'red', fontWeight: 'bold', filter: 'none' }}>Not Achieved</span>
+                    <span className="text-red-500 font-bold">Not Achieved</span>
                     )}
                 </div>
                 </div>
