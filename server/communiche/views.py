@@ -1,8 +1,8 @@
 import json
 from django.http import JsonResponse
 from django.db.models import Q
-from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing
-from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer 
+from .models import Badge, Notification, Report, Template, User, Posts, UserBadge, UserFollowing, CommunityBadge, UserCommunityBadge
+from .serializers import BadgeSerializer, ReportSerializer, TemplateSerializer, UserBadgeDetailedSerializer, UserFollowingSerializer, UserSerializer, CommunitySerializer, JoinRequestSerializer, TemplateCommunitySerializer, PostSerializer, InvitationSerializer, CommentSerializer, TagSerializer, UserCommunityBadgeDetailedSerializer, CommunityBadgeSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -68,7 +68,13 @@ def user_detail(request, id):
             if badge.duration_criteria(user):
                 UserBadge.assign_badge(user, badge)
                 send_in_app_notification(user, badge)
-        
+
+        for badge in CommunityBadge.objects.all():
+            if "membership_duration_days" in badge.criteria:
+                if badge.duration_criteria(user):
+                    UserCommunityBadge.assign_badge(user, badge)
+                    send_in_app_notification(user, badge)
+
         return Response(user_data)
     
     elif request.method == 'PUT':
@@ -308,7 +314,6 @@ def template_detail(request, id):
     if request.method == 'GET':
         serializer = TemplateSerializer(template)
         return Response(serializer.data)
-    
 
     elif request.method == 'PUT':
         serializer = TemplateSerializer(template, data=request.data)
@@ -616,6 +621,12 @@ def post(request):
         if badge.post_criteria(user):
             UserBadge.assign_badge(user, badge)
             send_in_app_notification(user, badge)
+
+    for badge in CommunityBadge.objects.filter(community=community):
+        if "posts_count" in badge.criteria:
+            if badge.post_criteria(user):
+                UserCommunityBadge.assign_badge(user, badge)
+                send_in_app_notification(user, badge)
     
     return Response(status=status.HTTP_201_CREATED)
 
@@ -740,7 +751,11 @@ def like_post(request, user_id, post_id):
                 UserBadge.assign_badge(postUser, getLikeBadge)
                 send_in_app_notification(postUser, getLikeBadge)
 
-        
+        for badge in CommunityBadge.objects.filter(community=post.community):
+            if "likes_given" in badge.criteria:
+                if badge.give_like_criteria(user):
+                    UserCommunityBadge.assign_badge(user, badge)
+                    send_in_app_notification(user, badge)
 
         return Response({'message': 'Post liked'}, status=status.HTTP_200_OK)
 
@@ -786,6 +801,18 @@ def comment(request, post_id):
         if badge.get_comment_criteria(p_comment.post.user):
             UserBadge.assign_badge(p_comment.post.user, badge)
             send_in_app_notification(p_comment.post.user, badge)
+
+    for badge in CommunityBadge.objects.filter(community=post.community):
+        if "comment_count" in badge.criteria:
+            if badge.get_comment_criteria(user):
+                UserCommunityBadge.assign_badge(user, badge)
+                send_in_app_notification(user, badge)
+    
+    for badge in CommunityBadge.objects.filter(community=post.community):
+        if "single_post_comments" in badge.criteria:
+            if badge.get_comment_criteria(p_comment.post.user):
+                UserCommunityBadge.assign_badge(p_comment.post.user, badge)
+                send_in_app_notification(p_comment.post.user, badge)
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -1089,3 +1116,132 @@ def get_followers(request, user_id):
     followers = UserFollowing.objects.filter(following=user)
     serializer = UserFollowingSerializer(followers, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def set_community_badges(request, community_id):
+    try:
+        community = Community.objects.get(pk=community_id)
+    except Community.DoesNotExist:
+        return JsonResponse({'error': 'Community not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    badge_data = request.data
+    criteria = badge_data.get('criteria')
+
+    if not criteria:
+        return JsonResponse({'error': 'Criteria is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        criteria = json.loads(criteria)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid criteria format'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Handle special case for selected_user
+    if "selected_user" in criteria:
+        user_id = criteria.get("selected_user")
+        try:
+            user = community.members.get(pk=user_id)
+        except community.members.model.DoesNotExist:
+            return JsonResponse({'error': 'User not found in the community'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Assign badge directly to the user
+        badge = CommunityBadge.objects.create(
+            name=badge_data.get('name'),
+            description=badge_data.get('description'),
+            criteria=criteria,
+            community_id=community_id,
+            background_color=badge_data.get('background_color'),
+            icon=badge_data.get('icon')
+        )
+
+        # Create a direct badge assignment
+        UserCommunityBadge.assign_badge(user, badge)
+
+        return JsonResponse({'message': 'Badge assigned successfully'}, status=status.HTTP_201_CREATED)
+    
+    # Default badge creation
+    badge = CommunityBadge.objects.create(
+        name=badge_data.get('name'),
+        description=badge_data.get('description'),
+        criteria=criteria,
+        community_id=community_id,
+        background_color=badge_data.get('background_color'),
+        icon=badge_data.get('icon')
+    )
+    return JsonResponse({'message': 'Badge created successfully'}, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def get_community_badges(request, community_id):
+    badges = CommunityBadge.objects.filter(community_id=community_id)
+    serializer = CommunityBadgeSerializer(badges, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_user_community_badges(request, user_id, community_id):
+    # Validate that the user exists
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Fetch all community badges
+    all_badges = CommunityBadge.objects.filter(community_id=community_id)
+
+    # Fetch user-specific community badges in a single query
+    user_badges = UserCommunityBadge.objects.filter(user=user, badge__community_id=community_id).select_related('badge')
+    user_badge_ids = user_badges.values_list('badge_id', flat=True)
+
+    # Build the badge response
+    badge_data = [
+        {
+            'id': badge.id,
+            'name': badge.name,
+            'description': badge.description,
+            'criteria': badge.criteria,
+            'background_color': badge.background_color,
+            'icon': badge.icon,
+            'is_owned': badge.id in user_badge_ids,
+            'earned_at': next(
+                (ub.earned_at for ub in user_badges if ub.badge_id == badge.id),
+                None,
+            ),
+        }
+        for badge in all_badges
+    ]
+
+    return Response(badge_data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_all_user_community_badges(request, user_id):
+    # Validate that the user exists
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Fetch all community badges
+    all_badges = CommunityBadge.objects.all()
+
+    # Fetch user-specific community badges in a single query
+    user_badges = UserCommunityBadge.objects.filter(user=user).select_related('badge')
+    user_badge_ids = user_badges.values_list('badge_id', flat=True)
+
+    # Build the badge response
+    badge_data = [
+        {
+            'id': badge.id,
+            'name': badge.name,
+            'description': badge.description,
+            'criteria': badge.criteria,
+            'background_color': badge.background_color,
+            'icon': badge.icon,
+            'is_owned': badge.id in user_badge_ids,
+            'earned_at': next(
+                (ub.earned_at for ub in user_badges if ub.badge_id == badge.id),
+                None,
+            ),
+        }
+        for badge in all_badges
+    ]
+
+    return Response(badge_data, status=status.HTTP_200_OK)

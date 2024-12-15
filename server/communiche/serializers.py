@@ -1,7 +1,7 @@
 from asyncio import constants
 import json
 from rest_framework import serializers
-from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, CommunityBadge, UserCommunityBadge
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -190,6 +190,32 @@ class UserBadgeDetailedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBadge
         fields = ['name', 'description', 'tier', 'icon', 'earned_at', 'is_owned']
+
+    def get_is_owned(self, obj):
+        user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
+        return str(obj.user_id) == str(user_id)
+
+class CommunityBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommunityBadge
+        fields = ['id', 'name', 'description', 'icon', 'background_color']
+
+class UserCommunityBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCommunityBadge
+        fields = ['id', 'earned_at', 'badge']
+
+class UserCommunityBadgeDetailedSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='communitybadge.name')
+    description = serializers.CharField(source='communitybadge.description')
+    icon = serializers.CharField(source='communitybadge.icon')
+    background_color = serializers.CharField(source='communitybadge.background_color')
+    earned_at = serializers.DateTimeField()
+    is_owned = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserCommunityBadge
+        fields = ['name', 'description', 'icon', 'background_color', 'earned_at', 'is_owned']
 
     def get_is_owned(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
