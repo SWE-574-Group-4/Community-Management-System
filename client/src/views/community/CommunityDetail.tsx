@@ -196,7 +196,11 @@ const Settings = () => {
                         {currentTab === 'rules' && (
                             <div>
                                 {community.rules ? (
-                                    <p>{community.rules}</p>
+                                    <ul>
+                                        {community.rules.split('\n').map((rule, index) => (
+                                            <li key={index}>{rule}</li>
+                                        ))}
+                                    </ul>
                                 ) : (
                                     <h1>No Community Rules Available</h1>
                                 )}
