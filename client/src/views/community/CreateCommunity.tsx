@@ -225,6 +225,7 @@ const CreateCommunity = () => {
                                         autoComplete="off"
                                         name="rules"
                                         placeholder="Add a community rule"
+                                        textArea
                                         component={Input}
                                     />
                                 </FormRow>

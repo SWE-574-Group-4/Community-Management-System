@@ -41,11 +41,13 @@ export default function Rules() {
                 footerBorder={false}
                 headerBorder={false}
             >
-                <ul>
+                <div>
                     {rules.map((rule, index) => (
-                        <li key={index}>{rule.name}</li>
+                        <div key={index}>
+                            <p className="mb-2">{rule.name}</p>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </Card>
         </div>
     );
