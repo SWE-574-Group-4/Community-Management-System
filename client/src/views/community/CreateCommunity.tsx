@@ -20,7 +20,8 @@ import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { useAppSelector } from '@/store'
 import { useEffect, useState } from 'react'
 import { useFetchCommunity } from '@/utils/hooks/useFetchCommunity'
-import AddCommunityTagsFormField from './components/AddCommunityTagsFormField'
+import { apiGetTags } from '@/services/PostService'
+import { Select } from '@/components/ui'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -40,7 +41,8 @@ const CreateCommunity = () => {
     })
     const cid = useParams<{ id: string }>().id
     const [editMode, setEditMode] = useState(false)
-    const [communityTags, setCommunityTags] = useState([])
+    const [tags, setTags] = useState<{ value: number; label: string }[]>([])
+    const [selectedTags, setSelectedTags] = useState<{ value: number; label: string }[]>([])
     const navigate = useNavigate()
     const userId = useAppSelector((state) => state.auth.user?.id)
     const fetchTrigger = useAppSelector(
@@ -62,6 +64,32 @@ const CreateCommunity = () => {
         }
     }, [community])
 
+
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const response = await apiGetTags()
+                if (response.status === 200) {
+                    setTags((response.data as any[]).map((tag: any) => ({ 
+                        value: tag.id, label: tag.name 
+                    })))
+                    console.log('getting tags', response.data)
+                }
+                // fetch default community labels
+                console.log('fetching community tags')
+            } catch (error) {
+                console.error('Error fetching community tags', error)
+            }
+        }
+
+        fetchTags()
+    }, [])
+
+    const handleCommunityTagsChange = (selectedOptions: any) => {
+        console.log('selectedOptions', selectedOptions)
+        setSelectedTags(selectedOptions)
+    }
+
     const onFormSubmit = async (
         values: CommunityFormModel,
         setSubmitting: (isSubmitting: boolean) => void
@@ -70,7 +98,7 @@ const CreateCommunity = () => {
             const resp = await apiAddCommunity({
                 ...values,
                 userId,
-                tagIds: communityTags.map((tag: any) => tag.id),
+                tagIds: selectedTags.map((tag: any) => tag.id),
             })
 
             if (resp.status == 201) {
@@ -118,7 +146,7 @@ const CreateCommunity = () => {
             const resp = await apiUpdateCommunity({
                 ...values,
                 cid,
-                tagIds: communityTags.map((tag: any) => tag.id),
+                tagIds: selectedTags.map((tag: any) => tag.id),
             })
 
             if (resp.status == 200) {
@@ -220,8 +248,13 @@ const CreateCommunity = () => {
                                     label="Labels"
                                     {...validatorProps}
                                 >
-                                    <AddCommunityTagsFormField setCommunityTags={setCommunityTags} />
-
+                                    <Select
+                                        isMulti
+                                        options={tags}
+                                        value={selectedTags}
+                                        onChange={handleCommunityTagsChange}
+                                        placeholder="Select labels"
+                                    />
                                 </FormRow>
 
 
