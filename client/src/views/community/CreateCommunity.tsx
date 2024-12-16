@@ -20,6 +20,7 @@ import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { useAppSelector } from '@/store'
 import { useEffect, useState } from 'react'
 import { useFetchCommunity } from '@/utils/hooks/useFetchCommunity'
+import AddCommunityTagsFormField from './components/AddCommunityTagsFormField'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -39,6 +40,7 @@ const CreateCommunity = () => {
     })
     const cid = useParams<{ id: string }>().id
     const [editMode, setEditMode] = useState(false)
+    const [communityTags, setCommunityTags] = useState([])
     const navigate = useNavigate()
     const userId = useAppSelector((state) => state.auth.user?.id)
     const fetchTrigger = useAppSelector(
@@ -68,6 +70,7 @@ const CreateCommunity = () => {
             const resp = await apiAddCommunity({
                 ...values,
                 userId,
+                tagIds: communityTags.map((tag: any) => tag.id),
             })
 
             if (resp.status == 201) {
@@ -115,6 +118,7 @@ const CreateCommunity = () => {
             const resp = await apiUpdateCommunity({
                 ...values,
                 cid,
+                tagIds: communityTags.map((tag: any) => tag.id),
             })
 
             if (resp.status == 200) {
@@ -210,6 +214,16 @@ const CreateCommunity = () => {
                                         }
                                     />
                                 </FormRow>
+
+                                <FormRow
+                                    name="description"
+                                    label="Labels"
+                                    {...validatorProps}
+                                >
+                                    <AddCommunityTagsFormField setCommunityTags={setCommunityTags} />
+
+                                </FormRow>
+
 
                                 <FormRow
                                     name="is_public"
