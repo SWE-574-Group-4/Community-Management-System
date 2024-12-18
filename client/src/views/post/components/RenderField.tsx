@@ -21,6 +21,7 @@ export default function RenderField({ field }: { field: _Field }) {
             )}
             {field.field_type === 'date' && <p>{field.field_value}</p>}
             {field.field_type === 'geolocation' && <p>{field.field_value}</p>}
+            {field.field_type === 'enumerated' && <p>{field.field_value}</p>}
             {field.field_type === 'number' && <p>{field.field_value}</p>}
         </div>
     )

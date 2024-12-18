@@ -11,6 +11,7 @@ export type FieldType = {
     field_type: string
     field_value?: string
     isRequired: boolean
+    keyword_id?: string
 }
 
 export type TemplateType = {

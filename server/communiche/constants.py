@@ -3,6 +3,7 @@ DATA_TYPES = [
     ('textarea', 'textarea'),
     ('date', 'date'),
     ('geo', 'geolocation'),
+    ('enum', 'enumerated'),
     ('number', 'number'),
     ('image', 'image'),
     ('video', 'video'),
