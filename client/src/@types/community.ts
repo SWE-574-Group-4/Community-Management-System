@@ -4,6 +4,7 @@ export type CommunityFormModel = {
     is_public: boolean
     userId?: string
     cid?: string
+    rules?: string
 }
 
 export type FieldType = {
@@ -58,6 +59,7 @@ export type CommunityType = {
     reputation_rating: string
     templates: DataTypeOption[]
     members: Member[]
+    rules: string
 }
 
 export type Member = {
@@ -89,6 +91,7 @@ export type IndividualCommunityType = {
     num_members: number
     members?: Member[]
     number_of_posts: number
+    rules: string
 }
 
 export type FetchCommunityType = {

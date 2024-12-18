@@ -19,6 +19,7 @@ import Reports from './components/Reports'
 import CreateCommunityBadges from './components/CreateCommunityBadges'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
+import { rule } from 'postcss'
 import CommunityBadges from './components/CommunityBadges'
 
 const { TabNav, TabList } = Tabs
@@ -64,6 +65,10 @@ const Settings = () => {
             label: 'Posts',
             path: 'posts',
         },
+        details: { label: 'Details', path: 'details' },
+        rules: { label: 'Rules', path: 'rules' },
+        members: { label: 'Members', path: 'members' },
+
         details: { 
             label: 'Details', 
             path: 'details' 
@@ -207,6 +212,19 @@ const Settings = () => {
                             <CommunitySpecificTemplates />
                         )}
                         {currentTab === 'reports' && <Reports />}
+                        {currentTab === 'rules' && (
+                            <div>
+                                {community.rules ? (
+                                    <ul>
+                                        {community.rules.split('\n').map((rule, index) => (
+                                            <li key={index}>{rule}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <h1>No Community Rules Available</h1>
+                                )}
+                            </div>
+                        )}
                         {currentTab === 'badges' && <CommunityBadges />}
 
                         {currentTab === 'createBadges' && <CreateCommunityBadges />}
