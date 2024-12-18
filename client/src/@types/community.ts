@@ -1,3 +1,5 @@
+import { Key } from 'react'
+
 export type CommunityFormModel = {
     name: string
     description: string
@@ -7,6 +9,7 @@ export type CommunityFormModel = {
 }
 
 export type FieldType = {
+    name: Key | null | undefined
     field_name: string
     field_type: string
     field_value?: string

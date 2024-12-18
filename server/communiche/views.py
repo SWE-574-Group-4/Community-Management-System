@@ -1155,3 +1155,15 @@ def fetch_keywords(request):
         return Response(results, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+def get_templates(request):
+    templates = Template.objects.filter(community__is_public=True)
+    data = [
+        {
+            'id': template.id,
+            'name': template.name,
+            'fields': template.get_searchable_fields()
+        }
+        for template in templates
+    ]
+    return JsonResponse(data, safe=False)

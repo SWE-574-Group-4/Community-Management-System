@@ -88,6 +88,9 @@ class Template(models.Model):
     fields = JSONField(default=list)
     community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='templates', null=True)
 
+    def get_searchable_fields(self):
+        return [field for field in self.fields if field['type'] not in ['image', 'video', 'audio']]
+
 class TemplateCommunity(models.Model):
     template = models.ForeignKey(Template, on_delete=models.CASCADE)
     community = models.ForeignKey(Community, on_delete=models.CASCADE)

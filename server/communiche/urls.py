@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from communiche import views
-from .views import follow_user, unfollow_user
+from .views import follow_user, unfollow_user, get_templates
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -94,6 +94,9 @@ urlpatterns = [
     path('community/<int:community_id>/reports/<int:id>/', views.report_detail, name='community-report-detail'),
     path('community/<int:community_id>/reports/<int:id>/delete/', views.report_delete, name='report-delete'),
     path('community/<int:community_id>/reports/<int:report_id>/update_status/', views.update_report_status, name='update-report-status'),
+
+    # API endpoints
+    path('api/templates/', get_templates, name='get_templates'),
 ]
 
 static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

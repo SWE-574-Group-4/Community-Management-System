@@ -6,7 +6,7 @@ import {
     TemplateType,
 } from '@/@types/community'
 import Community from '../search/components/Community'
-import { Button, Card, Checkbox, Radio } from '@/components/ui'
+import { Button, Card, Checkbox, Radio, Select, Input } from '@/components/ui'
 import DatePicker from '@/components/ui/DatePicker'
 import Post from './components/Post'
 import { PostData } from '@/@types/post'
@@ -17,6 +17,8 @@ import { DatePickerRangeValue } from '@/components/ui/DatePicker/DatePickerRange
 import User from './components/User'
 import { UserResponseType } from '@/@types/user'
 import Template from './components/Template'
+import axios from 'axios'
+import { SingleValue } from 'react-select'
 
 const { DatePickerRange } = DatePicker
 
@@ -87,8 +89,30 @@ const Search = () => {
         new Date(),
         new Date(),
     ])
-
     const [searchType, setSearchType] = useState('community')
+    const [templates, setTemplates] = useState<TemplateType[]>([])
+    const [selectedTemplate, setSelectedTemplate] =
+        useState<TemplateType | null>(null)
+    const [templateFields, setTemplateFields] = useState<{
+        [key: string]: string
+    }>({})
+
+    useEffect(() => {
+        const fetchTemplates = async () => {
+            const formData = new FormData()
+            formData.append('query', '')
+            formData.append('searchType', 'template')
+            formData.append('range[]', new Date().toISOString())
+            formData.append('range[]', new Date().toISOString())
+
+            const response = await axios.post(
+                'http://127.0.0.1:8000/advance_search/',
+                formData
+            )
+            setTemplates(response.data.data)
+        }
+        fetchTemplates()
+    }, [])
 
     const onChange = (val: string) => {
         setSearchType(val)
@@ -104,6 +128,8 @@ const Search = () => {
                     dataTypes: checkboxList,
                     searchType,
                     range,
+                    template: selectedTemplate?.id,
+                    templateFields,
                 })
 
                 setData(_response.data)
@@ -112,7 +138,7 @@ const Search = () => {
                 // Handle any errors here
             }
         },
-        [checkboxList, searchType, range] // Add the missing dependencies: range
+        [checkboxList, searchType, range, selectedTemplate, templateFields]
     )
 
     useEffect(() => {
@@ -128,6 +154,23 @@ const Search = () => {
             handleInputChange(inputRef.current?.value || '')
         }
     }, [range, handleInputChange])
+
+    const handleTemplateChange = (
+        newValue: SingleValue<{ label: string; value: number | undefined }>
+    ) => {
+        const templateId = newValue?.value
+        const template = templates.find((t) => t.id === templateId)
+        setSelectedTemplate(template || null)
+        setTemplateFields({})
+    }
+
+    const handleFieldChange = (field: string, value: string) => {
+        setTemplateFields((prev) => ({ ...prev, [field]: value }))
+    }
+
+    const handleSearchClick = () => {
+        handleInputChange(inputRef.current?.value || '')
+    }
 
     return (
         <div className="">
@@ -152,7 +195,54 @@ const Search = () => {
                 </div>
             </div>
 
-            {(searchType === 'post' || searchType === 'template') && (
+            {searchType === 'template' && (
+                <>
+                    <Select
+                        placeholder="Select a template"
+                        onChange={handleTemplateChange}
+                        options={templates.map((template) => ({
+                            label: template.name,
+                            value: template.id,
+                        }))}
+                    />
+                    {selectedTemplate && (
+                        <div className="mt-4">
+                            {selectedTemplate.fields
+                                .filter(
+                                    (field) =>
+                                        field.field_type !== 'image' &&
+                                        field.field_type !== 'video' &&
+                                        field.field_type !== 'audio'
+                                )
+                                .map((field) => (
+                                    <div
+                                        key={field.field_name}
+                                        className="mb-2"
+                                    >
+                                        <label>{field.field_name}</label>
+                                        <Input
+                                            type="text"
+                                            value={
+                                                templateFields[
+                                                    field.field_name
+                                                ] || ''
+                                            }
+                                            onChange={(e) =>
+                                                handleFieldChange(
+                                                    field.field_name,
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                ))}
+                        </div>
+                    )}
+                    <Button onClick={handleSearchClick}>Search</Button>
+                </>
+            )}
+
+            {searchType === 'post' && (
                 <CustomCheckboxGroup
                     setCheckboxList={setCheckboxList}
                     checkboxList={checkboxList}
