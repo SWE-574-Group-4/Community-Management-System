@@ -73,6 +73,7 @@ class Community(models.Model):
     reputation_rating = models.DecimalField(max_digits=10, decimal_places=1, default=0, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner', null=True)
     members = models.ManyToManyField(User, through='CommunityUser', related_name='communities')
+    rules = models.CharField(max_length=1000, null=True)
     
 class CommunityUser(models.Model):
     community = models.ForeignKey(Community, on_delete=models.CASCADE)

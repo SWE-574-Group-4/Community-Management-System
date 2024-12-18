@@ -18,6 +18,7 @@ import Posts from './components/Posts'
 import Reports from './components/Reports'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
+import { rule } from 'postcss'
 
 const { TabNav, TabList } = Tabs
 
@@ -63,6 +64,7 @@ const Settings = () => {
             path: 'posts',
         },
         details: { label: 'Details', path: 'details' },
+        rules: { label: 'Rules', path: 'rules' },
         members: { label: 'Members', path: 'members' },
 
         requests: {
@@ -191,6 +193,19 @@ const Settings = () => {
                             <CommunitySpecificTemplates />
                         )}
                         {currentTab === 'reports' && <Reports />}
+                        {currentTab === 'rules' && (
+                            <div>
+                                {community.rules ? (
+                                    <ul>
+                                        {community.rules.split('\n').map((rule, index) => (
+                                            <li key={index}>{rule}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <h1>No Community Rules Available</h1>
+                                )}
+                            </div>
+                        )}
                     </Suspense>
                 </div>
             </AdaptableCard>
