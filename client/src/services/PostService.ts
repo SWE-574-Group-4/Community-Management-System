@@ -95,9 +95,10 @@ export async function apiRemoveComment(commentId: string) {
 }
 
 // tags
-export async function apiGetTags() {
+export async function apiGetTags(searchQuery: string) {
     return ApiService.fetchData({
-        url: `/tags/`,
+        url: `/api/wikidata-search`,
         method: 'get',
+        params: { query: searchQuery, limit: 10 },
     })
 }

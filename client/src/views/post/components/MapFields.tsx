@@ -115,17 +115,17 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
             return;
         }
         try {
-            const response = await axios.get(
-                'http://127.0.0.1:8000/api/wikidata-search',
-                {
-                    params: { query: searchQuery, limit: 10 },
-                }
-            );
-            setSearchResults(response.data.results || []);
+            const response = await apiGetTags(searchQuery);
+            if (response.status === 200) {
+                setSearchResults(response.data.results || []);
+                console.log('search results', searchResults);
+            }
+            // fetch default community labels
+            console.log('fetching community tags')
         } catch (error) {
-            console.error('Error fetching tags:', error);
+            console.error('Error fetching community tags', error)
         }
-    };
+    }
 
     const addTag = (e: React.MouseEvent<HTMLButtonElement>, tag: any) => {
         e.preventDefault();

@@ -42,7 +42,10 @@ const CreateCommunity = () => {
     const cid = useParams<{ id: string }>().id
     const [editMode, setEditMode] = useState(false)
     const [tags, setTags] = useState<{ value: number; label: string }[]>([])
-    const [selectedTags, setSelectedTags] = useState<{ value: number; label: string }[]>([])
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    // const [selectedTags, setSelectedTags] = useState<{ value: number; label: string }[]>([])
     const navigate = useNavigate()
     const userId = useAppSelector((state) => state.auth.user?.id)
     const fetchTrigger = useAppSelector(
@@ -64,26 +67,30 @@ const CreateCommunity = () => {
         }
     }, [community])
 
-
-    useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const response = await apiGetTags()
-                if (response.status === 200) {
-                    setTags((response.data as any[]).map((tag: any) => ({ 
-                        value: tag.id, label: tag.name 
-                    })))
-                    console.log('getting tags', response.data)
-                }
-                // fetch default community labels
-                console.log('fetching community tags')
-            } catch (error) {
-                console.error('Error fetching community tags', error)
-            }
+    const fetchTags = async () => {
+        if (searchQuery.length < 3) {
+            alert('Please enter at least 3 characters for the search.');
+            return;
         }
+        try {
+            const response = await apiGetTags(searchQuery);
+            if (response.status === 200) {
+                setSearchResults(response.data.results || []);
+                console.log('search results', searchResults);
+            }
+            // fetch default community labels
+            console.log('fetching community tags')
+        } catch (error) {
+            console.error('Error fetching community tags', error)
+        }
+    }
 
-        fetchTags()
-    }, [])
+    const addTag = (e: React.MouseEvent<HTMLButtonElement>, tag: any) => {
+        e.preventDefault();
+        if (!selectedTags.some((t) => t.id === tag.id)) {
+            setSelectedTags([...selectedTags, tag]);
+        }
+    };
 
     const handleCommunityTagsChange = (selectedOptions: any) => {
         console.log('selectedOptions', selectedOptions)
@@ -245,17 +252,96 @@ const CreateCommunity = () => {
 
                                 <FormRow
                                     name="description"
-                                    label="Labels"
+                                    label="Tags"
                                     {...validatorProps}
                                 >
-                                    <Select
+                                    <div className="form-group">
+                    <label>Search for Tags:</label>
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Search for tags..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                flex: 1,
+                                padding: '8px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                            }}
+                        />
+                        <Button
+                            type="button"
+                            onClick={fetchTags}
+                            style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Search
+                        </Button>
+                    </div>
+
+                    {searchResults.length > 0 && (
+                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                            {searchResults.map((result: any) => (
+                                <li
+                                    key={result.id}
+                                    style={{
+                                        marginBottom: '5px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        border: '1px solid #ccc',
+                                        padding: '5px 10px',
+                                        borderRadius: '4px',
+                                    }}
+                                >
+                                    <span>
+                                        <strong>{result.label}</strong> -{' '}
+                                        {result.description}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={(e) => addTag(e, result)}
+                                        style={{
+                                            padding: '5px 10px',
+                                            backgroundColor: '#007BFF',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        Select
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
+
+                                    {/* <Select
                                         isMulti
                                         options={tags}
                                         value={selectedTags}
                                         onChange={handleCommunityTagsChange}
                                         placeholder="Select labels"
-                                    />
+                                    /> */}
                                 </FormRow>
+
+                                
 
 
                                 <FormRow
