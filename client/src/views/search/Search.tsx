@@ -1,5 +1,5 @@
 import { useRef, useState, SyntheticEvent, useEffect, useCallback } from 'react'
-import { apiAdvanceSearch, apiSearch } from '@/services/SearchService'
+import { apiAdvancedTemplateSearch, apiSearch } from '@/services/SearchService'
 import {
     CommunityType,
     DataTypeResponse,
@@ -123,11 +123,8 @@ const Search = () => {
             const query = val
 
             try {
-                const _response = await apiAdvanceSearch({
+                const _response = await apiAdvancedTemplateSearch({
                     query,
-                    dataTypes: checkboxList,
-                    searchType,
-                    range,
                     template: selectedTemplate?.id,
                     templateFields,
                 })
@@ -138,7 +135,7 @@ const Search = () => {
                 // Handle any errors here
             }
         },
-        [checkboxList, searchType, range, selectedTemplate, templateFields]
+        [selectedTemplate, templateFields]
     )
 
     useEffect(() => {
@@ -210,9 +207,11 @@ const Search = () => {
                             {selectedTemplate.fields
                                 .filter(
                                     (field) =>
-                                        field.field_type !== 'image' &&
-                                        field.field_type !== 'video' &&
-                                        field.field_type !== 'audio'
+                                        field.field_type === 'text' ||
+                                        field.field_type === 'textarea' ||
+                                        field.field_type === 'number' ||
+                                        field.field_type === 'date' ||
+                                        field.field_type === 'geolocation'
                                 )
                                 .map((field) => (
                                     <div
@@ -221,7 +220,20 @@ const Search = () => {
                                     >
                                         <label>{field.field_name}</label>
                                         <Input
-                                            type="text"
+                                            type={
+                                                field.field_type === 'text'
+                                                    ? 'text'
+                                                    : field.field_type ===
+                                                      'textarea'
+                                                    ? 'textarea'
+                                                    : field.field_type ===
+                                                      'number'
+                                                    ? 'number'
+                                                    : field.field_type ===
+                                                      'date'
+                                                    ? 'date'
+                                                    : 'text'
+                                            }
                                             value={
                                                 templateFields[
                                                     field.field_name
@@ -278,14 +290,10 @@ const Search = () => {
 
             {searchType === 'template' && data && (
                 <Card className="mt-5">
-                    <h5>Community Specific templates:</h5>
-                    {data.data.map((template: TemplateType) => (
-                        <Template
-                            key={template.id}
-                            template={template}
-                            checkboxList={checkboxList}
-                        />
-                    ))}
+                    <h5>Posts:</h5>
+                    {data.data.map((post: PostData) => {
+                        return <Post post={post} />
+                    })}
                 </Card>
             )}
         </div>

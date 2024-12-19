@@ -28,7 +28,7 @@ def user_list(request):
 
     if request.method == 'GET':
         query = request.query_params.get('query', '')
-        users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(firstname__icontains=query) | Q(lastname__icontains=query))
+        users = User.objects.filter(Q(username__icontains=query) | Q(email__icontains(query) | Q(firstname__icontains=query) | Q(lastname__icontains=query)))
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
@@ -486,7 +486,6 @@ def community_non_members(request, community_id):
 
     return Response(serializer.data)
 
-# TODO: Check this later 
 @api_view(['GET'])
 def join_requests(request, community_id):
     community = Community.objects.get(pk=community_id)
@@ -878,6 +877,33 @@ def advance_search(request):
             'total': len(user_serializer.data)
         })
 
+@api_view(['POST'])
+def advanced_template_search(request):
+    query = request.data.get('query', '')
+    template_id = request.data.get('template', None)
+    template_fields = request.data.get('templateFields', {})
+
+    if not template_id:
+        return Response({'error': 'Template ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        template = Template.objects.get(pk=template_id)
+    except Template.DoesNotExist:
+        return Response({'error': 'Template not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    q_objects = Q()
+    for field_name, field_value in template_fields.items():
+        q_objects &= Q(**{f"content__icontains": field_value})
+
+    posts = Posts.objects.filter(q_objects, community__templates=template)
+    post_serializer = PostSerializer(posts, many=True)
+
+    return Response({
+        'search_type': 'template',
+        'data': post_serializer.data,
+        'total': len(post_serializer.data)
+    })
+
 def send_in_app_notification(user, badge):
     """Creates a notification for a user when they earn a new badge."""
     Notification.objects.create(
@@ -931,14 +957,12 @@ def get_user_badges(request, user_id):
 
     return Response(badge_data, status=status.HTTP_200_OK)
 
-# Get all available badges (for admins or others)
 @api_view(['GET'])
 def get_all_badges(request):
     badges = Badge.objects.all()
     serializer = BadgeSerializer(badges, many=True)
     return Response(serializer.data)
 
-# Assign badge to user (admin or system logic)
 @api_view(['POST'])
 def assign_badge_to_user(request, user_id, badge_id):
     user = User.objects.get(id=user_id)
@@ -1156,6 +1180,7 @@ def fetch_keywords(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(['GET'])
 def get_templates(request):
     templates = Template.objects.filter(community__is_public=True)
     data = [

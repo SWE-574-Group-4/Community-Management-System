@@ -97,6 +97,7 @@ urlpatterns = [
 
     # API endpoints
     path('api/templates/', get_templates, name='get_templates'),
+    path('advanced_template_search/', views.advanced_template_search, name='advanced-template-search'),
 ]
 
 static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

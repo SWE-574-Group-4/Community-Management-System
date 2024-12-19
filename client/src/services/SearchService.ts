@@ -19,3 +19,14 @@ export async function apiAdvanceSearch<T, U extends Record<string, unknown>>(
         data,
     })
 }
+
+export async function apiAdvancedTemplateSearch<
+    T,
+    U extends Record<string, unknown>
+>(data: U) {
+    return ApiService.fetchData<T>({
+        url: `/advanced_template_search/`,
+        method: 'post',
+        data,
+    })
+}
