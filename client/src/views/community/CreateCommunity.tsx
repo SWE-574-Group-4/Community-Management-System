@@ -34,6 +34,9 @@ const validationSchema = Yup.object().shape({
     rules: Yup.string()
     .min(3, 'Rule is too short')
     .max(500, 'Rule is too long'),
+    rules: Yup.string()
+    .min(3, 'Rule is too short')
+    .max(500, 'Rule is too long'),
 })
 
 const CreateCommunity = () => {

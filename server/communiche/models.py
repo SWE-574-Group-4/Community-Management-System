@@ -132,6 +132,8 @@ class PComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+# General Badges for the platform
+
 class Badge(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -182,6 +184,71 @@ class Badge(models.Model):
 class UserBadge(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(default=timezone.now)
+
+    @classmethod
+    def assign_badge(cls, user, badge):
+        # Check if user already has this badge
+        if not cls.objects.filter(user=user, badge=badge).exists():
+            cls.objects.create(user=user, badge=badge)
+
+# Community Specific Badges
+
+class CommunityBadge(models.Model):
+    name = models.CharField(max_length=100)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    description = models.TextField()
+    criteria = models.JSONField()
+    background_color = models.CharField(max_length=20, null=True, blank=True)
+    icon = models.CharField(max_length=50, null=True, blank=True)
+
+    def comment_criteria(self, user):
+        user_comments = PComment.objects.filter(
+            post__community=self.community, post__user=user
+        ).count()
+
+        return user_comments >= self.criteria.get("comments_count", 0)
+    
+    def get_comment_criteria(self, user):
+        max_comments = user.posts_set.filter(community=self.community).annotate(num_comments=Count('pcomment')).aggregate(max_comments=Max('num_comments'))['max_comments'] or 0
+
+        return max_comments >= self.criteria.get("single_post_comments", 0)
+
+    def post_criteria(self, user):
+        user_posts = user.posts_set.filter(community=self.community).count()
+        
+        return user_posts >= self.criteria.get("posts_count", 0)
+    
+    def get_like_criteria(self, posts_user):
+        max_likes = posts_user.posts_set.annotate(num_likes=Count('likes')).aggregate(max_likes=Max('num_likes'))['max_likes'] or 0
+
+        return max_likes >= self.criteria.get("single_post_likes", 0)
+
+    def give_like_criteria(self, user):
+        user_likes_given = user.post_likes.filter(community=self.community).count()
+
+        return user_likes_given >= self.criteria.get("likes_given", 0)
+    
+    def create_community_criteria(self, user):
+        user_communities = user.communities.filter(id=self.community.id).count()
+
+        return user_communities >= self.criteria.get("communities_created", 0)
+
+    def join_community_criteria(self, user):
+        user_joined_communities = user.communityuser_set.filter(community=self.community).count()
+
+        return user_joined_communities >= self.criteria.get("communities_joined", 0)
+    
+    def duration_criteria(self, user):
+        community_user = user.communityuser_set.filter(community=self.community).first()
+        if community_user:
+            user_duration = (timezone.now() - community_user.joined_at).total_seconds() / 60
+            return user_duration >= self.criteria.get("membership_duration_days", 0)
+        return False
+    
+class UserCommunityBadge(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
+    badge = models.ForeignKey(CommunityBadge, on_delete=models.CASCADE)
     earned_at = models.DateTimeField(default=timezone.now)
 
     @classmethod
