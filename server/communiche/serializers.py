@@ -39,7 +39,7 @@ class CommunitySerializer(serializers.ModelSerializer):
     has_user_requested = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
     number_of_posts = serializers.SerializerMethodField()
-    tags = TagSerializer(many=True, read_only=True)
+    tags = serializers.SerializerMethodField()
 
     class Meta:
         model = Community

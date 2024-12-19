@@ -174,6 +174,7 @@ def add_community(request):
             user_id = request.data.get('user_id')
             tag_ids = request.data.getlist('tagIds[]')
             serializer.save(owner_id=user_id)
+            tag_ids = request.data.get('tag_ids', [])
             
             # Add owner to communityuser table with role -1
             community = serializer.instance
@@ -185,11 +186,19 @@ def add_community(request):
                 if badge.create_community_criteria(owner):
                     UserBadge.assign_badge(owner, badge)
                     send_in_app_notification(owner, badge)
-            
-            for tag_id in tag_ids:
-                tag_obj = Tag.objects.get(pk=tag_id)
-                community.tags.add(tag_obj)
-            
+
+            if tag_ids:
+                resolved_tags = []
+                for qid in tag_ids:
+                    wikidata_results = search_wikidata(query=qid, limit=1)
+                    label = wikidata_results[0].get("label") if wikidata_results else None
+
+                    if label:
+                        tag, created = Tag.objects.get_or_create(qid=qid, defaults={"label": label})
+                        resolved_tags.append(tag)
+
+                community.tags.set(resolved_tags)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
