@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getInterests, addInterest, deleteInterest } from '@/services/InterestsService';
+import { getInterests, addInterest, deleteInterest, triggerRelatedEntitiesFetching } from '@/services/UserService';
 import { useAppSelector } from '@/store';
 import axios from 'axios';
 
@@ -78,7 +78,7 @@ const MyInterests = () => {
     
                 // Fetch and store related entities
                 try {
-                    await axios.get(`http://localhost:8000/fetch-related/${tag.id}/user_interest/`); // Trigger related entities fetching
+                    await triggerRelatedEntitiesFetching(tag.id) // Trigger related entities fetching
                 } catch (fetchError) {
                     console.error(`Error fetching related entities for QID ${tag.id}:`, fetchError);
                 }
