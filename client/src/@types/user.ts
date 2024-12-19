@@ -47,6 +47,21 @@ export type BadgeType = {
     icon?: string 
     is_owned?: boolean
     earned_at?: string
+    background_color?: string;
+    criteria?: { [key: string]: any };
+}
+
+export type CommunityBadgeType = {
+    id: number
+    name: string
+    description?: string
+    tier?: string
+    status: boolean
+    icon?: string 
+    is_owned?: boolean
+    earned_at?: string
+    background_color?: string;
+    criteria?: { [key: string]: any };
 }
 
 export type NotificationType = {

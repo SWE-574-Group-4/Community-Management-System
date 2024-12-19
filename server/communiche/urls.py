@@ -38,7 +38,7 @@ urlpatterns = [
     path('is_following/<int:user_id>/<int:follower_id>', views.is_following, name='is_following'),
     path('followers/<int:user_id>/', views.get_followers, name='get_followers'),
     path('following/<int:user_id>/', views.get_following, name='get_following'),
-
+    
 
     # other paths...
     
@@ -69,7 +69,11 @@ urlpatterns = [
     path('community/<int:community_id>/add_template/', views.add_template, name='community-add-template'),
     path('search/', views.search, name='search'),
     path('community/<int:community_id>/transfer_ownership/<int:owner_id>/<int:new_owner_id>', views.transfer_ownership, name='transfer_ownership'),
-
+    path('community/<int:community_id>/setCommunityBadges/', views.set_community_badges, name='set_community_badges'),
+    path('community/<int:community_id>/getCommunityBadges/', views.get_community_badges, name='get_community_badges'),
+    path('user/<int:user_id>/community/<int:community_id>/getUserCommunityBadges/', views.get_user_community_badges, name='get_user_community_badges'),
+    path('user/<int:user_id>/getAllUserCommunityBadges/', views.get_all_user_community_badges, name='get_all_user_community_badges'),
+    
     # post
     path('post/', views.post, name='post'),
     path('post/<int:post_id>/delete/', views.delete_post, name='delete-post'),

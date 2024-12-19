@@ -192,3 +192,32 @@ export async function apiTransferOwnership(data: any) {
         method: 'post',
     })
 }
+
+export async function apiSetCommunityBadges(communityId: string, data: any) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/setCommunityBadges/`,
+        method: 'post',
+        data,
+    })
+}
+
+export async function apiGetCommunityBadges(communityId: string) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/getCommunityBadges/`,
+        method: 'get',
+    })
+}
+
+export async function apiGetUserCommunityBadges(userId: string, communityId: string) {
+    return ApiService.fetchData({
+        url: `/user/${userId}/community/${communityId}/getUserCommunityBadges/`,
+        method: 'get',
+    })
+}
+
+export async function apiGetAllUserCommunityBadges(userId: string) {
+    return ApiService.fetchData({
+        url: `/user/${userId}/getAllUserCommunityBadges/`,
+        method: 'get',
+    })
+}
