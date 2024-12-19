@@ -2,10 +2,11 @@ import useFetchData from '@/utils/hooks/useFetchData'
 import RecentCommunities from './community/components/RecentCommunities'
 import DisplayPost from './post/components/DisplayPost'
 import { apiGetPosts } from '@/services/PostService'
-import { useAppSelector } from '@/store'
+import { setUser, useAppSelector } from '@/store'
 import { AxiosResponse } from 'axios'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import { getInterests, getUserRecommendations, getUserRecommendedCommunities } from '@/services/UserService'
 
 const Home = () => {
     const userId = useAppSelector((state) => state.auth.user?.id)
@@ -18,49 +19,79 @@ const Home = () => {
     const [recommendedData, setRecommendedData] = useState<any>({ recommended_posts: [], recommended_communities: [] })
 
     // Fetch user's followed communities
-    useEffect(() => {
-        const fetchUserCommunities = async () => {
-            if (userId) {
-                try {
-                    const response = await axios.get(`http://localhost:8000/user/communities/`, {
-                        params: { user_id: userId },
-                    })
-                    const communityIds = response.data.map((community: any) => community.id)
-                    setUserCommunities(communityIds)
-                } catch (error) {
-                    console.error('Error fetching user communities:', error)
-                }
-            }
-        }
+    // useEffect(() => {
+    //     const fetchUserCommunities = async () => {
+    //         if (userId) {
+    //             try {
+    //                 const response = await axios.get(`http://localhost:8000/user/communities/`, {
+    //                     params: { user_id: userId },
+    //                 })
+    //                 const communityIds = response.data.map((community: any) => community.id)
+    //                 setUserCommunities(communityIds)
+    //             } catch (error) {
+    //                 console.error('Error fetching user communities:', error)
+    //             }
+    //         }
+    //     }
+        
+    //     fetchUserCommunities()
+    // }, [userId])
+    
+    //Fetch recommended posts and communities
+    // useEffect(() => {
+    //     const fetchRecommendations = async () => {
+    //         if (userId) {
+    //             try {
+    //                 const response = await axios.post('http://localhost:8000/api/recommendations/', { user_id: userId })
+    //                 setRecommendedData(response.data)
+    //             } catch (error) {
+    //                 console.error('Error fetching recommendations:', error)
+    //             }
+    //         }
+    //     }
+    //     fetchRecommendations()
+    // }, [userId])
 
-        fetchUserCommunities()
-    }, [userId])
-
-    // Fetch recommended posts and communities
     useEffect(() => {
-        const fetchRecommendations = async () => {
-            if (userId) {
-                try {
-                    const response = await axios.post('http://localhost:8000/api/recommendations/', { user_id: userId })
-                    setRecommendedData(response.data)
-                } catch (error) {
-                    console.error('Error fetching recommendations:', error)
-                }
+        const fetchRecommendedCommunities = async () => {
+            if (!userId) return;
+            try {
+                const userRecommendedCommunities:any = await getUserRecommendedCommunities(userId);
+                setUserCommunities(userRecommendedCommunities);
+            } catch (error) {
+                console.error('Error fetching user recommendations:', error);
             }
-        }
-        fetchRecommendations()
-    }, [userId])
+        };
+
+        fetchRecommendedCommunities();
+    },[userId])
+
+    useEffect(() => {
+        // Fetch existing interests on load
+        const fetchUserRecommendations = async () => {
+            if (!userId) return;
+            try {
+                const userRecommendations = await getUserRecommendations(userId);
+                setRecommendedData(userRecommendations);
+            } catch (error) {
+                console.error('Error fetching user recommendations:', error);
+            }
+        };
+
+        fetchUserRecommendations();
+    },[userId])
+
 
     // Filter posts by user's followed communities
     const filteredPosts = (data?.data as any[])?.filter((post: any) =>
-        userCommunities.includes(post.community.id)
+        userCommunities.find((u:any) => u.id === post.community.id)
     )
 
     return (
         <div className="grid grid-cols-12 gap-4">
-            {/* Main Feed */}
             <div className="lg:col-span-9 md:col-span-8 sm:col-span-12 col-span-12">
                 <h3>Feed</h3>
+
                 {filteredPosts?.map((post: any) => (
                     <DisplayPost key={post.id} post={post} />
                 ))}

@@ -26,7 +26,7 @@ const MyInterests = () => {
         // Fetch existing interests on load
         const fetchInterests = async () => {
             try {
-                const userInterests = await getInterests(user.id);
+                const userInterests:any = await getInterests(user.id);
                 setInterests(userInterests);
             } catch (error) {
                 console.error('Error fetching user interests:', error);
@@ -85,7 +85,7 @@ const MyInterests = () => {
             }
     
             // Update interests list
-            const updatedInterests = await getInterests(user.id);
+            const updatedInterests:any = await getInterests(user.id);
             setInterests(updatedInterests);
     
             // Clear selected tags
@@ -98,7 +98,7 @@ const MyInterests = () => {
     const handleRemoveInterest = async (qid: string) => {
         try {
             await deleteInterest(user.id, qid); // Pass the QID directly
-            const updatedInterests = await getInterests(user.id);
+            const updatedInterests:any = await getInterests(user.id);
             setInterests(updatedInterests);
         } catch (error) {
             console.error('Error removing interest:', error);

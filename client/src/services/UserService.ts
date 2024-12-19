@@ -181,3 +181,29 @@ export async function triggerRelatedEntitiesFetching(qid: string) {
     });
     return response.data;
 }
+
+
+export async function getUserRecommendations(userId: number) {
+    const response = await ApiService.fetchData({
+        url: `/api/recommendations/`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: {
+            user_id: userId,
+        },
+    });
+    return response.data;
+}
+
+export async function getUserRecommendedCommunities(userId: string) {
+    const response = await ApiService.fetchData({
+        url: `/user/communities/`,
+        method: 'get',
+        params: {
+            user_id: userId,
+        },
+    });
+    return response.data;
+}
