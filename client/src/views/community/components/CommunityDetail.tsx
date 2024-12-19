@@ -1,5 +1,5 @@
 import { IndividualCommunityType, Member } from '@/@types/community'
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Tag } from '@/components/ui'
 import {
     apiJoinCommunity,
     apiLeaveCommunity,
@@ -22,8 +22,6 @@ export default function CommunityDetail({
 }: {
     community: IndividualCommunityType
 }) {
-    console.log(community)
-
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const fetchTrigger = useAppSelector(
@@ -39,6 +37,7 @@ export default function CommunityDetail({
         is_public,
         is_owner,
         number_of_posts,
+        tags,
     } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -173,6 +172,20 @@ export default function CommunityDetail({
                 </div>
                 <h4 className="font-bold my-3">{name}</h4>
                 <p>{description}</p>
+                {tags && tags.length > 0 && (
+                    <div
+                        className="tags-section mt-3"
+                    >
+                        <strong>Tags:</strong>
+                        <span className="ml-2">
+                            {tags.map((tag, index) => (
+                                <span key={index}>
+                                    <Tag className="mr-1">{tag}</Tag>
+                                </span>
+                            ))}
+                        </span>
+                    </div>
+                )}
                 {/* <Members /> */}
             </Card>
         </div>

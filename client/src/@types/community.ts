@@ -89,6 +89,7 @@ export type IndividualCommunityType = {
     num_members: number
     members?: Member[]
     number_of_posts: number
+    tags?: string[]
 }
 
 export type FetchCommunityType = {
