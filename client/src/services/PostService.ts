@@ -23,6 +23,13 @@ export async function apiPost(
     })
 }
 
+export async function apiTriggerRelatedEntities(tagId: string) {
+    return ApiService.fetchData({
+        url: `fetch-related/${tagId}/post`,
+        method: 'get',
+    })
+}
+
 export async function apiGetPosts(userId?: string) {
     return ApiService.fetchData({
         url: `/posts/`,

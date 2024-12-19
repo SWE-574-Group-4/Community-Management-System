@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { apiGetTags, apiPost } from '@/services/PostService'
+import { apiGetTags, apiPost, apiTriggerRelatedEntities } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
 import Select from '@/components/ui/Select'
@@ -155,9 +155,7 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
             // Trigger related entities fetching for each tag
             for (const tagId of tags) {
                 try {
-                    await axios.get(
-                        `http://127.0.0.1:8000/fetch-related/${tagId}/post/`
-                    );
+                    await apiTriggerRelatedEntities(tagId);
                     console.log(`Related entities fetched for tag ${tagId}`);
                 } catch (fetchError) {
                     console.error(
