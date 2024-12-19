@@ -61,6 +61,9 @@ class CommunitySerializer(serializers.ModelSerializer):
     def get_number_of_posts(self, obj):
         return Posts.objects.filter(community=obj).count()
     
+    def get_tags(self, obj):
+        return [tag.label for tag in obj.tags.all()]
+    
 
 class CommunityUserSerializer(serializers.ModelSerializer):
     user = UserSerializer()

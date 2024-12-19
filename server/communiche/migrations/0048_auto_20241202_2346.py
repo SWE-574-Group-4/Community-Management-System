@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communiche', '0045_badge_types_user_created_at'),
+        ('communiche', '0046_community_tags'),
     ]
 
     operations = [
