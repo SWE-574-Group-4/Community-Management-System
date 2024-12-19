@@ -172,9 +172,8 @@ def add_community(request):
         serializer = CommunitySerializer(data=request.data)
         if serializer.is_valid():
             user_id = request.data.get('user_id')
-            tag_ids = request.data.getlist('tagIds[]')
+            tag_ids = request.data.getlist('tags[]')
             serializer.save(owner_id=user_id)
-            tag_ids = request.data.get('tag_ids', [])
             
             # Add owner to communityuser table with role -1
             community = serializer.instance

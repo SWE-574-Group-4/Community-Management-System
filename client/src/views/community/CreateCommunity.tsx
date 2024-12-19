@@ -92,6 +92,10 @@ const CreateCommunity = () => {
         }
     };
 
+    const removeTag = (tagId: string) => {
+        setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
+    };
+
     const handleCommunityTagsChange = (selectedOptions: any) => {
         console.log('selectedOptions', selectedOptions)
         setSelectedTags(selectedOptions)
@@ -101,11 +105,13 @@ const CreateCommunity = () => {
         values: CommunityFormModel,
         setSubmitting: (isSubmitting: boolean) => void
     ) => {
+        const tags = selectedTags.map((tag: any) => tag.id);
+        console.log('tags', tags)
         try {
             const resp = await apiAddCommunity({
                 ...values,
                 userId,
-                tagIds: selectedTags.map((tag: any) => tag.id),
+                tags: tags
             })
 
             if (resp.status == 201) {
@@ -256,81 +262,117 @@ const CreateCommunity = () => {
                                     {...validatorProps}
                                 >
                                     <div className="form-group">
-                    <label>Search for Tags:</label>
-                    <div
-                        style={{
-                            display: 'flex',
-                            gap: '10px',
-                            marginBottom: '10px',
-                        }}
-                    >
-                        <input
-                            type="text"
-                            placeholder="Search for tags..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{
-                                flex: 1,
-                                padding: '8px',
-                                border: '1px solid #ccc',
-                                borderRadius: '4px',
-                            }}
-                        />
-                        <Button
-                            type="button"
-                            onClick={fetchTags}
-                            style={{
-                                padding: '8px 16px',
-                                backgroundColor: '#4CAF50',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            Search
-                        </Button>
-                    </div>
+                                        <label>Search for Tags:</label>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                gap: '10px',
+                                                marginBottom: '10px',
+                                            }}
+                                        >
+                                            <input
+                                                type="text"
+                                                placeholder="Search for tags..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '8px',
+                                                    border: '1px solid #ccc',
+                                                    borderRadius: '4px',
+                                                }}
+                                            />
+                                            <Button
+                                                type="button"
+                                                onClick={fetchTags}
+                                                style={{
+                                                    padding: '8px 16px',
+                                                    backgroundColor: '#4CAF50',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                Search
+                                            </Button>
+                                        </div>
 
-                    {searchResults.length > 0 && (
-                        <ul style={{ listStyleType: 'none', padding: 0 }}>
-                            {searchResults.map((result: any) => (
-                                <li
-                                    key={result.id}
-                                    style={{
-                                        marginBottom: '5px',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        border: '1px solid #ccc',
-                                        padding: '5px 10px',
-                                        borderRadius: '4px',
-                                    }}
-                                >
-                                    <span>
-                                        <strong>{result.label}</strong> -{' '}
-                                        {result.description}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={(e) => addTag(e, result)}
-                                        style={{
-                                            padding: '5px 10px',
-                                            backgroundColor: '#007BFF',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '4px',
-                                            cursor: 'pointer',
-                                        }}
-                                    >
-                                        Select
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
+                                        {searchResults.length > 0 && (
+                                            <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                                {searchResults.map((result: any) => (
+                                                    <li
+                                                        key={result.id}
+                                                        style={{
+                                                            marginBottom: '5px',
+                                                            display: 'flex',
+                                                            justifyContent: 'space-between',
+                                                            alignItems: 'center',
+                                                            border: '1px solid #ccc',
+                                                            padding: '5px 10px',
+                                                            borderRadius: '4px',
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            <strong>{result.label}</strong> -{' '}
+                                                            {result.description}
+                                                        </span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => addTag(e, result)}
+                                                            style={{
+                                                                padding: '5px 10px',
+                                                                backgroundColor: '#007BFF',
+                                                                color: 'white',
+                                                                border: 'none',
+                                                                borderRadius: '4px',
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            Select
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
 
+                                    {selectedTags.length > 0 && (
+                                    <div>
+                                        <h4>Selected Tags</h4>
+                                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                                            {selectedTags.map((tag: any) => (
+                                                <li
+                                                    key={tag.id}
+                                                    style={{
+                                                        marginBottom: '5px',
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
+                                                        border: '1px solid #ccc',
+                                                        padding: '5px 10px',
+                                                        borderRadius: '4px',
+                                                    }}
+                                                >
+                                                    <span>{tag.label}</span>
+                                                    <button
+                                                        onClick={() => removeTag(tag.id)}
+                                                        style={{
+                                                            padding: '5px 10px',
+                                                            backgroundColor: '#f44336',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            borderRadius: '4px',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
 
                                     {/* <Select
                                         isMulti
@@ -340,9 +382,6 @@ const CreateCommunity = () => {
                                         placeholder="Select labels"
                                     /> */}
                                 </FormRow>
-
-                                
-
 
                                 <FormRow
                                     name="is_public"
