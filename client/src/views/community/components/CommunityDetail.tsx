@@ -174,6 +174,7 @@ export default function CommunityDetail({
                 <h4 className="font-bold my-3">{name}</h4>
                 <p><strong>Description:</strong> {description}</p>
                 <p><strong>Rules:</strong> {rules}</p>
+
                 {tags && tags.length > 0 && (
                     <div
                         className="tags-section mt-3"
@@ -188,6 +189,7 @@ export default function CommunityDetail({
                         </span>
                     </div>
                 )}
+
                 {/* <Members /> */}
             </Card>
         </div>

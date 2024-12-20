@@ -16,9 +16,11 @@ import PendingRequests from './components/PendingRequests'
 import Invite from './Invite'
 import Posts from './components/Posts'
 import Reports from './components/Reports'
+import CreateCommunityBadges from './components/CreateCommunityBadges'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
 import { HiOutlineDocumentAdd } from 'react-icons/hi'
 import { rule } from 'postcss'
+import CommunityBadges from './components/CommunityBadges'
 
 const { TabNav, TabList } = Tabs
 
@@ -67,6 +69,18 @@ const Settings = () => {
         rules: { label: 'Rules', path: 'rules' },
         members: { label: 'Members', path: 'members' },
 
+        details: { 
+            label: 'Details', 
+            path: 'details' 
+        },
+        members: { 
+            label: 'Members', 
+            path: 'members' 
+        },
+        badges: { 
+            label: 'Badges', 
+            path: 'CommunityBadges' 
+        },
         requests: {
             label: 'Requests',
             path: 'requests',
@@ -85,6 +99,11 @@ const Settings = () => {
         reports: {
             label: 'Reports',
             path: 'reports',
+            authority: ['owner', 'moderator'],
+        },
+        createBadges: {
+            label: 'Create Badge',
+            path: 'createCommunityBadges',
             authority: ['owner', 'moderator'],
         },
     }
@@ -206,6 +225,11 @@ const Settings = () => {
                                 )}
                             </div>
                         )}
+
+                        {currentTab === 'badges' && <CommunityBadges />}
+
+                        {currentTab === 'createBadges' && <CreateCommunityBadges />}
+
                     </Suspense>
                 </div>
             </AdaptableCard>

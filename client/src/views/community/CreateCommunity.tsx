@@ -275,6 +275,7 @@ const CreateCommunity = () => {
                                     />
                                 </FormRow>
 
+
                                 <FormRow
                                     name="description"
                                     label="Tags"

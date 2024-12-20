@@ -1,7 +1,8 @@
 from asyncio import constants
 import json
 from rest_framework import serializers
-from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, UserInterest
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, CommunityBadge, UserCommunityBadge,UserInterest
+
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,6 +45,8 @@ class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
         fields = ['id', 'name', 'description', 'rules', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner', 'number_of_posts', 'tags']
+
+
 
     def get_is_member(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
@@ -199,6 +202,7 @@ class UserBadgeDetailedSerializer(serializers.ModelSerializer):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
         return str(obj.user_id) == str(user_id)
 
+
 class UserInterestSerializer(serializers.ModelSerializer):
     tag_label = serializers.CharField(source='tag.label', read_only=True)
     tag_qid = serializers.CharField(source='tag.qid', read_only=True)
@@ -206,3 +210,30 @@ class UserInterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInterest
         fields = ['id', 'user', 'tag', 'tag_label', 'tag_qid']
+
+class CommunityBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommunityBadge
+        fields = ['id', 'name', 'description', 'icon', 'background_color']
+
+class UserCommunityBadgeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserCommunityBadge
+        fields = ['id', 'earned_at', 'badge']
+
+class UserCommunityBadgeDetailedSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='communitybadge.name')
+    description = serializers.CharField(source='communitybadge.description')
+    icon = serializers.CharField(source='communitybadge.icon')
+    background_color = serializers.CharField(source='communitybadge.background_color')
+    earned_at = serializers.DateTimeField()
+    is_owned = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserCommunityBadge
+        fields = ['name', 'description', 'icon', 'background_color', 'earned_at', 'is_owned']
+
+    def get_is_owned(self, obj):
+        user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
+        return str(obj.user_id) == str(user_id)
+

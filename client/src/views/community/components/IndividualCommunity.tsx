@@ -138,6 +138,7 @@ export default function IndividualCommunity({
                 <div>
                     <strong>Rules: {rules}</strong>
                 </div>
+
                 {tags && tags.length > 0 && (
                     <div
                         className="tags-section mt-3"
@@ -152,6 +153,7 @@ export default function IndividualCommunity({
                         </span>
                     </div>
                 )}
+
             </Card>
         </div>
     )
