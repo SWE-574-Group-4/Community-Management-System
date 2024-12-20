@@ -20,3 +20,26 @@ export async function apiAssignBadge(userId: string, badgeId: string) {
         method: 'post',
     })
 }
+
+interface CommunityBadgeParams {
+    badgeName: string
+    badgeDescription: string
+    badgeCriteria: string
+    communityId: string
+    icon: string
+    backgroundColor: string
+}
+
+export async function apiSetCommunityBadge({badgeName, badgeDescription, badgeCriteria, communityId, icon, backgroundColor}: CommunityBadgeParams) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/setCommunityBadges/`,
+        method: 'post',
+        data: {
+            name: badgeName,
+            description: badgeDescription,
+            criteria: badgeCriteria, // Ensure criteria is sent correctly
+            icon, // Include icon in the request data
+            background_color: backgroundColor,
+        },
+    })
+}
