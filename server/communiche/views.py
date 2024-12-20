@@ -1514,10 +1514,6 @@ def recommended_posts_view(request):
             return JsonResponse({"error": str(e)}, status=500)
 
     return JsonResponse({"error": "Invalid HTTP method"}, status=405)
-<<<<<<< HEAD
-=======
-
->>>>>>> d973a2c64ff1c5632b19dbad1be7777ee8710675
 @api_view(['POST'])
 def set_community_badges(request, community_id):
     try:
