@@ -1,7 +1,12 @@
 from asyncio import constants
 import json
 from rest_framework import serializers
+<<<<<<< HEAD
 from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, CommunityBadge, UserCommunityBadge, UserInterest
+=======
+from .models import Badge, Notification, Report, Template, User, Community, JoinRequest, CommunityUser, TemplateCommunity, Posts, PComment, Invitation, Tag, UserBadge, UserFollowing, CommunityBadge, UserCommunityBadge,UserInterest
+
+>>>>>>> d973a2c64ff1c5632b19dbad1be7777ee8710675
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,6 +49,11 @@ class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
         fields = ['id', 'name', 'description', 'rules', 'created_at', 'updated_at', 'is_public', 'reputation_rating', 'templates', 'members', 'is_member', 'has_user_requested', 'is_owner', 'number_of_posts', 'tags']
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> d973a2c64ff1c5632b19dbad1be7777ee8710675
 
     def get_is_member(self, obj):
         user_id = self.context.get('request').query_params.get('user_id') if self.context.get('request') else None
