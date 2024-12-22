@@ -1,0 +1,1179 @@
+
+# SWE 574 Final Project Report
+### 22.12.2024
+### Group-4 / Communiche App
+Github Repository URL: [https://github.com/SWE-574-Group-4/Community-Management-System](https://github.com/SWE-574-Group-4/Community-Management-System)  <br>
+Git Tag URL:  https://github.com/SWE-574-Group-4/Community-Management-System/releases/tag/v0.9.0 <br>
+Deployment URL:  https://communiche.vercel.app/home <br>
+
+### Group-4 Members:
+1. ATAKAN ÖZGÜNER	
+1. BURAK COŞAR
+1. CEMİLE ELİF TOP
+1. SEHER İREM KURT
+1. MEHMET EYÜPOĞLU
+1. ONUR ALTINKURT	
+1. RASHID GAITOV
+
+## Honor Code
+Related to the submission of all the project deliverables for the SWE574 Fall 2024
+semester project reported in this report, we, as Group-4, declare that:
+
+• All the material that we are submitting related to our project (including but not
+limited to the project repository, the final project report, and supplementary documents)
+have been exclusively prepared by Group-4.
+
+Name: ATAKAN ÖZGÜNER	  
+Name: BURAK COŞAR  
+Name: CEMİLE ELİF TOP  
+Name: SEHER İREM KURT  
+Name: MEHMET EYÜPOĞLU  
+Name: ONUR ALTINKURT	  
+Name: RASHID GAITOV  
+
+## Final Review
+### Deliverables
+1. Bug Fixes
+2. Community Specific Badges
+3. Recommendation System
+4. Interest Selection
+5. Followers & Following System
+5. Enumerated Field Types
+6. Testing
+
+### 1: Bug Fixes
+ - Status: Partially Completed
+ - For the final milestone, since the demonstration, we have worked on several bugs that were reported before, during and right after milestone 2. Most of the known bugs are resolved, some bugs are labeled as wontfix as their priority are low and does not affect our core functionalities.
+
+### 2: Community Specific Badges
+ - Status: Completed
+ - In this milestone, we have started and finalized our community specific badges, an addition to now enriched system-wide badges. This feature allows communities to have specific badges with specific descriptions and adjustable icons & color scheme. These new badges can be awarded directly, or new rulesets can be assigned to achieve them within communities.
+
+### 3: Recommendation System
+ - Status: Completed
+ - We have aimed to improve user experience, by implementing a recommendation system that can help new users to integrate easily, and find the communities that they can enjoy being part of. Users can declare their interests using tags, and the recommendation system utilizes these tags to recommend matching communities.
+
+### 4: Interest Selection
+ - Status: Completed
+ - Users can now select their interests from wide variety of possibilities, and can re-shape their Communiche experience. By introducing interest selection, it is now possible to recommend communities to related individuals.
+
+### 5: Followers & Following System
+ - Status: Completed
+ - We have introduced the followers and following system, where users can follow each other, and easily access their follower & following lists from their profiles or dropdown menu from the navigation bar.
+
+### 6: Testing
+
+ - Status: Completed
+ - In this final milestone, additional to the unit tests that we have covered, now User Tests are introduced. 
+
+## Project Details
+
+### Status of Deployment
+
+- Communiche App is deployed and can be accessed at: https://communiche.vercel.app/home
+- Application components are dockerized and currently running on cloud instance.
+### Project Overview
+
+The **Communiche App** was conceptualized as a feature-rich platform designed to connect individuals with shared interests, enabling users to create and participate in communities, engage with posts, upvote, comment, and discover relevant information. The project aimed to deliver a system that integrates social, community-driven interactions with advanced features such as user profiles, community management, content creation and gamification features such as badges.
+
+#### Objectives and Scope:
+The system was designed to:
+
+-   Foster user engagement through public and private communities with customizable templates and rules.
+-   Provide advanced functionality like user-interactions such as comments, following and likes, additionally search, interest selections, personalized recommendations and badges.
+-   Enable role-based management for creators and moderators, including tools for abuse reporting and badge assignment.
+
+#### Deliverables
+
+The final product successfully delivered all major planned features, meeting the functional and non-functional requirements outlined in the SRS. Key functionalities included:
+
+1.  **User Features**: Registration, login, profile management, and the ability to follow/unfollow users.
+2.  **Community Features**: Creation and management of public/private communities, role delegation, and advanced tagging for discoverability.
+3.  **Content Interaction**: Users could create, vote, comment on, and manage posts with structured templates.
+4.  **Search and Recommendations**: Search options, alongside with recommendation system that works according to user's interest selections.
+5.  **Abuse Reporting**: A robust abuse reporting mechanism, with notifications for moderators and transparent resolution processes.
+6.  **Badge and Achievement Systems**: Badges for user achievements and community-specific contributions, encouraging participation.
+7.  **Cross-Platform Compatibility**: Seamless functionality on both mobile and desktop platforms.
+
+
+### Software Requirements Specification
+
+Software Requirements Specification can be accessed at [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification)
+
+### Design
+You can find design related contents from the following:
+Designs: [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Designs](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Designs)
+Mock Ups: [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mock-Ups](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mock-Ups)
+
+### Status of the Project
+Status of Each Requirement:
+
+### Table of Requirements:
+
+### 1. User Registration:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 1.1.[Mobile] [Desktop] [573] Requirement: The unregistered user shall be able to register to the system easily with the main credentials: username and password. | Completed |             |
+| 1.2.[Mobile] [Desktop] [574] Requirement: The new user shall see and accept GDPR rules. | Completed |             |
+| 1.3.[Mobile] [Desktop] [573] Requirement: The new user shall see an invalid credentials message if he/she attempts to sign up with invalid credentials. | Completed |             |
+| 1.4.[Mobile] [Desktop] [573] Requirement: The new user shall be able to enter other optional information like age, gender, country, email, phone, short bio. | Completed |             |
+| 1.5.[Mobile] [Desktop] [574] Requirement: The user shall be able to select topics of his/her interests. | Completed |             |
+
+---
+
+### 2. User Login:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 2.1. Requirement: The user shall log in with a valid username and password. | Completed |             |
+| 2.2. Requirement: The user shall see an invalid credentials message if he/she attempts to log in with invalid credentials. | Completed |             |
+| 2.3. Requirement: The user shall logout once they want to shut down the system. | Completed |             |
+
+---
+
+### 3. Main Page:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 3.1. [Mobile] [Desktop] [574] Requirement: The user shall see activities of all public communities. | Completed |             |
+| 3.2. [Mobile] [Desktop] [574] Requirement: The user shall see the hot topics from communities. | Completed |             |
+| 3.3. [Mobile] [Desktop] [574] Requirement: The user shall search for other users by their name by clicking search button. | Completed |             |
+| 3.5. [Mobile] [Desktop] [574] Requirement: The user shall search for communities by their name by clicking search button. | Completed |             |
+| 3.6. [Mobile] [Desktop] [574] Requirement: The user shall search for posts by advanced search by clicking search button. | Partially | The post search with intervals is not present|
+| 3.7. [Mobile] [Desktop] [574] Requirement: The user shall see suggested communities. | Completed |             |
+| 3.8. [Mobile] [Desktop] [574] Requirement: The user shall do advanced search by templates, txt, geolocation, number, video, audio, file. | Not completed |The users may do a simple search for all the mentioned fields. The template search is nor present|
+| 3.9. [Mobile] [Desktop] [574] Requirement: The user shall see recent communities on the right side bar. | Completed |             |
+
+---
+
+### 4. Search Page:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 4.1. Requirement [Mobile] [Desktop] [574]: The user shall search for posts, communities, and users by advanced search by clicking the search button, selecting the type of the fields, and filling in the selected fields. | Completed |             |
+| 4.2. Requirement [Mobile] [Desktop] [574]: The user shall do the advanced search for posts by templates by their text, textarea, date, geolocation, number, image, video, audio, and file. | Not completed |             |
+| 4.3. Requirement [Mobile] [Desktop] [574]: The user shall filter communities based on their labels and tags. | Not completed |             |
+
+---
+
+### 5. Content Creation:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 5.1.[Mobile] [Desktop] [573] Requirement: The user shall share text-based content when he/she is enrolled in a community that has a template that enables text-based content share. | Completed |             |
+| 5.2. [Mobile] [Desktop] [573] Requirement: The user shall share video-based content when he/she is enrolled in a community that has a template that enables video-based content share. | Completed |             |
+| 5.3.[Mobile] [Desktop] [573] Requirement: The user shall share audio-based content when he/she is enrolled in a community that has a template that enables audio-based content share. | Completed |             |
+| 5.4.[Mobile] [Desktop] [573] Requirement: The user shall share image-based content when he/she is enrolled in a community that has a template that enables image-based content share. | Completed |             |
+| 5.5.[Mobile] [Desktop] [573] Requirement: The user shall share geolocation when he/she is enrolled in a community that has a template that enables geolocation content share. | Completed |             |
+| 5.6.[Mobile] [Desktop] [573] Requirement: The user shall share date-time content when he/she is enrolled in a community that has a template that enables date-time-based content share. | Completed |             |
+| 5.7.[Mobile] [Desktop] [573] Requirement: If a user clicks on the share button without filling all the mandatory fields the system shall display an error message. | Completed |             |
+| 5.8. [Mobile] [Desktop] [574] Requirement: The user shall select a label and a tag for each post they create. | Completed |             |
+
+---
+
+### 6. Content Management:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 6.1. [Mobile] [Desktop] [573] Requirement: The user shall see the content of a community when he/she enrolls in it. | Completed |             |
+| 6.2. [Mobile] [Desktop] [573] Requirement: The user shall vote for content in a community when he/she enrolls in it. | Completed |             |
+| 6.3. [Mobile] [Desktop] [573] Requirement: The user shall react to content with emojis in a community when he/she enrolls in it. | Completed |             |
+| 6.4. [Mobile] [Desktop] [573] Requirement: The enrolled user shall comment on posts in that community. | Completed |             |
+| 6.5. [Mobile] [Desktop] [573] Requirement: The enrolled user shall be able to post content. | Completed |             |
+| 6.6. [Mobile] [Desktop] [574] Requirement: The user shall see the post label and tag. | Completed |             |
+
+---
+
+### 7. Community Creation:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 7.1. Requirement[Mobile] [Desktop] [573]: A user shall create a community with the following information: community name, short description, community picture, rules, creation date. | Completed |             |
+| 7.2. Requirement[Mobile] [Desktop] [573]: A community creator shall create custom community rules. | Completed |             |
+| 7.3. Requirement[Mobile] [Desktop] [573]: A community creator shall create post templates with mandatory and non-mandatory fields. | Completed |             |
+| 7.4. Requirement[Mobile] [Desktop] [573]: The user shall be able to accept/decline invitations. | Completed |             |
+| 7.5. Requirement[Mobile] [Desktop] [573]: The community must have either public or private. | Completed |             |
+| 7.6. Requirement[Mobile] [Desktop] [573]: Private communities shall display title, description. | Completed |             |
+| 7.7. Requirement[Mobile] [Desktop] [574]: The system shall allow the community creator to set initial community tags or categories for better discoverability. | Completed |             |
+| 7.8. Requirement[Mobile] [Desktop] [573]: The user shall be able to create a community without creating a post template. The post template creation process shall be optional. | Completed |             |
+| 7.9. Requirement[Mobile] [Desktop] [573]: If a user starts to create a post template and decides to cancel, they shall be able to discard the template and navigate back to the Create Community page without saving any changes. | Completed |             |
+| 7.10. Requirement[Mobile] [Desktop] [573]: The community creator shall select a label and tag related to that label. | Completed |             |
+
+---
+
+
+### 8. Community Management:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 8.1. [Desktop][Mobile][574] Requirement: The community creator shall delegate the creator role to another user. | Completed |             |
+| 8.2. [Desktop][Mobile][574] Requirement: The community creator shall select moderators. | Completed |             |
+| 8.3. [Desktop][Mobile][574] Requirement: The community creator and moderators shall accept invitations. | Completed |             |
+| 8.4. [Desktop][Mobile][574] Requirement: The community creator and moderators shall invite other users. | Completed |             |
+| 8.5. [Desktop][Mobile][574] Requirement: The community creator shall assign a topic to the community. | Completed |             |
+| 8.6. [Desktop][Mobile][574] Requirement: The community creator shall remove a user. | Completed |             |
+| 8.7. [Desktop][Mobile][574] Requirement: The moderator shall remove a user. | Completed |             |
+
+---
+
+### 9. Following People:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 9.1. Requirement: [Desktop][Mobile][573] The user shall follow other users. | Completed |             |
+| 9.2. Requirement: [Desktop][Mobile][574] The user shall be able to view a list of users they are following and followers. | Completed |             |
+| 9.3. Requirement: [Desktop][Mobile][574] The user shall be able to unfollow users they no longer want to follow. | Completed |  It was working last deployment. Not working after the final deployment           |
+| 9.4. Requirement: [Desktop][Mobile][574] The user shall be able to follow other users on the platform. | Completed |             |
+
+---
+
+### 10. Enrollment and Leaving Communities:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 10.1. [Desktop][Mobile][573] Requirement: A user shall enroll in a public community. | Completed |             |
+| 10.2. [Desktop][Mobile][573] Requirement: A user shall see the custom rules of a community. | Completed |             |
+| 10.3. [Desktop][Mobile][573] Requirement: A user shall see activities when he/she is enrolled in a community. | Completed |             |
+| 10.4. [Desktop][Mobile][573] Requirement: A user shall quit a community. | Completed |             |
+| 10.5. [Desktop][Mobile][573] Requirement: A user shall see activities when he/she visits a public community without enrolling. | Completed |             |
+| 10.6. [Desktop][Mobile][573] Requirement: A user shall see labels and tags of communities. | Completed |             |
+
+---
+
+### 11. Private Communities:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 11.2. Requirement: The creator of a private community shall invite other users to private communities. | Completed |             |
+| 11.3. Requirement: A user shall receive an invitation when he/she is invited into a private community. | Completed |             |
+| 11.4. Requirement: A user shall have access to the private community when he/she accepts the private community invitation. | Completed |             |
+| 11.5. Requirement: A user shall reject a private community invitation. | Completed |             |
+
+---
+
+### 12. Suggestions:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 12.1. Requirement: The system shall provide suggested people based on user participation. | Completed |             |
+| 12.2. Requirement: The system shall provide suggested communities based on user participation. | Completed |             |
+
+---
+
+### 13. User Profiles:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 13.1. Requirement: The user shall create a profile by providing a bio, photo, birthdate, location and title. | Completed |             |
+| 13.2. Requirement: The user shall edit a profile. | Completed |             |
+| 13.3. Requirement: The user shall list the communities that is being enrolled. | Completed |             |
+| 13.4. Requirement: The user shall list the invitations of communities that s/he is a moderator/creator. | Completed |             |
+
+---
+
+### 14. Recommendations:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 14.1. Requirement: [Mobile][Desktop][574] The system shall recommend communities, posts, and users to users based on their activity and preferences. | Completed |             |
+
+---
+
+### 15. Badges:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 15.1.1. Requirement [Desktop][Mobile][574]: The system shall provide system-wide badges that users can earn by completing actions or reaching milestones applicable across the entire platform. | Completed |             |
+| 15.1.2. Requirement [Desktop][Mobile][574]: The system shall support predefined levels or tiers for system-wide badges to represent increasing levels of achievement. | Completed |             |
+| 15.1.3. Requirement [Desktop][Mobile][574]: The system shall display system-wide badges on the user’s profile in a section labelled “Badges.” | Completed |             |
+| 15.2.1. Requirement [Desktop][Mobile][574]: The system shall allow community admins to create and customize community-specific badges, with options to define badge name, icon, and criteria. | Completed |             |
+| 15.2.2. Requirement [Desktop][Mobile][574]: The system shall allow community admins to edit or retire badges to keep badge criteria and availability up to date with community guidelines. | Completed |             |
+| 15.2.3. Requirement [Desktop][Mobile][574]: Community-specific badges shall be applicable to the whole community or specific users chosen by the community admin. | Completed |             |
+
+---
+
+### 16. Activity Summary:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 16.1. Requirement [Desktop][Mobile][574]: While the user is offline on the system for a week or more, he/she shall see an activity summary. | Completed |             |
+| 16.2. Requirement [Desktop][Mobile][574]: The user shall see the activity summary as a pop-up on the home page. | Completed |             |
+| 16.3. Requirement [Desktop][Mobile][574]: The user shall see the activity summary for a timeline from his/her last login to the day he/she logged in again. | Completed |             |
+| 16.4. Requirement [Desktop][Mobile][574]: The activity summary shall have the popular posts in the communities where the user is a participant. | Completed |             |
+| 16.5. Requirement [Desktop][Mobile][574]: The activity summary shall have the new users in the communities where the user is a participant. | Completed |             |
+| 16.6. Requirement [Desktop][Mobile][574]: The activity summary shall have the new communities that the user might be interested in based on the current recommendation system. | Completed |             |
+| 16.7. Requirement [Desktop][Mobile][574]: The user shall see the activity summary on the home page. | Completed |             |
+
+---
+
+### 17. Abuse Report:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 17.1. [Mobile][Desktop][574] Requirement: Members of a community shall be able to report abuse. | Completed |             |
+| 17.2. [Mobile][Desktop][574] Requirement: The user with an admin role shall see the complaints of abuse and misconduct reported by the members on the dashboard. | Completed |             |
+| 17.3. [Mobile][Desktop][574] Requirement: The system shall notify moderators when an abuse report is filled. | Completed |             |
+| 17.4. [Mobile][Desktop][574] Requirement: The user shall report abuse on posts, comments, and messages. | Completed |             |
+
+---
+
+### 18. GDPR Compliance:
+
+| Requirement      | Status       | Explanation |
+|-----------------------------|--------------|-------------|
+| 18.1. The system shall obtain explicit consent from users for all data collection and processing activities and shall allow users to withdraw consent at any time, as required by GDPR. | Completed |             |
+| 18.2. The system shall clearly inform users about the types of data collected, purposes of data processing, and user rights through a Privacy Policy accessible on all platforms, in compliance with GDPR. | Completed |             |
+| 18.3. The system shall provide mechanisms for users to access, correct, and delete their personal data, in accordance with GDPR rights. | Completed |             |
+| 18.4. The system shall implement data minimization by collecting only the data necessary for its intended purposes and limiting data storage duration based on a defined retention policy. | Completed |             |
+   |
+
+### System Manual
+
+Requirements & Installation Instructions can be found here on repository README : [https://github.com/SWE-574-Group-4/Community-Management-System/blob/dev/README.md](https://github.com/SWE-574-Group-4/Community-Management-System/blob/dev/README.md)
+
+Mobile Installation Instructions can be found here: [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mobile-Installation-Instructions](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mobile-Installation-Instructions)
+
+### Test Results
+Unit Test Results can be found here: [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Unit-Test-Results](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Unit-Test-Results)
+User Test Results can be found here: https://docs.google.com/document/d/16vhDlSMykXoOQEh6AOBDnGdHb3oMy5SOXQzlnFPjcio/edit?tab=t.0
+
+### Individual Contributions
+## Member: Atakan Özgüner
+### Responsibilities:
+Development, Requirements, SRS, Documentation, Bug-Fixing, Tests
+
+### Main contributions:
+**1. Creating Brancing Strategy - Commit Strategy - Repository organziation. Clarify code documentation.**<br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/13
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Git-Workflows-and-Best-Practices
+
+**Code explanations:** <br>
+Branching strategies and commit rules are explained in terms of best practises for the group to follow as much as possible in order to create an organized code documentation.
+
+**2.Bugfix - Remove DOB field as it was not updated on change:**<br>
+**The related requirements:**<br>
+* 1.4.[Mobile] [Desktop] [573] Requirement: The new user shall be able to enter other optional information like age, gender, country, email, phone, short bio.
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/44
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/129
+
+**Code explanations:**<br>
+As date of birth fields were not updated correctly, creating bugfix stories and we have decided to omit that field and adjust database tables and frontend accordingly. I have made necessary changes and created PR along with 2 other issues for this.
+
+**Forgot Password mechanism is not working**  .<br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/59
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/129
+
+**Code explanations:**<br>
+We had HTTP 404 Error on forgot password mechanism, a known remaining bug that we decided the feature hada  low priority, I have made necessary updates to remove the field and change the frontend content accordingly.
+
+**4.Bug Fix: Remove Date of Birth Field Format on Sign-up**   <br>
+**The related requirements:**<br>
+* 1.4.[Mobile] [Desktop] [573] Requirement: The new user shall be able to enter other optional information like age, gender, country, email, phone, short bio.
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/98
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/129
+
+**Code explanations:**<br>
+Like the profile field, DoB field in the registration was creating similar issues and it is removed together.
+
+**5.Organize SRS Document:** <br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/99
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+
+**Code explanations:**<br>
+I have organized the SRS document, created related wiki pages for it and completed documentation.
+
+**5. Second MVP Report** <br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/145
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Milestone-2-Report-Preparation-%E2%80%90-Review
+
+**Code explanations:**<br>
+I have created the second MVP Report, requested individual contributions and finalized and pushed the changes.
+
+**5.Backend Unit Testing** <br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/146
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/160
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Unit-Test-Results
+
+**Code explanations:**<br>
+I have created testing suite for *all* backend API endpoints, created tests folder under backend, written each endpoint their respective tests, created Mock data for seamless integration and testing backend as it is, without database connection required. Utilized pytest for testing and mocking. Utilized pytest-cov for coverage reports. Created test reports and coverage reports.
+
+**5.Geolocation Bugfix** <br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/170
+
+**Code explanations:**<br>
+After demonstration we have realized that geolocation fails, either because of API key or because of API integration from our backend. As I was working on this bugfix issue, I couldn't healthily reproduce the error, and for the case it will not be fixed on the deployment, I rather created a second solution that utilizes a free API, OpenStreetMaps, for geolocation field interactions. Later it was discovered that minor updates and creating a new API key has resolved the problem so no PR was created for this issue.
+
+### Documentation
+* Git Workflows & Best Practices : https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Git-Workflows-and-Best-Practices
+* SRS Organziation: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+* Unit Test Results Reports : https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Unit-Test-Results
+* Milestone 2 Report Preparation: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Milestone-2-Report-Preparation-%E2%80%90-Review
+* Final Project Report Preparation: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Final-Project-Report-%E2%80%90-workspace
+
+### Demo: 
+
+Unit Test and test results have been the biggest issue that I've worked on for this project, creating unit tests for each endpoint that has a span of  around 1k+ lines of codes of test, mock data generation, with arrange - act - assert pattern and creating reports and coverage reports as output is the scope of this issue. For this issue I don't know if any screenshot will be meaningful, but I can include the link to the related wiki page's content here: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Unit-Test-Results
+
+
+### Pull Requests (MAJOR)
+
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/129 <br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/160 <br>
+
+
+### Table of Issues:
+| Issue Title       | URL                          | Type (Created/Assigned) |
+|-------------------|------------------------------|--------------|
+| Fix & Improve Geolocation Functionality   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/170)  | Assigned      |
+| List of Minor System Bugs   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/159)  | Assigned     |
+| Unit Testing   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/146)  | Assigned   |
+| Second MVP Report | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/145)  | Assigned     |
+| Organize SRS Document   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/99)  | Assigned   |
+| Remove DOB From Sign-up    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/98)  | Assigned|
+| Advanced Search w/ Specific Fields  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/77)  | Assigned|
+| Forgot Password Mechanism Bugfix   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/59)  | Assigned|
+| DOB Does not Update - Bugfix   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/44)  | Assigned|
+| Define Branching Strategy    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/13)  | Assigned   |
+
+## Member: Rashid
+### Responsibilities:
+Iteration tracking, team meeting management, code reviews and development of multiple features (listed below)
+
+### Main contributions:
+**1. Community Tag Selection Feature** - The users are able to select the tags when creating the communities. <br>
+
+**The related requirements:**<br>
+* ComC.15.[Mobile] [Desktop] [574]: While the users are on the Create Community page, they shall have the option to set community tags using a tag input field.
+
+**The related issue URLs:**<br>
+* [#89](https://github.com/SWE-574-Group-4/Community-Management-System/issues/89)
+
+**The URL to the relevant content (code):**<br>
+* [#148](https://github.com/SWE-574-Group-4/Community-Management-System/pull/148)
+
+**Code explanations:** <br>
+1. Added the Many-to-Many relationship between the Tag and Community models in models.py
+1.  Changed the POST request to handle the tag assignment when the community is created
+1.  Added the Select component in the frontend
+1.  Connected the frontend and backend with API Service
+
+**2. Community Tag Display** - the related tags are shown to users on the Communities and Community Detail pages.
+
+**The related requirements:**<br>
+* EC.4. [Desktop][Mobile][574]: A user shall see labels and tags of public communities on the home page, activity summary, and search results.
+
+
+**The related issue URLs:**<br>
+* [#109](https://github.com/SWE-574-Group-4/Community-Management-System/issues/109)
+
+**The URL to the relevant content (code):**<br>
+* [#150](https://github.com/SWE-574-Group-4/Community-Management-System/pull/150)
+
+**Code explanations:**<br>
+1. Changed the **GET** request to fetch the tags assigned to the community
+1. Added the **Tag** component in the client 
+1. Connected the frontend and backend with API Service
+
+**3. Important Fixes:** Updated the Community tags selection from static to using WikiData API + helped to fix the API calls
+
+**The related requirements:**<br>
+* 14.1.[Mobile][Desktop][574] Requirement: The system shall recommend communities, posts, and users to users based on their activity and preferences.
+
+**The related issue URLs:**<br>
+* [#110](https://github.com/SWE-574-Group-4/Community-Management-System/issues/110)
+
+**The URL to the relevant content (code):**<br>
+* [#189](https://github.com/SWE-574-Group-4/Community-Management-System/pull/189)
+
+**Code explanations:**<br>
+1. Changed the client API requests to the correct format. Before that, the URL was not dynamic and the recommendation system did not work when deployed
+
+### Documentation
+I was responsible for Managing meetings, iteration planning and task allocations. Here are the URLs for the meeting notes: <br>
+[Presentation Reflections ‐ 21.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Presentation-Reflections-%E2%80%90-21.10) <br> [Meeting Notes ‐ 19.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-19.10) <br> [Meeting Notes ‐ 15.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-15.10) <br> 
+[Meeting Notes ‐ 14.10 (in‐class)](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-14.10-(in%E2%80%90class)) <br> 
+[Meeting Notes ‐ 12.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-12.10) <br> 
+[Meeting Notes ‐ 08.10 and Bug List](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-08.10) <br> 
+[Meeting Notes ‐ 05.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-05.10) <br> 
+[Meeting Notes ‐ 01.10](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-01.10) <br> 
+[Meeting Notes - 28.09](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-28.09) <br> 
+[Meeting Notes - 24.09](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-24.09) <br> 
+[Meeting Notes - 23.09](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Meeting-Notes-%E2%80%90-23.09) <br>
+
+### Demo (Screenshots)
+<img width="780" alt="image" src="https://github.com/user-attachments/assets/62604581-d790-4bfe-8726-bb8161a95d24" /><br>
+Figure. Community tag selection screenshot <br>
+<img width="581" alt="image" src="https://github.com/user-attachments/assets/2197ddfa-26fb-4955-babb-ac4da176b260" /><br>
+Figure. Community tag view <br>
+
+### Code Review:
+Since I do not have the best code understanding in the team, mainly my responsibility was to review the codes with medium size, and testing most of the Pull-Requests locally <br>
+
+[#184](https://github.com/SWE-574-Group-4/Community-Management-System/pull/184) - Onur's PR foor the recommendation mechanism feature. Initially, there was an issue with the API requests and the migration documents. I helped Onur with the API requests on my own branch and we merged it. <br>
+[#181](https://github.com/SWE-574-Group-4/Community-Management-System/pull/181) - Irem's PR for the user-following feature. I have tested it locally and since there were no approved the merge. <br>
+[#134](https://github.com/SWE-574-Group-4/Community-Management-System/pull/134) - Mehmet's PR for the Template Search. I have mentioned in the comments that a more advanced search is necessary, but we decided to approve the current version and develop it more in the following iterations. <br>
+### Pull Requests
+* [#148](https://github.com/SWE-574-Group-4/Community-Management-System/pull/148) - it was merged into the main branch
+* [#150](https://github.com/SWE-574-Group-4/Community-Management-System/pull/150) - it was merged into a different branch and closed
+* [#189](https://github.com/SWE-574-Group-4/Community-Management-System/pull/189) - it was merged into a different branch and closed
+* [#130](https://github.com/SWE-574-Group-4/Community-Management-System/pull/130) - image and map bugfix
+
+### Table of Issues:
+| Issue Title       | URL                          | Type (Created/Assigned) |
+|-------------------|------------------------------|--------------|
+|Final Submission|[#195](https://github.com/SWE-574-Group-4/Community-Management-System/issues/195)|Created|
+|The list of minor system bugs|[#159](https://github.com/SWE-574-Group-4/Community-Management-System/issues/159)|Created|
+|Display Recommended Communities and Posts|[#110](https://github.com/SWE-574-Group-4/Community-Management-System/issues/110)|Created|
+|Community Labels shown to public|[#109](https://github.com/SWE-574-Group-4/Community-Management-System/issues/109)| Created and Assigned|
+|See your followers/followings|[#108](https://github.com/SWE-574-Group-4/Community-Management-System/issues/108)|Created|
+|User following|[#107](https://github.com/SWE-574-Group-4/Community-Management-System/issues/107)| Created|
+|Create the Project Roadmap|[#38](https://github.com/SWE-574-Group-4/Community-Management-System/issues/38)|Created and Assigned|
+|Add a Questionnaire Mockup |[#28](https://github.com/SWE-574-Group-4/Community-Management-System/issues/28)|Created and Assigned|
+
+### Other:
+Additionally, I have developed a Frontend for the Interest Selection Form. But it is not on the latest version of the software because the user interests part was not ready when I have developed it and there was not enough time to update it
+<img width="743" alt="image" src="https://github.com/user-attachments/assets/9cd39e8c-0fa6-432b-855c-6ea1770ee83b" />
+
+## Member: Burak Cosar
+
+**Responsibilities**: Development, Documentation, Mockups
+
+**Main contributions:**
+
+- Reporting Functionality (logic, design and backend & frontend implementation)  
+- System-Wide Badges (logic, design and backend & frontend implementation)  
+- Community Specific Badges (logic, design and backend & frontend implementation)  
+- Badges on User Profiles (logic, design and backend & frontend implementation)  
+- Enumerated Field Type (backend & frontend implementation)
+
+**Non-code-related significant issues:**
+
+- User Scenarios and Scenario Mock Ups  
+- Final Presentation Scenario
+
+**Pull Requests:**
+
+- Reporting Functionality  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/141](https://github.com/SWE-574-Group-4/Community-Management-System/pull/141)  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/163](https://github.com/SWE-574-Group-4/Community-Management-System/pull/163)
+
+- System Wide Badges  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/177](https://github.com/SWE-574-Group-4/Community-Management-System/pull/177)   
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/183](https://github.com/SWE-574-Group-4/Community-Management-System/pull/183)
+
+- Community Specific Badges  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/188](https://github.com/SWE-574-Group-4/Community-Management-System/pull/188)
+
+- Badges on User Profiles  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/172](https://github.com/SWE-574-Group-4/Community-Management-System/pull/172)
+
+- Enumerated Field Type  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/180](https://github.com/SWE-574-Group-4/Community-Management-System/pull/180) 
+
+- Terms & Conditions Page Creation  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/118](https://github.com/SWE-574-Group-4/Community-Management-System/pull/118)
+
+- Privacy Policy Page Creation  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/125](https://github.com/SWE-574-Group-4/Community-Management-System/pull/125) 
+
+- Other  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/27](https://github.com/SWE-574-Group-4/Community-Management-System/pull/27)  
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/66](https://github.com/SWE-574-Group-4/Community-Management-System/pull/66)   
+  \- [https://github.com/SWE-574-Group-4/Community-Management-System/pull/121](https://github.com/SWE-574-Group-4/Community-Management-System/pull/121)
+
+**Executive Summary:**
+
+In this part, I will summarize the reason, rationale, logic and solution aspects of the work that I have contributed to the team, feature by feature.
+
+In terms of coding, my main approach has been to understand and follow the system architecture and create a fitting solution, in terms of how the original creator, Mehmet, established backend, database, API and frontend elements. Thanks to this approach, I successfully handled multiple challenging tasks in this project.
+
+For the explanations regarding the features, I will refer to the requirements in the SRS: [https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification)  
+
+**Reporting functionality** (SRS, Section 17), is an important feature which requires challenges such as recording the abused content (specific post/comment), passing the “reported” and “reporter”, and a management aspect for the community managers.
+
+For this task, I want to highlight that I handled various complexities with a single “Reports” backend model, then on the front end, provided both users and admins with usable forms and dashboards to engage with the functionality.
+
+![Screenshot 2024-12-22 at 10 34 56](https://github.com/user-attachments/assets/6e0f1041-ed84-47ae-9011-7e386da4b1ea)
+
+
+**System Wide Badges** (SRS, Section 15.1), was not initially assigned to me; however, it turned into my passion project after I took it over. Badges have always been among the emphasized requirements by the customer, and I used my imagination to perfect it, even in the early days; for reference, you can see the mockups I created in [user scenarios](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/User-Scenarios-&-Mockups-for-Communiche):
+
+![Screenshot 2024-12-22 at 19 46 37](https://github.com/user-attachments/assets/c9e9a37b-90ee-4a7a-bdba-994d3ed1adaa)
+
+I find it very insightful that while drawing the mockups, I developed an understanding of the logic and design of badges.
+
+In the project, badges were originally being created by another team member. The task came out as requiring fixes: when a badge was achieved, all the other badges were also being assigned. On the other hand, there were only 5 types of badges.
+
+I volunteered to take over and work on the badges for a fix, where I also convinced my teammates that a better design would go a long way.
+
+Firstly, I detected the bug in the existing feature. The problem was due to looping of achievement criteria when a criterion triggered the badge assignment method. To fix this, I created 8 different types of badge assignment logic:
+
+![Screenshot 2024-12-22 at 09 30 15](https://github.com/user-attachments/assets/f6ea439b-7e26-41d4-810c-55e97bf57ac9)
+
+Along with this logic, I made sure that every type of content creation is only tied to its relevant badge assignment criteria. For example, a post creation task only checks for post creation-related badge assignments. This approach proved as a success; however, there was more to be done, namely the design.
+
+The existing design of badges was a tabular format, which was getting the job done but lacking “excitement”. I insisted to my teammates that I could take this over and make a success of it. Thanks to my past experience in frontend operations, my familiarity with CSS served me well in this effort. Below is the old design of badges:
+
+![Screenshot 2024-12-22 at 09 38 56](https://github.com/user-attachments/assets/2549a6d3-e764-49e5-bfad-d90677fa766e)
+
+I envisioned a grid with 3 columns, each column representing a tier; Bronze, Silver, Gold. In order to build suspense for the user, I implemented a grayscale display for the badges that were “Not Achieved”. I created 8 badge types, with a neat selection of royalty-free images. The end product was worth the effort, since the bug fix of the element of excitement was successfully done:
+
+![392093457-0045e939-a8e4-4c47-bf9b-f7dcc2bdee98](https://github.com/user-attachments/assets/779bb7d9-d221-458a-9513-cd6b10f1fa77)
+
+**Community Specific Badges** (SRS, Section 15.2) was kickstarted by another member while I was perfecting the System-Wide Badges. However; because my implementations brought System-Wide Badges to a certain level, I decided to jump in and bring Community Specific Badges to the same level. In the early days of the project, I envisioned and created the mockup of Community Specific Badge creation as below:
+
+![Screenshot 2024-12-22 at 09 47 21](https://github.com/user-attachments/assets/b11105ea-da76-4c43-962a-8c3d7ae6b8bd)
+  
+Firstly, I adapted the existing badge assignment logic to a customized-community specific approach, then adapted the system-wide user badge view design to the community. Then, I decided that there needed to be more customization for this type of feature. My teammate already created a badge creation form; however, I envisioned that more customizability would provide better user experience. In this line of thought, I made use of a long list of emoticons as badge icons, and also background color options. These seemingly small additions made a big difference in experience, as approved by the team.
+
+Additionally, I created the “Special Reward” which can be assigned to a user in a community, regardless of achievements. The end view of this task looks like this:
+
+![Screenshot 2024-12-22 at 10 00 48](https://github.com/user-attachments/assets/db2e99ec-f317-49b4-8682-303b66fcc549)
+
+**Badges on User Profiles** (SRS, Section 15\) Both during and after badge-related implementations; I made sure that these achievements are visible on the user’s profile page. Importantly, I made sure that Special Rewards made the user feel like a “star”:
+
+![Screenshot 2024-12-22 at 10 04 46](https://github.com/user-attachments/assets/dfe12295-531a-42eb-bee0-6c00b991578b)
+
+**Enumerated Field Type** is among the often mentioned requirements by the customer. In order to make this possible, I needed to make sure both template and post creation forms would work fine with the functionality. Additionally, I envisioned using Wikidata tags to base enumeration on. In the backend logic, I used 2 API connections to Wikidata; one for fetching entities for keywords, so that the community admin can select an existing entity relevant to the keyword for enumeration, the other is to populate enumerated field options based on the selected keyword entity. The first one is a straightforward keyword search in Wikidata:
+
+![Screenshot 2024-12-22 at 10 20 49](https://github.com/user-attachments/assets/f6bcd706-9eb3-47d0-829f-21f737abb7fd)
+
+In the second part, I send a SparQL query to the Wikidata (which is made to a different endpoint: [https://query.wikidata.org/sparql](https://query.wikidata.org/sparql)) to populate the label fields of subclasses of the selected entity:  
+
+![Screenshot 2024-12-22 at 19 51 25](https://github.com/user-attachments/assets/329a02d5-dac8-42c9-8c9a-ecf0f63177c5)
+
+For example, if “house cat” is selected (Q146), then enumerated field options would be limited to types of house cats:
+
+![Screenshot 2024-12-22 at 19 51 39](https://github.com/user-attachments/assets/db4a1ef7-72d5-445d-bb90-88c2dd7827a0)
+
+**Table of Major Issues**
+
+| Issue Title | URL | Note |
+| :---- | :---- | :---- |
+| Reporting an abuse as a member | https://github.com/SWE-574-Group-4/Community-Management-System/issues/84 | Assignee |
+| Add more badges(see note) | https://github.com/SWE-574-Group-4/Community-Management-System/issues/166 | Assignee (In this issue, badge assignment logic and badge design was recreated as a whole, relevant PR is linked to issue) |
+| Community Specific Badges | https://github.com/SWE-574-Group-4/Community-Management-System/issues/168 | Assignee |
+| On the public profile show all achieved badges to all users | https://github.com/SWE-574-Group-4/Community-Management-System/issues/167 | Assignee |
+| Enumerated field type  | https://github.com/SWE-574-Group-4/Community-Management-System/issues/178 | Creator & Assignee |
+| Create User Scenarios & Mockups for Documentation | https://github.com/SWE-574-Group-4/Community-Management-System/issues/96 | Creator & Assignee |
+
+## Member: Cemile Elif Top
+### Responsibilities:
+Development, Test, Pull Request Review, Requirements, Project Planning, Documentation, Bug-Fixing
+
+### Main contributions:
+**1. System-Wide Badges:** User earns badges based on their activities on the system.<br>
+
+**The related requirements:**<br>
+* The system shall provide system-wide badges that users can earn by completing actions or reaching milestones applicable across the entire platform.
+* The system shall support predefined levels or tiers for system-wide badges to represent increasing levels of achievement.
+* The system shall display system-wide badges on the user’s profile in a section labelled “Badges.”
+* The system shall allow users to earn badges by completing actions such as posting content, receiving upvotes, or reaching milestones like anniversaries or user levels.
+* The system shall provide predefined badges for system-wide achievements such as “Top Contributor,” “1-Year Member,” or “10,000 Upvotes Received.”
+* The system shall display a visual representation of badges, including the badge icon and title, in the user’s profile.
+* The system shall automatically update the user’s profile with the appropriate badge once a milestone or activity threshold is achieved.
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/68
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/137
+
+**Code explanations:** <br>
+In the application, there are two type of badges: system-wide and community specific. The system-wide badges are defined by the system admin and they are applicable for all the users regardless of the communities. 
+There are 8 different badges and each of them has three tiers like in the figure 1.
+Community Specific badges are custom badges which are defined by the community admins. Their criteria must be satisfied within the community they created. To create a community Specific Badge, badge name, badge description, badge criteria and, badge ico are selected. User can select different badge criteria.
+Badges are displayed in the Community Details page under the Badges tab. Like the system-wide badges.
+Community-specific badges are defined in the CommunityBadge model. Each badge has attributes like name, description, criteria, background_color, and icon. The criteria attribute is a JSON field that specifies the conditions under which the badge is awarded. Badges are assigned to users through the UserCommunityBadge model. The assign_badge class method checks if the user already has the badge before creating a new UserCommunityBadge instance. Methods in the CommunityBadge model evaluate whether a user meets the criteria for a badge.
+
+**2.Community-Specific Badges Requirements:** Custom badges for communities.<br>
+**The related requirements:**<br>
+* The system shall allow community admins to create and customize community-specific badges, with options to define badge name, icon, and criteria.
+* Community admins shall be able to access a badge management interface in the community settings.
+* The badge management interface shall allow admins to create badges by specifying a badge name, icon, and the criteria for earning the badge (e.g., number of posts, membership duration).
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/168
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/69
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/tree/168-community-specific-badges
+
+**Code explanations:**<br>
+Community badges are custom badges that are defined by the community admins. Their criteria must be satisfied within the community they created. To create a community-specific badge, badge name, badge description, badge criteria, and, badge ico are selected. Badges are displayed in the Community Details page under the Badges tab. Like the system-wide badges.
+Community-specific badges are defined in the CommunityBadge model. Each badge has attributes like name, description, criteria, background_color, and icon. The criteria attribute is a JSON field that specifies the conditions under which the badge is awarded. Badges are assigned to users through the UserCommunityBadge model. The assign_badge class method checks if the user already has the badge before creating a new UserCommunityBadge instance. Methods in the CommunityBadge model evaluate whether a user meets the criteria for a badge.
+
+**3.Notifications:**  Users receive an in-app notification when they earn a new system-wide badge.<br>
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/68
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/137
+
+**Code explanations:**<br>
+In the user profile, there is a My Notification Section (please check figure 2).
+In this section, the user can see the notifications received with the date. Whenever a new system-wide or community-specific badge is earned, a new notification is received. 
+The Notification model is defined in the models.py file. It includes fields such as user, message, is_read, and created_at.Notifications are created using the Notification.objects.create method. For example, when a user earns a new badge, a notification is created to inform the user about this achievement. The send_in_app_notification function is used to create notifications for badge achievements. The Notifications component in the frontend handles fetching and displaying notifications.
+
+**4.Bug Fix:**  Private communities are visible to all users:<br>
+**The related requirements:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification#11-private-communities
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/36
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/119 
+
+**Code explanations:**<br>
+An extra check is added in the frontend to display the public or communities that user joined in the home screen. 
+
+**5.Bug Fix:**  When the post is created, the fields do not have headings:<br>
+**The related requirements:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification#5-content-creation
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/52
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/117
+
+**Code explanations:**<br>
+"PostTable" component is updated to display field names in the frontend.
+
+### Documentation
+* Building the Software Requirements Specification structure: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+* Adding new requirements for new features: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+* Structuring Wiki: https://github.com/SWE-574-Group-4/Community-Management-System/wiki
+* Entry and exit criteria definition for task board columns: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Column-Descriptions-of-the-Task-Board
+* Mock-up screen creation (tag selection, search, activity stream, community creation): https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mock-Ups
+* User story creation: [https://github.com/SWE-574-Group-4/Community-Management-System/issues?q=​​](https://github.com/SWE-574-Group-4/Community-Management-System/issues?q=%E2%80%8B%E2%80%8B)
+* Testing and bug reporting: https://github.com/SWE-574-Group-4/Community-Management-System/issues/26
+
+### Demo (Screenshots)
+Figure 1: ![image](https://github.com/user-attachments/assets/45cd3fee-4a35-464c-a272-c4fd9a311be0)
+Figure 2: ![image](https://github.com/user-attachments/assets/6c57990e-fced-4605-a432-c25fa1c37df9)
+**Demo Video: **https://youtu.be/ycJoXl9iIcU
+
+### Code Review:
+**AddJenkinsfile #17:**<br>
+* Onur's PR
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/17
+* It is a Jenkins file to build the deployment pipeline.
+* As result, deployment pipeline is built.
+
+**Update issue templates #27:**<br>
+* Burak's PR
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/27
+* It contains issue templates for task, feature, and bug reporting.
+* As result, issue templates are created.
+
+**Update issue templates #27:**<br>
+* Burak's PR
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/27
+* It contains issue templates for task, feature, and bug reporting.
+* As result, issue templates are created.
+
+**Add badge; types, layout, 8 assignment logic #177:**<br>
+* Burak's PR
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/177
+* It contains badge logic fixes and a beautiful representation of system-wide badges on the badges and profile page.
+* As a result, system-wide badges logic is fixed, instead of tabular representation more beautiful representation is created.
+
+**Community specific badges #188:**<br>
+* Burak's PR: 
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/188
+* It contains migration correction for community-specific badges, Special badge assignments, and UI improvements.
+* As a result, community-specific badges are added to the application 
+
+**Recommendationfix #190:**<br>
+* Onur's PR.
+* Pull Request: https://github.com/SWE-574-Group-4/Community-Management-System/pull/190
+* It contains merges to the dev branch and recommendation mechanism.
+* This branch contains recommendation fixes and it is used for the deployment.
+
+### Pull Requests (MAJOR)
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/137 <br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/119 <br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/117 <br>
+
+### Table of Issues:
+| Issue Title       | URL                          | Type (Created/Assigned) |
+|-------------------|------------------------------|--------------|
+| Earning System-Wide Badges   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/68)  | Assigned      |
+| Community Specific Badges   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/168)  | Assigned     |
+| Creating Community-Specific Badges   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/69)  | Assigned   |
+| Private communities are visible to all users | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/36)  | Assigned     |
+| When the post is created, the fields do not have headings   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/52)  | Assigned   |
+| Enter and exit criteria of columns in the task board    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/10)  | Created      |
+| Wiki Page Creation  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/11)  | Created     |
+| Run Development Environment   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/15)  | Created   |
+| Advanced search Mock Ups   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/22)  | Created     |
+| Activity Summary Mock Ups    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/23)  | Created   |
+| Topic Selection and Topic Filtering  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/24)  | Created      |
+| User Story Creation - Fill Backlog | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/25)  | Created     |
+| Email address already used error message does not display   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/26)  | Created   |
+| Community Based Badges Requirements   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/32)  | Created     |
+| Community Based Badges Mockups   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/33)  | Created   |
+| Post and Community Tagging Requirements | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/34)  | Created      |
+| Post and Community Tagging Mockups   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/35)  | Created     |
+| Private communities are visible to all users   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/36)  | Created   |
+| Milestone 1 Presentation | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/63)  | Created     |
+| Milestone 1 Deliverable Report  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/64)  | Created   |
+| Demo Preparation  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/65)  | Created      |
+| Serving the API through SSL | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/144)  | Created     |
+| Second MVP Report | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/145)  | Created   |
+| Unit Testing | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/146)  | Created     |
+| Notifications keep coming after the first badge is earned | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/156)  | Created   |
+
+## Member: Onur Altınkurt
+### Responsibilities: DevOps, Development
+
+### Main contributions:
+**1. DevOps:**<br> My contributions to the DevOps processes focused on establishing a reliable and scalable deployment pipeline. I set up two Amazon EC2 instances: one for hosting applications (backend, frontend, and MySQL) and another for Jenkins, ensuring efficient CI/CD operations. Given the resource requirements of npm and Jenkins, I opted for non-free-tier instances to avoid performance limitations. Pipelines automate pulling the code from GitHub, building Docker images, pushing them to Amazon ECR and deploying containers to the application server. <br>
+I designed two Jenkins pipelines; one for backend and one for frontend deployment.
+Pipelines include 4 stages, they automate pulling the code from GitHub, building Docker images, pushing them to Amazon ECR and deploying containers to the application server.<br>
+I used Amazon ECR to maintain version control of Docker images, enabling quick rollbacks to previous versions also ensured a robust deployment process by separating application hosting and CI/CD operations across dedicated EC2 instances.
+
+**The related requirements:**<br>
+* No requirements specified for DevOps.
+
+**The related issue URLs:**<br>
+* [Set up CI/CD pipeline](https://github.com/SWE-574-Group-4/Community-Management-System/issues/8)
+
+**The URL to the relevant content (code):**<br>
+* [Jenkins Pipelines](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Jenkins-Pipelines)
+* [Dockerfiles](https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Dockerfiles)
+
+**2. Post Tag:**<br>
+Post tags in Communiche are a key feature I contributed to by integrating a dynamic tagging system with Wikidata. This effort involved designing and implementing a mechanism for users to search and select meaningful tags for posts. Post tag mechanism also played a critical role in the platform’s personalized recommendation system.
+
+
+**The related requirements:**<br>
+* 5.8. [Mobile] [Desktop] [574]Requirement: The user shall select a label and a tag for each post they create. 
+
+**The related issue URLs:**<br>
+* [Selecting a Tag for Each Post](https://github.com/SWE-574-Group-4/Community-Management-System/issues/80)
+
+**The URL to the relevant content (code):**<br>
+* [Add post tags](https://github.com/SWE-574-Group-4/Community-Management-System/pull/140)
+* [Recommendationfix](https://github.com/SWE-574-Group-4/Community-Management-System/pull/190)
+
+**3. Interest Selection:**<br> I implemented the interest selection feature for the project, integrating a dynamic system that allows users to search and choose interests using Wikidata. This ensures that interest tags are not only relevant but also tied to real-world entities, improving the accuracy and usability of recommendations. <br>
+
+
+**The related requirements:**<br>
+* 1.5.[Mobile] [Desktop] [574] Requirement: The user shall be able to select topics of his/her interests
+
+**The related issue URLs:**<br>
+* [Interests Selection on Sign-Up](https://github.com/SWE-574-Group-4/Community-Management-System/issues/72)
+
+**The URL to the relevant content (code):**<br>
+* [Add recommendation mechanism&interest selection](https://github.com/SWE-574-Group-4/Community-Management-System/pull/184)
+* [Recommendationfix](https://github.com/SWE-574-Group-4/Community-Management-System/pull/190)
+
+
+**4. Recommendation:**<br> I developed the recommendation mechanism for the project. The system dynamically compares the tags and related entities associated with posts and communities against the user-selected interests to generate personalized recommendations. This approach ensures that the suggestions are not only accurate but also contextually relevant to each user's preferences.
+
+The mechanism uses Wikidata's structured relationships to enhance recommendation accuracy by linking user-selected interests to related entities. For instance, if a user selects an interest like "Artificial Intelligence," the system also considers related tags, such as "Machine Learning" or "Deep Learning," when scoring posts and communities. This ensures that recommendations go beyond direct matches, exploring semantically connected topics to improve user discovery.
+
+The system is designed to be adaptive, updating recommendations in real time as users refine their interests or as new posts and communities are added. This dynamic functionality ensures that the recommendations remain up-to-date and personalized, maintaining high engagement levels. <br>
+
+
+**The related requirements:**<br>
+* 14.1.[Mobile][Desktop][574] Requirement: The system shall recommend communities, posts, and users to users based on their activity and preferences.
+
+**The related issue URLs:**<br>
+* [Display Recommended Communities and Posts](https://github.com/SWE-574-Group-4/Community-Management-System/issues/110)
+
+**The URL to the relevant content (code):**<br>
+* [Recommendationfix](https://github.com/SWE-574-Group-4/Community-Management-System/pull/190)
+
+
+### Documentation
+### Demo (Screenshots)
+<img width="468" alt="image" src="https://github.com/user-attachments/assets/47e972e3-ab89-4ec2-8fa8-b603c0a1db5f" /> <br>
+<img width="283" alt="image" src="https://github.com/user-attachments/assets/a1156e04-9f42-419e-ab39-413d8f849f92" /><br>
+![image](https://github.com/user-attachments/assets/b1e8fdfe-cd0f-4f92-83fe-c3e76922fca9)<br>
+[CI/CD Demo Video](https://drive.google.com/file/d/1ufl5bOSXhvufFsG9TA0CBJNPzvb8rRYY/view?usp=drive_link)
+
+
+
+### Code Review:
+**Clearly answer the following questions by specifying:**<br>
+* – Whose code you reviewed by indicating the name of your team member and the code you reviewed. Provide the relevant pull request, code review, and conversation.
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/155 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/154 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/142 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/140 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/122 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/97 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/92 (Mehmet Eyüpoğlu)
+* – https://github.com/SWE-574-Group-4/Community-Management-System/pull/81 (Mehmet Eyüpoğlu)
+<br>I reviewed infrastructure related pull requests. 
+
+
+### Pull Requests (MAJOR)
+…
+* [Add post tags](https://github.com/SWE-574-Group-4/Community-Management-System/pull/140)
+* [Add recommendation mechanism&interest selection](https://github.com/SWE-574-Group-4/Community-Management-System/pull/184)
+* [Recommendationfix](https://github.com/SWE-574-Group-4/Community-Management-System/pull/190)
+
+### Table of Issues:
+| Issue Title                                   | URL                                                                 | Type       |
+|----------------------------------------------|---------------------------------------------------------------------|------------|
+| Milestone 1 Deliverable Report               | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/64)  | Assigned   |
+| Demo Preparation                             | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/65)  | Assigned   |
+| Issue Templates                              | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/3)   | Assigned   |
+| Set up CI/CD pipeline                        | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/8)   | Assigned   |
+| Run Development Environment                  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/15)  | Assigned   |
+| Serving the API through SSL                  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/144) | Assigned   |
+| Selecting a Tag for Each Post                | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/80)  | Assigned   |
+| Interests Selection on Sign-Up               | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/72)  | Assigned   |
+| Display Recommended Communities and Posts    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/110) | Assigned   |
+
+### Other:
+_Describe any other work you performed (if applicable)._
+
+## Member: İrem
+### Responsibilities:
+Development, User Acceptance Testing, Bug Fixing, Mock ups, Documentation, Bug issue creation & validation, Bug reporting
+
+### Main contributions:
+* [Community rules](https://github.com/SWE-574-Group-4/Community-Management-System/issues/176)
+* [User Following](https://github.com/SWE-574-Group-4/Community-Management-System/issues/107)
+* [User search does not work](https://github.com/SWE-574-Group-4/Community-Management-System/issues/58)
+* [Remove Post page is displayed empty](https://github.com/SWE-574-Group-4/Community-Management-System/issues/61)
+
+### Non-code-related significant issues:
+* User acceptance test case creation and run with deployed system
+* Bug reporting of final system
+* Requirements creation (https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification)
+* Creation of Abuse Report mockup
+* Creating issues with acceptance criteria after finding bugs as a team.
+* Creation of labels 
+
+### User Following/Unfollowing Mechanism
+Description: Users should be able to follow other users on the platform.
+**The related requirements:**<br>
+* High-Level Requirements:
+* 9.1: The user shall follow other users. (Status: Completed)
+* 9.2: The user shall be able to view a list of users they are following and followers. (Status: Completed)
+* Explanation: It was working during the last deployment but stopped functioning after the final deployment.
+* 9.3: The user shall be able to unfollow users they no longer want to follow. (Status: Completed)
+* 9.4: The user shall be able to follow other users on the platform. (Status: Completed)
+* Detailed Requirements for Following People (FP):
+* FP.1.1: While the user is viewing a community post, they shall click on the username to navigate to the user profile page. (Status: Completed)
+* FP.1.2: While the user is viewing a comment under a post, they shall click on the username in the comment to navigate to the user profile page. (Status: Completed)
+* FP.1.3: While the user is viewing the search results, they shall click on the username in the result to navigate to the user profile page. (Status: Completed)
+* FP.1.4: While the user is viewing another user's profile page, they shall click on the "Follow" button to follow that user. (Status: Completed)
+* FP.1.5: While the user is viewing another user's profile page, the system shall change the "Follow" button to "Following" when the user successfully follows that profile. (Status: Completed)
+* FP.1.6: While the user is viewing another user's profile page, if the profile is private, the system shall display a "Request Sent" message after the user clicks the follow button, and they shall not see the "Following" status until the request is approved. (Status: Not Completed)
+* Explanation: Private profile functionality is not implemented.
+* FP.1.7: While the user is viewing their profile page, they shall be able to click on a "Following" tab to see a list of users they are following. (Status: Not Completed)
+* FP.1.8: While the user is viewing their profile page, they shall be able to click on a "Followers" tab to see a list of users who are following them. (Status: Not Completed)
+* FP.1.9: While the user is viewing another user's profile page, they shall click on the "Unfollow" button to unfollow that user. (Status: Completed)
+* FP.1.10: While the user is viewing another user's profile page, the system shall change the "Following" button to "Follow" when the user successfully unfollows that profile. (Status: Completed)
+
+**The related issue URLs:**<br>
+* [User Following](https://github.com/SWE-574-Group-4/Community-Management-System/issues/107)
+
+**The URL to the relevant content (code):**<br>
+* [PR #195](https://github.com/SWE-574-Group-4/Community-Management-System/issues/195)
+* [Add is_followed field to UserResponseType and ProfileType](https://github.com/SWE-574-Group-4/Community-Management-System/pull/138)
+* [Add followers and followings functionality with UI components #175](https://github.com/SWE-574-Group-4/Community-Management-System/pull/175)
+
+**Code explanations:** <br>
+* Issue description: The user following/unfollowing system in this project helps users easily manage their social connections. Users can follow or unfollow others and see lists of their followers and followings.
+* Backend system: The backend, built with Django REST Framework, provides APIs to handle follow actions, check follow status, and retrieve follower and following lists. It uses models and serializers to organize the data. 
+
+*Frontend System: The frontend, made with React and TypeScript, includes a FollowButton component that updates dynamically and shows error messages if something goes wrong.
+Click username to reach follow button.
+![Screenshot 2024-12-22 at 20 29 12](https://github.com/user-attachments/assets/e5e09cb4-8bc8-461c-a2b8-fc24c43b3e25)
+ Click follow button to follow user
+![Screenshot 2024-12-22 at 20 29 39](https://github.com/user-attachments/assets/cfe8c2f9-fc8e-49dc-a0b3-2b525bd8ce2f)
+Click unfollow button to unfollow user
+![Screenshot 2024-12-22 at 20 30 49](https://github.com/user-attachments/assets/1c781090-eed3-4c11-b584-d2c2f3cb6972)
+Go to my following section from profile page by clicking from right top corner
+![Screenshot 2024-12-22 at 20 31 40](https://github.com/user-attachments/assets/332e656b-79bb-46a3-b9a6-31f5f5218ce6)
+My following list.
+![Screenshot 2024-12-22 at 20 32 28](https://github.com/user-attachments/assets/023b2fcb-67b8-44cb-bf76-a3d249ba21f7)
+You see My following list from settings bu clicking the related tab
+![Screenshot 2024-12-22 at 20 34 09](https://github.com/user-attachments/assets/7fe0959c-76d4-4d2e-9b99-c96ef627f80f)
+I have created Followers section as well work as following system.
+![Screenshot 2024-12-22 at 20 37 15](https://github.com/user-attachments/assets/c4a3e272-84e0-4be2-acdd-98d78d29ede9)
+
+
+**2. Community rules:** Community rule feature is necessary before creating a community for a safe community. It is created and edited by community owner/moderator <br>
+**The related requirements:**<br>
+* 7.2. Requirement[Mobile] [Desktop] [573]: A community creator shall create custom community rules. Completed
+* ComC.10.[Mobile] [Desktop] [573]: While the users are on the Create Community page, they shall enter the community rules into the community rules text field by using English letters and numbers.
+* ComC.11.[Mobile] [Desktop] [573]: While the users are on the Create Community page If they enter a text that has anything else than English letters or numbers in the community rules field, the save button shall remain unclickable and greyed out. NotCompleted
+* ComC.12.[Mobile] [Desktop] [573]: While the users are on the Create Community page, they shall click on the save button to save that template after they define at least one template and community rules. HalfCompleted (Community rules part is completed.)
+* ComC.14.[Mobile] [Desktop] [573]: While the users are on the Create Community page If they do not define at least one template and community rules, the save button shall remain unclickable and greyed out. NotCompleted
+
+**The related issue URLs:**<br>
+* [Community rules](https://github.com/SWE-574-Group-4/Community-Management-System/issues/176)
+**The URL to the relevant content (code):**<br>
+* [176 add community description and rules field #181](https://github.com/SWE-574-Group-4/Community-Management-System/pull/181)
+
+**Code explanations:**<br>
+he Rules feature in this React project shows community rules in a simple and clear way. It gets the rules from the backend and displays them in a nice card format. It uses React tools like useState to store the rules and useEffect to fetch the latest rules when needed.
+In backend, I needed to change model file by adding rule section, because the backend database must store the rules for each community. Also, I added rule in serializer too. Adding the rule in the serializer was necessary to convert the rule data from the database into a format that the API can send to the frontend.
+
+### Demo 
+Create rules while creating community
+(Sc
+![Screenshot 2024-12-22 at 20 44 36](https://github.com/user-attachments/assets/a6f5f041-ed51-4606-ab5c-0208d241b2a0)
+reenshots)
+Rules is seen in community box in the feed and also details tab in community page.
+![Screenshot 2024-12-22 
+![Screenshot 2024-12-22 at 20 46 17](https://github.com/user-attachments/assets/52cb526c-9340-46a1-9b5a-92e184cbcbce)
+at 20 45 51](https://github.com/user-attachments/assets/b9d469f7-bfb4-443f-9df9-0add902e58a9)
+
+Rules can be seen from Rules tab as well:
+![Screenshot 2024-12-22 at 20 47 15](https://github.com/user-attachments/assets/d7be6ab4-3afc-4f14-8d00-cd65723e1baf)
+
+
+### Pull Requests (MAJOR)
+* [176 add community description and rules field #181](https://github.com/SWE-574-Group-4/Community-Management-System/pull/181)
+* [Add is_followed field to UserResponseType and ProfileType](https://github.com/SWE-574-Group-4/Community-Management-System/pull/138)
+* [Add followers and followings functionality with UI components #175](https://github.com/SWE-574-Group-4/Community-Management-System/pull/175)
+* [User search does not work](https://github.com/SWE-574-Group-4/Community-Management-System/pull/128)
+* [Remove page on navbar](https://github.com/SWE-574-Group-4/Community-Management-System/pull/123)
+
+### Table of Issues:
+| Issue Title       | URL                          | Type (Created/Assigned) |
+|-------------------|------------------------------|--------------|
+| Community rules | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/176 )  | Created & Assigned      |
+| User Following  | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/107 )  | Created & Assigned      |
+| User search does not work   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/58 )  | Created & Assigned    |
+| Remove Post page is displayed empty | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/61 )  | Created & Assigned    |
+| User Acceptance Test Case Creation | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/192)  | Created & Assigned    |
+
+### Other:
+* I performed User Acceptance test: [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/192)
+* I created requirements of the system.
+* I created mockups screen of Abuse Reporting
+* I reported bug with issues
+* I created issues for bugs that team is found from the last years' app
+
+## Member: Mehmet Eyüpoğlu
+### Responsibilities:
+Development, Pull Request Review, Requirements, Project Planning, Documentation, Bug-Fixing, Deployment
+
+### Main contributions:
+**1. Mobile-First Design:** User is able to use the application on mobile devices in addition to the web or desktop version.<br>
+
+**The related requirements:**<br>
+* The SRS includes mobile and desktop label throughout the document. The software-as-is needed to conform to this rule.
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/88
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/82
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/92
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/83
+
+**Code explanations:** <br>
+In the previous application, the views were not designed for the mobile devices. Therefore, a new design that supports these devices was implemented in this task. 
+
+**2.Minor System Bugs:** <br>
+* The system had minor bugs that were widely scattered accross the system after the milestone presentation. These bugs were affecting the smooth usage of the application and needed to be addressed immediately.
+
+**The related issue URLs:**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/issues/159
+
+**The URL to the relevant content (code):**<br>
+https://github.com/SWE-574-Group-4/Community-Management-System/pull/161
+
+**Code explanations:**<br>
+The code contains various bugfixes in a single shot.
+
+### Documentation
+* Building the Software Requirements Specification structure: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+* Adding new requirements for new features: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Software-Requirements-Specification
+* Structuring Wiki: https://github.com/SWE-574-Group-4/Community-Management-System/wiki
+* Entry and exit criteria definition for task board columns: https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Column-Descriptions-of-the-Task-Board
+* Mock-up screen creation (tag selection, search, activity stream, community creation): https://github.com/SWE-574-Group-4/Community-Management-System/wiki/Mock-Ups
+* User story creation: [https://github.com/SWE-574-Group-4/Community-Management-System/issues?q=​​](https://github.com/SWE-574-Group-4/Community-Management-System/issues?q=%E2%80%8B%E2%80%8B)
+
+### Pull Requests (MAJOR)
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/171
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/161
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/157
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/155
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/154
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/152
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/149
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/142
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/134
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/126
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/124
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/122
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/114
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/97
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/92
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/83
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/81
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/19
+* https://github.com/SWE-574-Group-4/Community-Management-System/pull/12
+
+
+### Table of Issues:
+
+| Issue Title | URL                                                                               | Type (Created/Assigned) |
+| ----------- | --------------------------------------------------------------------------------- | ----------------------- |
+| Issue 45    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/45)  | Created                 |
+| Issue 25    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/25)  | Created                 |
+| Issue 2     | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/2)   | Created                 |
+| Issue 7     | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/7)   | Created                 |
+| Issue 8     | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/8)   | Created                 |
+| Issue 9     | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/9)   | Created                 |
+| Issue 15    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/15)  | Created                 |
+| Issue 18    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/18)  | Created                 |
+| Issue 42    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/42)  | Created                 |
+| Issue 53    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/53)  | Created                 |
+| Issue 72    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/72)  | Created                 |
+| Issue 77    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/77)  | Created                 |
+| Issue 82    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/82)  | Created                 |
+| Issue 88    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/88)  | Created                 |
+| Issue 89    | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/89)  | Created                 |
+| Issue 158   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/158) | Created                 |
+| Issue 159   | [Link](https://github.com/SWE-574-Group-4/Community-Management-System/issues/159) | Created                 |
+
+## Demos
+The link to [video demo](https://drive.google.com/drive/folders/1EmieDooQWJkbg-kR0MIBuSKNSjiSn0Vd?usp=drive_link) for both web and mobile applications
