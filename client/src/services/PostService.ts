@@ -18,8 +18,15 @@ export async function apiPost(
             community_id: communityId,
             user_id: userId,
             content: fields,
-            tag_ids: tag_ids, // TODO: Look for a better way to process in the backend like content fields
+            tag_ids: tag_ids,
         },
+    })
+}
+
+export async function apiTriggerRelatedEntities(tagId: string) {
+    return ApiService.fetchData({
+        url: `/fetch-related/${tagId}/post/`,
+        method: 'get',
     })
 }
 
@@ -95,10 +102,11 @@ export async function apiRemoveComment(commentId: string) {
 }
 
 // tags
-export async function apiGetTags() {
+export async function apiGetTags(searchQuery: string) {
     return ApiService.fetchData({
-        url: `/tags/`,
+        url: `/api/wikidata-search`,
         method: 'get',
+        params: { query: searchQuery, limit: 10 },
     })
 }
 

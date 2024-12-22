@@ -8,12 +8,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { apiGetTags, apiPost, apiFetchEnumeratedOptions } from '@/services/PostService'
+import { apiGetTags, apiPost, apiFetchEnumeratedOptions, apiTriggerRelatedEntities } from '@/services/PostService'
 import { useDispatch } from 'react-redux'
 import RenderGeo from './RenderGeo'
 import Select from '@/components/ui/Select'
 import { MultiValue } from 'react-select'
-import { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { Notification, Tag, toast } from '@/components/ui'
 
 const FieldComponent = ({
@@ -115,98 +115,98 @@ const FieldComponent = ({
 export default function MapFields({ fields }: { fields: FieldType[] }) {
     const [fieldValues, setFieldValues] = useState<{ [key: string]: string }>(
         {}
-    )
+    );
 
-    const { id } = useParams<{ id: string }>()
-    const userId = useAppSelector((state) => state.auth.user?.id)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const { id } = useParams<{ id: string }>();
+    const userId = useAppSelector((state) => state.auth.user?.id);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [handlePost, isPosting] = useRequestWithNotification(
         apiPost,
         'You have successfully posted!',
         'Error posting',
         () => dispatch(toggleFetchTrigger())
-    )
+    );
 
-    const [tags, setTags] = useState<{ value: number; label: string }[]>([])
-    const [selectedTags, setSelectedTags] = useState<
-        MultiValue<{ value: number; label: string }>
-    >([])
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
 
-    useEffect(() => {
-        const fetchTags = async () => {
-            try {
-                const response = (await apiGetTags()) as AxiosResponse
-
-                const options = response?.data.map(
-                    (tag: { id: number; name: string }) => ({
-                        value: tag.id,
-                        label: tag.name,
-                    })
-                )
-                setTags(options)
-            } catch (error) {
-                console.error('Error fetching tags:', error)
-            }
+    const fetchTags = async () => {
+        if (searchQuery.length < 3) {
+            alert('Please enter at least 3 characters for the search.');
+            return;
         }
-        fetchTags()
-    }, [])
-
-    const handleTagChange = (
-        selectedOptions: MultiValue<{ value: number; label: string }>
-    ) => {
-        setSelectedTags(selectedOptions)
+        try {
+            const response = await apiGetTags(searchQuery);
+            if (response.status === 200) {
+                setSearchResults(response.data.results || []);
+                console.log('search results', searchResults);
+            }
+            // fetch default community labels
+            console.log('fetching community tags')
+        } catch (error) {
+            console.error('Error fetching community tags', error)
+        }
     }
 
-    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const addTag = (e: React.MouseEvent<HTMLButtonElement>, tag: any) => {
+        e.preventDefault();
+        if (!selectedTags.some((t) => t.id === tag.id)) {
+            setSelectedTags([...selectedTags, tag]);
+        }
+    };
 
+    const removeTag = (tagId: string) => {
+        setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
+    };
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const formData = fields.map((field) => ({
             field_name: field.field_name,
             field_type: field.field_type,
             field_value: fieldValues[field.field_name] || '',
-        }))
+        }));
 
-        const tags = selectedTags.map((tag) => {
-            return tag.value
-        })
+        const tags = selectedTags.map((tag) => tag.id);
 
         try {
-            if (typeof handlePost === 'function') {
-                await handlePost(id, userId, formData, tags)
+            // Submit the post
+            await apiPost(id, userId, formData, tags);
 
-                toast.push(
-                    <Notification title={'Post successful'} type="success" />,
-                    {
-                        placement: 'top-center',
-                    }
-                )
-
-                setTimeout(() => {
-                    navigate(`/`)
-                }, 1000)
+            // Trigger related entities fetching for each tag
+            for (const tagId of tags) {
+                try {
+                    await apiTriggerRelatedEntities(tagId);
+                    console.log(`Related entities fetched for tag ${tagId}`);
+                } catch (fetchError) {
+                    console.error(
+                        `Error fetching related entities for tag ${tagId}:`,
+                        fetchError
+                    );
+                }
             }
+
+            // Navigate to the homepage
+            navigate('/');
         } catch (error) {
-            toast.push(<Notification title={'Post fail'} type="danger" />, {
-                placement: 'top-center',
-            })
-            console.error('Error posting:', error)
+            console.error('Error submitting form:', error);
         }
-    }
+    };
 
     const handleFieldChange = (name: string, value: string) => {
-        setFieldValues((prev) => ({ ...prev, [name]: value }))
-    }
+        setFieldValues((prev) => ({ ...prev, [name]: value }));
+    };
 
     useEffect(() => {
-        const initialValues: { [key: string]: string } = {}
+        const initialValues: { [key: string]: string } = {};
         fields.forEach((field) => {
-            initialValues[field.field_name] = ''
-        })
-
-        setFieldValues(initialValues)
-    }, [fields])
+            initialValues[field.field_name] = '';
+        });
+        setFieldValues(initialValues);
+    }, [fields]);
 
     return (
         <form onSubmit={handleFormSubmit}>
@@ -223,15 +223,117 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
                 ))}
 
                 <div className="form-group">
-                    <label>Select Tags:</label>
-                    <Select
-                        options={tags}
-                        isMulti
-                        value={selectedTags}
-                        onChange={handleTagChange}
-                        placeholder="Choose tags..."
-                    />
+                    <label>Search for Tags:</label>
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Search for tags..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                flex: 1,
+                                padding: '8px',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                            }}
+                        />
+                        <Button
+                            type="button"
+                            onClick={fetchTags}
+                            style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Search
+                        </Button>
+                    </div>
+
+                    {searchResults.length > 0 && (
+                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                            {searchResults.map((result: any) => (
+                                <li
+                                    key={result.id}
+                                    style={{
+                                        marginBottom: '5px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        border: '1px solid #ccc',
+                                        padding: '5px 10px',
+                                        borderRadius: '4px',
+                                    }}
+                                >
+                                    <span>
+                                        <strong>{result.label}</strong> -{' '}
+                                        {result.description}
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={(e) => addTag(e, result)}
+                                        style={{
+                                            padding: '5px 10px',
+                                            backgroundColor: '#007BFF',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        Select
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
+
+                {selectedTags.length > 0 && (
+                    <div>
+                        <h4>Selected Tags</h4>
+                        <ul style={{ listStyleType: 'none', padding: 0 }}>
+                            {selectedTags.map((tag: any) => (
+                                <li
+                                    key={tag.id}
+                                    style={{
+                                        marginBottom: '5px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        border: '1px solid #ccc',
+                                        padding: '5px 10px',
+                                        borderRadius: '4px',
+                                    }}
+                                >
+                                    <span>{tag.label}</span>
+                                    <button
+                                        onClick={() => removeTag(tag.id)}
+                                        style={{
+                                            padding: '5px 10px',
+                                            backgroundColor: '#f44336',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
 
                 <Button
                     className="mt-5 flex items-center justify-center gap-x-0.5"
@@ -249,5 +351,5 @@ export default function MapFields({ fields }: { fields: FieldType[] }) {
                 </Button>
             </div>
         </form>
-    )
+    );
 }

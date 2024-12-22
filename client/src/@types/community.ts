@@ -5,6 +5,7 @@ export type CommunityFormModel = {
     userId?: string
     cid?: string
     rules?: string
+    tags?: string[]
 }
 
 export type FieldType = {
@@ -92,6 +93,7 @@ export type IndividualCommunityType = {
     members?: Member[]
     number_of_posts: number
     rules: string
+    tags?: string[]
 }
 
 export type FetchCommunityType = {

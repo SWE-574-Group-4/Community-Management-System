@@ -13,7 +13,7 @@ export type PostData = {
     user: UserResponseType
     likes?: number
     is_liked?: boolean
-    tags?: { id: number; name: string }[]
+    tags?: { id: number; label: string }[]
 }
 
 export type _Field = {

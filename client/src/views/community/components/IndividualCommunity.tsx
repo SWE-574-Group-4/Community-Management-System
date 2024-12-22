@@ -1,5 +1,5 @@
 import { IndividualCommunityType } from '@/@types/community'
-import { Button, Card, Notification, toast } from '@/components/ui'
+import { Button, Card, Notification, Tag, toast } from '@/components/ui'
 import {
     apiIsUserInCommunity,
     apiJoinCommunity,
@@ -36,7 +36,8 @@ export default function IndividualCommunity({
         num_members,
         members,
         number_of_posts,
-        rules
+        rules,
+        tags,
     } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -137,6 +138,20 @@ export default function IndividualCommunity({
                 <div>
                     <strong>Rules: {rules}</strong>
                 </div>
+                {tags && tags.length > 0 && (
+                    <div
+                        className="tags-section mt-3"
+                    >
+                        <strong>Tags:</strong>
+                        <span className="ml-2">
+                            {tags.map((tag, index) => (
+                                <span key={index}>
+                                    <Tag className="mr-1">{tag}</Tag>
+                                </span>
+                            ))}
+                        </span>
+                    </div>
+                )}
             </Card>
         </div>
     )
