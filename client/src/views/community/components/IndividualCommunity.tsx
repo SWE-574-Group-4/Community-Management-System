@@ -1,5 +1,5 @@
 import { IndividualCommunityType } from '@/@types/community'
-import { Button, Card, Notification, toast } from '@/components/ui'
+import { Button, Card, Notification, Tag, toast } from '@/components/ui'
 import {
     apiIsUserInCommunity,
     apiJoinCommunity,
@@ -8,8 +8,7 @@ import {
 import { toggleFetchTrigger, useAppSelector } from '@/store'
 import { formatDate } from '@/utils/helpers'
 import useRequestWithNotification from '@/utils/hooks/useRequestWithNotification'
-import { useEffect, useState } from 'react'
-import { FaExternalLinkAlt } from 'react-icons/fa'
+import { rule } from 'postcss'
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -36,6 +35,9 @@ export default function IndividualCommunity({
         description,
         num_members,
         members,
+        number_of_posts,
+        rules,
+        tags,
     } = community
 
     const [handleJoinCommunity, isJoining] = useRequestWithNotification(
@@ -91,11 +93,6 @@ export default function IndividualCommunity({
         <div className="flex items-center justify-between">
             {renderButton()}
             <span className="flex items-center">
-                <FaExternalLinkAlt
-                    className="mr-2"
-                    size={'20'}
-                    onClick={() => navigate(`/community/${id}/details`)}
-                />
                 <div>
                     <h6 className="text-sm">Last Activity</h6>
                     <span className="text-xs">{formatDate(updated_at)}</span>
@@ -113,10 +110,12 @@ export default function IndividualCommunity({
                 headerClass="p-0"
                 footerBorder={false}
                 headerBorder={false}
+                onClick={() => navigate(`/community/${id}/details`)}
             >
                 <div className="w-full flex justify-between">
                     <span className="text-emerald-600 font-semibold">
-                        {num_members || members?.length} members, 20 posts
+                        {num_members || members?.length} members,{' '}
+                        {number_of_posts} posts
                     </span>
                     <span className="font-semibold">
                         {is_public ? (
@@ -133,7 +132,26 @@ export default function IndividualCommunity({
                     </span>
                 </div>
                 <h4 className="font-bold my-3">{name}</h4>
-                <p>{description}</p>
+                <div>
+                    <strong>Description: {description}</strong>
+                </div>
+                <div>
+                    <strong>Rules: {rules}</strong>
+                </div>
+                {tags && tags.length > 0 && (
+                    <div
+                        className="tags-section mt-3"
+                    >
+                        <strong>Tags:</strong>
+                        <span className="ml-2">
+                            {tags.map((tag, index) => (
+                                <span key={index}>
+                                    <Tag className="mr-1">{tag}</Tag>
+                                </span>
+                            ))}
+                        </span>
+                    </div>
+                )}
             </Card>
         </div>
     )

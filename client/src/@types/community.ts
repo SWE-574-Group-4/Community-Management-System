@@ -4,6 +4,8 @@ export type CommunityFormModel = {
     is_public: boolean
     userId?: string
     cid?: string
+    rules?: string
+    tags?: string[]
 }
 
 export type FieldType = {
@@ -11,6 +13,7 @@ export type FieldType = {
     field_type: string
     field_value?: string
     isRequired: boolean
+    keyword_id?: string
 }
 
 export type TemplateType = {
@@ -57,6 +60,7 @@ export type CommunityType = {
     reputation_rating: string
     templates: DataTypeOption[]
     members: Member[]
+    rules: string
 }
 
 export type Member = {
@@ -87,6 +91,9 @@ export type IndividualCommunityType = {
     templates: DataTypeOption[]
     num_members: number
     members?: Member[]
+    number_of_posts: number
+    rules: string
+    tags?: string[]
 }
 
 export type FetchCommunityType = {

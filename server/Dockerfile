@@ -1,5 +1,5 @@
 # Use the official Python image as a base
-FROM python:3.7.4
+FROM python:3.9.4
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -20,4 +20,6 @@ COPY . /code/
 EXPOSE 8000
 
 # Command to run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+#CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+

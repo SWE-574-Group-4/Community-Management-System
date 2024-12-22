@@ -16,7 +16,7 @@ export default function IndividualCommunity({
 
     return (
         <div className="community-card mb-2" onClick={handleClick}>
-            <p className="text-white font-bold">{name}</p>
+            <p className="dark:text-white font-bold">{name}</p>
             <p className="inline-flex">{num_members} Members</p>
             <p className="inline-flex ml-2">10 Posts</p>
             <p className="italic mb-4">

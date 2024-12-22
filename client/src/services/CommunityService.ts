@@ -2,7 +2,7 @@ import { CommunityFormModel } from '@/@types/community'
 import ApiService from './ApiService'
 
 export async function apiAddCommunity(data: CommunityFormModel) {
-    const { is_public, userId, ...rest } = data
+    const { is_public, userId, tags, ...rest } = data
     return ApiService.fetchData({
         url: '/add_community/',
         method: 'post',
@@ -10,6 +10,7 @@ export async function apiAddCommunity(data: CommunityFormModel) {
             ...rest,
             is_public,
             user_id: userId,
+            tags: tags,
         },
     })
 }
@@ -177,11 +178,47 @@ export async function apiAddTemplate(data: any) {
     })
 }
 
+export async function apiDeleteTemplate(id: any) {
+    return ApiService.fetchData({
+        url: `/template/${id}/delete/`,
+        method: 'delete',
+    })
+}
+
 export async function apiTransferOwnership(data: any) {
     console.log('data', data)
     const { community_id, user_id, new_owner_id } = data
     return ApiService.fetchData({
         url: `/community/${community_id}/transfer_ownership/${user_id}/${new_owner_id}`,
         method: 'post',
+    })
+}
+
+export async function apiSetCommunityBadges(communityId: string, data: any) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/setCommunityBadges/`,
+        method: 'post',
+        data,
+    })
+}
+
+export async function apiGetCommunityBadges(communityId: string) {
+    return ApiService.fetchData({
+        url: `/community/${communityId}/getCommunityBadges/`,
+        method: 'get',
+    })
+}
+
+export async function apiGetUserCommunityBadges(userId: string, communityId: string) {
+    return ApiService.fetchData({
+        url: `/user/${userId}/community/${communityId}/getUserCommunityBadges/`,
+        method: 'get',
+    })
+}
+
+export async function apiGetAllUserCommunityBadges(userId: string) {
+    return ApiService.fetchData({
+        url: `/user/${userId}/getAllUserCommunityBadges/`,
+        method: 'get',
     })
 }

@@ -6,7 +6,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import { useAppSelector } from '@/store'
 import { IndividualCommunityType } from '@/@types/community'
 import { apiGetCommunity, apiGetUserRole } from '@/services/CommunityService'
-import { Notification, Tag, toast } from '@/components/ui'
+import { Button, Notification, Tag, toast } from '@/components/ui'
 import CommunityDetail from './components/CommunityDetail'
 import Members from './components/Members'
 import { AuthorityCheck } from '@/components/shared'
@@ -16,7 +16,11 @@ import PendingRequests from './components/PendingRequests'
 import Invite from './Invite'
 import Posts from './components/Posts'
 import Reports from './components/Reports'
+import CreateCommunityBadges from './components/CreateCommunityBadges'
 import CommunitySpecificTemplates from './components/CommunitySpecificTemplates'
+import { HiOutlineDocumentAdd } from 'react-icons/hi'
+import { rule } from 'postcss'
+import CommunityBadges from './components/CommunityBadges'
 
 const { TabNav, TabList } = Tabs
 
@@ -24,7 +28,7 @@ const Settings = () => {
     const [community, setCommunity] = useState<IndividualCommunityType>(
         {} as IndividualCommunityType
     )
-    const [currentTab, setCurrentTab] = useState('profile')
+    const [currentTab, setCurrentTab] = useState('posts')
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -36,6 +40,7 @@ const Settings = () => {
     )
 
     const onTabChange = (val: string) => {
+        console.log({ val })
         setCurrentTab(val)
         navigate(`/community/${id}/${val}`)
     }
@@ -48,16 +53,6 @@ const Settings = () => {
         }
     }, [userRole])
 
-    useEffect(() => {
-        const pathSegments = location.pathname.split('/')
-        const lastPathSegment = pathSegments[pathSegments.length - 1]
-        setCurrentTab(lastPathSegment)
-    }, [location.pathname])
-
-    useEffect(() => {
-        console.log({ mappedRole })
-    }, [mappedRole])
-
     const communityDetailsMenu: Record<
         string,
         {
@@ -66,11 +61,25 @@ const Settings = () => {
             authority?: string[]
         }
     > = {
-        details: { label: 'Details', path: 'details' },
-        members: { label: 'Members', path: 'members' },
         posts: {
             label: 'Posts',
             path: 'posts',
+        },
+        details: { label: 'Details', path: 'details' },
+        rules: { label: 'Rules', path: 'rules' },
+        members: { label: 'Members', path: 'members' },
+
+        details: { 
+            label: 'Details', 
+            path: 'details' 
+        },
+        members: { 
+            label: 'Members', 
+            path: 'members' 
+        },
+        badges: { 
+            label: 'Badges', 
+            path: 'CommunityBadges' 
         },
         requests: {
             label: 'Requests',
@@ -90,6 +99,11 @@ const Settings = () => {
         reports: {
             label: 'Reports',
             path: 'reports',
+            authority: ['owner', 'moderator'],
+        },
+        createBadges: {
+            label: 'Create Badge',
+            path: 'createCommunityBadges',
             authority: ['owner', 'moderator'],
         },
     }
@@ -140,7 +154,7 @@ const Settings = () => {
                         variant="pill"
                         onChange={(val) => onTabChange(val)}
                     >
-                        <TabList className="pb-4">
+                        <TabList className="pb-2">
                             {Object.keys(communityDetailsMenu).map((key) => (
                                 <AuthorityCheck
                                     key={key}
@@ -158,15 +172,38 @@ const Settings = () => {
                         </TabList>
                     </Tabs>
                 )}
-                <div className="px-1 py-2 md:px-4 md:py-6">
+                <div className="py-4">
+                    
                     <Suspense fallback={<></>}>
+                    {currentTab === 'posts' && (
+                        <>
+                        <Button
+                            disabled={!community.is_member}
+                            className="mb-3 flex items-center justify-center gap-x-0.5"
+                            size="sm"
+                            variant="twoTone"
+                            color="emerald-600"
+                            block
+                            onClick={() =>
+                                navigate(`/community/${id}/post`, {
+                                    state: { community },
+                                })
+                            }
+                        >
+                            <HiOutlineDocumentAdd className="" />
+                            <span>Post</span>
+                        </Button>
+                        <Posts />
+                            
+                        </>
+                    )}
                         {currentTab === 'details' && (
                             <CommunityDetail community={community} />
                         )}
                         {currentTab === 'members' && (
                             <Members community={community} />
                         )}
-                        {currentTab === 'posts' && <Posts />}
+
                         {currentTab === 'requests' && (
                             <PendingRequests community={community} />
                         )}
@@ -174,9 +211,23 @@ const Settings = () => {
                         {currentTab === 'templates' && (
                             <CommunitySpecificTemplates />
                         )}
-                        {currentTab === 'reports' && (
-                            <Reports />
+                        {currentTab === 'reports' && <Reports />}
+                        {currentTab === 'rules' && (
+                            <div>
+                                {community.rules ? (
+                                    <ul>
+                                        {community.rules.split('\n').map((rule, index) => (
+                                            <li key={index}>{rule}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <h1>No Community Rules Available</h1>
+                                )}
+                            </div>
                         )}
+                        {currentTab === 'badges' && <CommunityBadges />}
+
+                        {currentTab === 'createBadges' && <CreateCommunityBadges />}
                     </Suspense>
                 </div>
             </AdaptableCard>
