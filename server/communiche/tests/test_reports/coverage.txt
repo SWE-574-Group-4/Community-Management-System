@@ -1,0 +1,77 @@
+============================= test session starts ==============================
+platform linux -- Python 3.9.18, pytest-7.4.4, pluggy-1.2.0
+django: version: 3.2.8, settings: communiche.settings_test (from ini)
+rootdir: /home/u27p56/boun_2024/Community-Management-System/server
+configfile: pytest.ini
+plugins: cov-5.0.0, django-4.9.0
+collected 45 items
+
+communiche/tests/test_views.py ......................................... [ 91%]
+....                                                                     [100%]
+
+=============================== warnings summary ===============================
+communiche/tests/test_views.py::test_join_requests
+  /home/u27p56/boun_2024/Community-Management-System/server/venv/lib/python3.9/site-packages/django/db/models/fields/__init__.py:1416: RuntimeWarning: DateTimeField JoinRequest.created_at received a naive datetime (2024-10-29 02:59:10.731114) while time zone support is active.
+    warnings.warn("DateTimeField %s received a naive datetime (%s)"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+---------- coverage: platform linux, python 3.9.18-final-0 -----------
+Name                                                                                          Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------------------------------------------------
+communiche/__init__.py                                                                            0      0   100%
+communiche/asgi.py                                                                                4      4     0%   10-16
+communiche/constants.py                                                                           1      0   100%
+communiche/migrations/0001_initial.py                                                             5      0   100%
+communiche/migrations/0002_community_owner_alter_community_created_at_and_more.py                 5      0   100%
+communiche/migrations/0003_rename_ispublic_community_is_public_and_more.py                        4      0   100%
+communiche/migrations/0004_alter_user_password.py                                                 4      0   100%
+communiche/migrations/0005_remove_community_owner_community_owner_id_and_more.py                  5      0   100%
+communiche/migrations/0006_rename_owner_id_community_owner.py                                     4      0   100%
+communiche/migrations/0007_alter_community_created_at_and_more.py                                 4      0   100%
+communiche/migrations/0008_alter_community_owner.py                                               5      0   100%
+communiche/migrations/0009_template.py                                                            4      0   100%
+communiche/migrations/0010_datafield.py                                                           4      0   100%
+communiche/migrations/0011_rename_datafield_datafields.py                                         4      0   100%
+communiche/migrations/0012_datafields_template_template_community.py                              5      0   100%
+communiche/migrations/0013_auto_20240406_1239.py                                                 13      0   100%
+communiche/migrations/0014_alter_datafields_data_type.py                                          4      0   100%
+communiche/migrations/0015_remove_datafields_template_remove_template_community_and_more.py       5      0   100%
+communiche/migrations/0016_auto_20240410_0528.py                                                  7      0   100%
+communiche/migrations/0017_template_field_label.py                                                4      0   100%
+communiche/migrations/0018_remove_template_field_remove_template_field_label_and_more.py          4      0   100%
+communiche/migrations/0019_auto_20240412_0839.py                                                  7      0   100%
+communiche/migrations/0020_communitytemplates.py                                                  5      0   100%
+communiche/migrations/0021_auto_20240414_1636.py                                                  5      0   100%
+communiche/migrations/0022_templatecommunity.py                                                   5      0   100%
+communiche/migrations/0023_communityuser.py                                                       5      0   100%
+communiche/migrations/0024_community_members.py                                                   4      0   100%
+communiche/migrations/0025_joinrequest.py                                                         5      0   100%
+communiche/migrations/0026_communityuser_role.py                                                  4      0   100%
+communiche/migrations/0027_joinrequest_status.py                                                  4      0   100%
+communiche/migrations/0028_joinrequest_updated_at.py                                              4      0   100%
+communiche/migrations/0029_auto_20240428_1017.py                                                  5      0   100%
+communiche/migrations/0030_posts_likes.py                                                         4      0   100%
+communiche/migrations/0031_invitation.py                                                          5      0   100%
+communiche/migrations/0032_pcomment.py                                                            5      0   100%
+communiche/migrations/0033_alter_pcomment_content.py                                              4      0   100%
+communiche/migrations/0034_remove_posts_comments.py                                               4      0   100%
+communiche/migrations/0035_alter_posts_content.py                                                 4      0   100%
+communiche/migrations/0036_report.py                                                              5      0   100%
+communiche/migrations/0037_alter_report_user.py                                                   5      0   100%
+communiche/migrations/0038_remove_report_reported_user.py                                         4      0   100%
+communiche/migrations/0039_report_status.py                                                       4      0   100%
+communiche/migrations/__init__.py                                                                 0      0   100%
+communiche/models.py                                                                             90      1    99%   144
+communiche/serializers.py                                                                       105     10    90%   68, 132-134, 136-138, 140-142
+communiche/settings.py                                                                           23      0   100%
+communiche/settings_test.py                                                                       2      0   100%
+communiche/test_serializers.py                                                                   73     73     0%   1-110
+communiche/tests/test_views.py                                                                  512      0   100%
+communiche/urls.py                                                                                4      0   100%
+communiche/views.py                                                                             612    173    72%   31-35, 41-42, 61-77, 87, 89, 96, 107-108, 140-141, 170, 190, 206-207, 215-218, 226-242, 260, 270, 276-277, 284-299, 311-312, 316-323, 333-334, 341, 345-350, 362-365, 373-374, 379, 386-387, 396-397, 400, 404-419, 443, 464-476, 484-485, 505, 515-516, 536, 555-558, 573-574, 587-594, 649, 684-690, 694-700, 771-784, 803, 807-809, 840-848, 855-856, 868, 871, 877-880
+communiche/wsgi.py                                                                                5      5     0%   10-19
+---------------------------------------------------------------------------------------------------------------------------
+TOTAL                                                                                          1618    266    84%
+
+======================== 45 passed, 1 warning in 1.75s =========================
