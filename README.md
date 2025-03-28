@@ -2,19 +2,13 @@
 
 ## Description
 
-Goal: Create a social platform for users to form communities, share content, and interact.
+This repository contains the source code for the Community-Specific Information Management System - a web and mobile application that allows users to create, join, and explore communities based on shared interests. Users can share content, organize events, and connect with like-minded individuals.
 
-Features: Registration, community creation, content posting, moderation, search.
+You can access the detailed documentation, including the SRS and System Designs in our public [Wiki tab](https://github.com/SWE-574-Group-4/Community-Management-System/wiki)
 
-Mobile Variation: Responsive design, push notifications, optimized for mobile.
-Responsive Design: Ensure the platform adapts seamlessly to different screen sizes (phones, tablets).
-Push Notifications: Send notifications for new posts, comments, or invitations.
-Optimized for Mobile: Consider touch-friendly controls and simplified navigation.
-Requirements: Performance, scalability, security, availability, usability, maintainability.
+## How to run our project locally:
 
-## setup
-
-### database setup
+### Database setup
 
 - Open MySQL Workbench
 - Create a new database schema with the name `communiche_db` that does not require a password
@@ -56,7 +50,7 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 
-Note: I have used mysql as database. You might need a mysql server running on your local machine. You can change the database settings in `server/communiche/settings.py` file. Also, consider .env file is needed. You can create a .env file in the root of the project and add the following lines:
+Note: We have used mysql as database. You might need a mysql server running on your local machine. You can change the database settings in `server/communiche/settings.py` file. Also, consider .env file is needed. You can create a .env file in the root of the project and add the following lines:
 
 ```bash
 # .env file. Make sure to ask for the .env file from the project owner
